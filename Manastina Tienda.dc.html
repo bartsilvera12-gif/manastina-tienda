@@ -23,8 +23,8 @@
 <script src="./image-slot.js"></script>
 <style>
 *{box-sizing:border-box}
-html{scroll-behavior:smooth;overflow-x:clip}
-body{margin:0;overflow-x:clip;background:#F9F1EA;color:#331821;font-family:Montserrat,Helvetica,sans-serif;-webkit-font-smoothing:antialiased}
+html{scroll-behavior:smooth}
+body{margin:0;background:#F9F1EA;color:#331821;font-family:Montserrat,Helvetica,sans-serif;-webkit-font-smoothing:antialiased}
 a{color:#331821;text-decoration:none}
 a:hover{color:#4C0F2E}
 button{font-family:inherit;color:inherit}
@@ -165,10 +165,10 @@ input,select,textarea{font-family:inherit;color:#331821}
       </nav>
       <button onClick="{{ irHome }}" aria-label="MANASTINA, ir al inicio" style="background:none;border:0;cursor:pointer;padding:0;display:block">
         <sc-if value="{{ headerClaro }}">
-          <img src="assets/manastina-wordmark-rosa.png" alt="MANASTINA, Llena de Gracia" style="width:clamp(150px,13vw,190px);height:auto;display:block">
+          <img src="assets/manastina-wordmark-rosa.png" alt="MANASTINA, Llena de Gracia" style="width:clamp(168px,14.5vw,210px);height:auto;display:block">
         </sc-if>
         <sc-if value="{{ headerOscuro }}" hint-placeholder-val="{{ true }}">
-          <img src="assets/manastina-wordmark-borgona.png" alt="MANASTINA, Llena de Gracia" style="width:clamp(150px,13vw,190px);height:auto;display:block">
+          <img src="assets/manastina-wordmark-borgona.png" alt="MANASTINA, Llena de Gracia" style="width:clamp(168px,14.5vw,210px);height:auto;display:block">
         </sc-if>
       </button>
       <div style="display:flex;gap:26px;justify-content:flex-end;align-items:center;font-size:11px;letter-spacing:.17em;text-transform:uppercase;font-weight:500">
@@ -209,10 +209,10 @@ input,select,textarea{font-family:inherit;color:#331821}
       </button>
       <button onClick="{{ irHome }}" aria-label="MANASTINA, ir al inicio" style="background:none;border:0;cursor:pointer;padding:0;justify-self:center">
         <sc-if value="{{ headerClaro }}">
-          <img src="assets/manastina-wordmark-rosa.png" alt="MANASTINA, Llena de Gracia" style="width:min(132px,34vw);height:auto;display:block">
+          <img src="assets/manastina-wordmark-rosa.png" alt="MANASTINA, Llena de Gracia" style="width:min(148px,37vw);height:auto;display:block">
         </sc-if>
         <sc-if value="{{ headerOscuro }}" hint-placeholder-val="{{ true }}">
-          <img src="assets/manastina-wordmark-borgona.png" alt="MANASTINA, Llena de Gracia" style="width:min(132px,34vw);height:auto;display:block">
+          <img src="assets/manastina-wordmark-borgona.png" alt="MANASTINA, Llena de Gracia" style="width:min(148px,37vw);height:auto;display:block">
         </sc-if>
       </button>
       <button onClick="{{ abrirCarrito }}" aria-label="Abrir carrito" style="background:none;border:0;width:auto;min-width:44px;height:44px;justify-self:end;display:flex;align-items:center;justify-content:flex-end;gap:6px;cursor:pointer;font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:0;white-space:nowrap">Bolsa<span style="min-width:18px;height:18px;border:1px solid currentColor;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:600">{{ cantidadCarrito }}</span></button>
@@ -1435,7 +1435,7 @@ class Component extends DCLogic {
     const carrito = s.carrito;
     const total = carrito.reduce((a, i) => a + i.precio * i.cantidad, 0);
     const cantidadCarrito = carrito.reduce((a, i) => a + i.cantidad, 0);
-    const claro = false;
+    const claro = true;
     const galBase = [
       { url: "assets/hero-1.png", thumb: "assets/hero-1.png", esVideo: false, esFoto: true, title: "Campaña", desc: "Estructura firme, terminación serena." },
       { url: "assets/gal-vid-1.mp4", thumb: "assets/gal-vid-1.jpg", esVideo: true, esFoto: false, title: "En movimiento", desc: "Detalle de la pieza." },
@@ -1544,9 +1544,9 @@ class Component extends DCLogic {
       heroLadoOp: (Math.max(0, 1 - Math.min(1, s.heroCol / 0.6) * 1.35)).toFixed(3),
       heroLadoPE: (Math.min(1, s.heroCol / 0.6) > 0.6) ? "none" : "auto",
       heroGap: esMobile ? "0px" : (20 * (1 - Math.min(1, s.heroCol / 0.6))).toFixed(1) + "px",
-      headerFondo: claro ? "transparent" : "#F9F1EA",
-      headerTexto: claro ? "#F9F1EA" : "#331821",
-      headerBorde: claro ? "transparent" : "rgba(51,24,33,.12)",
+      headerFondo: "#550F34",
+      headerTexto: "#F9F1EA",
+      headerBorde: "rgba(249,241,234,.16)",
       headerClaro: claro, headerOscuro: !claro,
       cantidadCarrito, anchoCarrito: esMobile ? "100vw" : "430px", izquierdaModal: esMobile ? "0" : "auto",
       anchoTarjeta: esMobile ? "min(72vw,300px)" : "clamp(230px,23vw,320px)",
