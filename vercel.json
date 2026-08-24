@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/", "destination": "/Manastina%20Tienda.dc.html" }
+  ]
+}
