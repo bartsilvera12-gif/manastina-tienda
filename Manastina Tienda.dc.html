@@ -1555,8 +1555,8 @@ class Component extends DCLogic {
       }),
       nuevos: nuevosLista.map(p => this.prep(p)),
       refRiel: this._riel,
-      rielAnterior: () => { const el = this._riel && this._riel.current; if (el) el.scrollBy({ left: -(el.clientWidth * 0.82), behavior: "smooth" }); },
-      rielSiguiente: () => { const el = this._riel && this._riel.current; if (el) el.scrollBy({ left: el.clientWidth * 0.82, behavior: "smooth" }); },
+      rielAnterior: () => { const el = this._riel && this._riel.current; if (el) el.scrollBy({ left: -(el.clientWidth * (esMobile ? 0.9 : 0.82)), behavior: "smooth" }); },
+      rielSiguiente: () => { const el = this._riel && this._riel.current; if (el) el.scrollBy({ left: el.clientWidth * (esMobile ? 0.9 : 0.82), behavior: "smooth" }); },
       seleccion: prods.filter(p => p.seleccion).slice(0, 4).map(p => this.prep(p)),
       instagram: [1, 2, 3, 4, 5, 6],
       galeria: galItems.map((g, i) => Object.assign({}, g, { abrir: () => this.setState({ lightbox: i }) })),
@@ -1572,6 +1572,7 @@ class Component extends DCLogic {
       refGalCont: this._galCont,
       refGalTrack: this._galTrack,
       galMove: e => {
+        if (esMobile) return;
         const c = this._galCont && this._galCont.current, t = this._galTrack && this._galTrack.current;
         if (!c || !t) return;
         const max = Math.max(0, t.scrollWidth - c.clientWidth);
@@ -1585,7 +1586,7 @@ class Component extends DCLogic {
         const c = this._galCont && this._galCont.current, t = this._galTrack && this._galTrack.current;
         if (!c || !t) return;
         const max = Math.max(0, t.scrollWidth - c.clientWidth);
-        this._galX = Math.min(0, Math.max(-max, (this._galX || 0) + c.clientWidth * 0.6));
+        this._galX = Math.min(0, Math.max(-max, (this._galX || 0) + c.clientWidth * (esMobile ? 0.92 : 0.6)));
         t.style.transition = "transform .6s cubic-bezier(.2,.75,.2,1)";
         t.style.transform = "translateX(" + this._galX + "px)";
       },
@@ -1593,7 +1594,7 @@ class Component extends DCLogic {
         const c = this._galCont && this._galCont.current, t = this._galTrack && this._galTrack.current;
         if (!c || !t) return;
         const max = Math.max(0, t.scrollWidth - c.clientWidth);
-        this._galX = Math.min(0, Math.max(-max, (this._galX || 0) - c.clientWidth * 0.6));
+        this._galX = Math.min(0, Math.max(-max, (this._galX || 0) - c.clientWidth * (esMobile ? 0.92 : 0.6)));
         t.style.transition = "transform .6s cubic-bezier(.2,.75,.2,1)";
         t.style.transform = "translateX(" + this._galX + "px)";
       },
