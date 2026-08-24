@@ -285,7 +285,7 @@ input,select,textarea{font-family:inherit;color:#331821}
     <div style="position:sticky;top:0;height:100svh;overflow:hidden;display:flex;align-items:center;padding:calc({{ altoHeader }} + clamp(6px,1vw,14px)) clamp(10px,1.4vw,24px) clamp(12px,1.6vw,24px);animation:aparecer .7s ease both">
       <div style="display:flex;align-items:stretch;gap:{{ heroGap }};width:100%;height:100%">
 
-      <article style="position:relative;flex:{{ heroFlexLado }};min-width:0;height:100%;overflow:hidden;background:repeating-linear-gradient(135deg,#EFE3DA 0 16px,#EADCD1 16px 32px);opacity:{{ heroLadoOp }};pointer-events:{{ heroLadoPE }};transition:opacity .25s ease">
+      <article style="position:relative;display:{{ heroLadoDisplay }};flex:{{ heroFlexLado }};min-width:0;height:100%;overflow:hidden;background:repeating-linear-gradient(135deg,#EFE3DA 0 16px,#EADCD1 16px 32px);opacity:{{ heroLadoOp }};pointer-events:{{ heroLadoPE }};transition:opacity .25s ease">
         <div style="position:absolute;inset:0;animation:zoomLento 2.6s cubic-bezier(.2,.7,.2,1) both">
           <img src="assets/hero-1.png" alt="Campaña MANASTINA" loading="lazy" style="width:100%;height:100%;object-fit:cover;object-position:center">
         </div>
@@ -311,7 +311,7 @@ input,select,textarea{font-family:inherit;color:#331821}
         </div>
       </article>
 
-      <article style="position:relative;flex:{{ heroFlexLado }};min-width:0;height:100%;overflow:hidden;background:repeating-linear-gradient(135deg,#EFE3DA 0 16px,#EADCD1 16px 32px);opacity:{{ heroLadoOp }};pointer-events:{{ heroLadoPE }};transition:opacity .25s ease">
+      <article style="position:relative;display:{{ heroLadoDisplay }};flex:{{ heroFlexLado }};min-width:0;height:100%;overflow:hidden;background:repeating-linear-gradient(135deg,#EFE3DA 0 16px,#EADCD1 16px 32px);opacity:{{ heroLadoOp }};pointer-events:{{ heroLadoPE }};transition:opacity .25s ease">
         <div style="position:absolute;inset:0;animation:zoomLento 2.6s cubic-bezier(.2,.7,.2,1) both">
           <img src="assets/hero-3.png" alt="Nuevos ingresos MANASTINA" loading="lazy" style="width:100%;height:100%;object-fit:cover;object-position:center">
         </div>
@@ -1469,13 +1469,14 @@ class Component extends DCLogic {
       altoHeader: esMobile ? "64px" : "74px", heroOffset: "0px",
       refHero: this._hero,
       refVideo: this._video,
-      altoHeroWrap: esMobile ? "185svh" : "205vh",
+      altoHeroWrap: esMobile ? "100svh" : "205vh",
       heroTcol: (() => { const t = Math.min(1, s.heroCol / 0.6); return t; })(),
-      heroFlexLado: (Math.max(0, 1 - Math.min(1, s.heroCol / 0.6))).toFixed(3) + " 1 0",
-      heroFlexCentro: (1.35 + Math.min(1, s.heroCol / 0.6) * 2.2).toFixed(3) + " 1 0",
+      heroFlexLado: esMobile ? "0 0 0" : (Math.max(0, 1 - Math.min(1, s.heroCol / 0.6))).toFixed(3) + " 1 0",
+      heroLadoDisplay: esMobile ? "none" : "block",
+      heroFlexCentro: esMobile ? "1 1 100%" : (1.35 + Math.min(1, s.heroCol / 0.6) * 2.2).toFixed(3) + " 1 0",
       heroLadoOp: (Math.max(0, 1 - Math.min(1, s.heroCol / 0.6) * 1.35)).toFixed(3),
       heroLadoPE: (Math.min(1, s.heroCol / 0.6) > 0.6) ? "none" : "auto",
-      heroGap: ((esMobile ? 12 : 20) * (1 - Math.min(1, s.heroCol / 0.6))).toFixed(1) + "px",
+      heroGap: esMobile ? "0px" : (20 * (1 - Math.min(1, s.heroCol / 0.6))).toFixed(1) + "px",
       headerFondo: claro ? "transparent" : "#F9F1EA",
       headerTexto: claro ? "#F9F1EA" : "#331821",
       headerBorde: claro ? "transparent" : "rgba(51,24,33,.12)",
