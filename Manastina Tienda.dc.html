@@ -165,10 +165,16 @@ input,select,textarea{font-family:inherit;color:#331821}
       </nav>
       <button onClick="{{ irHome }}" aria-label="MANASTINA, ir al inicio" style="background:none;border:0;cursor:pointer;padding:0;display:block">
         <sc-if value="{{ headerClaro }}">
-          <img src="assets/manastina-wordmark-rosa.png" alt="MANASTINA, Llena de Gracia" style="width:clamp(168px,14.5vw,210px);height:auto;display:block">
+          <span style="display:flex;align-items:center;gap:clamp(10px,1vw,15px)">
+            <img src="assets/logo-isotipo-claro.png" alt="" aria-hidden="true" style="width:clamp(42px,3.8vw,56px);height:auto;display:block">
+            <img src="assets/manastina-wordmark-rosa.png" alt="MANASTINA, Llena de Gracia" style="width:clamp(182px,16vw,232px);height:auto;display:block">
+          </span>
         </sc-if>
         <sc-if value="{{ headerOscuro }}" hint-placeholder-val="{{ true }}">
-          <img src="assets/manastina-wordmark-borgona.png" alt="MANASTINA, Llena de Gracia" style="width:clamp(168px,14.5vw,210px);height:auto;display:block">
+          <span style="display:flex;align-items:center;gap:clamp(10px,1vw,15px)">
+            <img src="assets/logo-isotipo-borgona.png" alt="" aria-hidden="true" style="width:clamp(42px,3.8vw,56px);height:auto;display:block">
+            <img src="assets/manastina-wordmark-borgona.png" alt="MANASTINA, Llena de Gracia" style="width:clamp(182px,16vw,232px);height:auto;display:block">
+          </span>
         </sc-if>
       </button>
       <div style="display:flex;gap:26px;justify-content:flex-end;align-items:center;font-size:11px;letter-spacing:.17em;text-transform:uppercase;font-weight:500">
@@ -209,10 +215,16 @@ input,select,textarea{font-family:inherit;color:#331821}
       </button>
       <button onClick="{{ irHome }}" aria-label="MANASTINA, ir al inicio" style="background:none;border:0;cursor:pointer;padding:0;justify-self:center">
         <sc-if value="{{ headerClaro }}">
-          <img src="assets/manastina-wordmark-rosa.png" alt="MANASTINA, Llena de Gracia" style="width:min(148px,37vw);height:auto;display:block">
+          <span style="display:flex;align-items:center;gap:8px">
+            <img src="assets/logo-isotipo-claro.png" alt="" aria-hidden="true" style="width:min(34px,9vw);height:auto;display:block">
+            <img src="assets/manastina-wordmark-rosa.png" alt="MANASTINA, Llena de Gracia" style="width:min(140px,34vw);height:auto;display:block">
+          </span>
         </sc-if>
         <sc-if value="{{ headerOscuro }}" hint-placeholder-val="{{ true }}">
-          <img src="assets/manastina-wordmark-borgona.png" alt="MANASTINA, Llena de Gracia" style="width:min(148px,37vw);height:auto;display:block">
+          <span style="display:flex;align-items:center;gap:8px">
+            <img src="assets/logo-isotipo-borgona.png" alt="" aria-hidden="true" style="width:min(34px,9vw);height:auto;display:block">
+            <img src="assets/manastina-wordmark-borgona.png" alt="MANASTINA, Llena de Gracia" style="width:min(140px,34vw);height:auto;display:block">
+          </span>
         </sc-if>
       </button>
       <button onClick="{{ abrirCarrito }}" aria-label="Abrir carrito" style="background:none;border:0;width:auto;min-width:44px;height:44px;justify-self:end;display:flex;align-items:center;justify-content:flex-end;gap:6px;cursor:pointer;font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:0;white-space:nowrap">Bolsa<span style="min-width:18px;height:18px;border:1px solid currentColor;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:600">{{ cantidadCarrito }}</span></button>
@@ -1533,7 +1545,7 @@ class Component extends DCLogic {
     return {
       esMobile, esDesktop, esHome: enHome, esTienda: s.ruta.n === "tienda", esProducto: !!prod,
       esNosotros: s.ruta.n === "nosotros", esContacto: s.ruta.n === "contacto",
-      altoHeader: esMobile ? "64px" : "74px", heroOffset: "0px",
+      altoHeader: esMobile ? "66px" : "79px", heroOffset: "0px",
       refHero: this._hero,
       refVideo: this._video,
       altoHeroWrap: esMobile ? "100svh" : "205vh",
