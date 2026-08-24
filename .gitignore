@@ -13,3 +13,7 @@
 .thumbnail
 Thumbs.db
 .DS_Store
+
+# Build de Hostinger (se genera con: node build.js)
+/build/
+/manastina-hostinger.zip
