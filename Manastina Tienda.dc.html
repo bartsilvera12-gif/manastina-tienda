@@ -475,15 +475,15 @@ input,select,textarea{font-family:inherit;color:#331821}
     </div>
     <div style="display:grid;grid-template-columns:{{ columnasMarcas }};gap:1px;background:rgba(51,24,33,.14);border:1px solid rgba(51,24,33,.14)">
       <sc-for list="{{ marcas }}" as="m" hint-placeholder-count="5">
-        <button onClick="{{ m.ir }}" onMouseEnter="{{ m.sobre }}" onMouseLeave="{{ m.salir }}" onFocus="{{ m.sobre }}" onBlur="{{ m.salir }}" class="marca-cell" style="--k:{{ m.orden }};position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(9px,1vw,13px);background:#F9F1EA;border:0;min-height:clamp(132px,13vw,168px);padding:clamp(14px,1.4vw,20px) clamp(16px,1.8vw,26px);cursor:pointer;text-align:center;color:#331821;opacity:{{ m.atenua }};transition:background .45s ease,opacity .35s ease" style-hover="background:#F3E7DE">
+        <button onClick="{{ m.ir }}" onMouseEnter="{{ m.sobre }}" onMouseLeave="{{ m.salir }}" onFocus="{{ m.sobre }}" onBlur="{{ m.salir }}" class="marca-cell" style="--k:{{ m.orden }};grid-column:{{ m.span }};position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(9px,1vw,13px);background:#F9F1EA;border:0;min-height:clamp(112px,11vw,142px);padding:clamp(12px,1.2vw,18px) clamp(10px,1.1vw,16px);cursor:pointer;text-align:center;color:#331821;opacity:{{ m.atenua }};transition:background .45s ease,opacity .35s ease" style-hover="background:#F3E7DE">
           <sc-if value="{{ m.logo }}">
-            <img src="{{ m.logo }}" alt="Logo {{ m.nombre }}" loading="lazy" class="marca-logo" style="position:relative;z-index:1;max-width:min(94%,240px);max-height:clamp(64px,8vw,104px);width:auto;height:auto;object-fit:contain;mix-blend-mode:multiply">
+            <img src="{{ m.logo }}" alt="Logo {{ m.nombre }}" loading="lazy" class="marca-logo" style="position:relative;z-index:1;max-width:min(90%,150px);max-height:clamp(40px,4.6vw,60px);width:auto;height:auto;object-fit:contain;mix-blend-mode:multiply">
           </sc-if>
           <sc-if value="{{ m.sinLogo }}">
             <span style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(23px,2.1vw,32px);font-weight:600;line-height:1.1;letter-spacing:.01em;color:#331821">{{ m.nombre }}</span>
           </sc-if>
-          <span style="position:relative;z-index:1;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#8A6472">{{ m.conteo }}</span>
-          <span class="marca-ver" style="position:relative;z-index:1;display:block;font-size:9px;letter-spacing:.2em;text-transform:uppercase;font-weight:600;color:#4C0F2E">Ver piezas →</span>
+          <span style="position:relative;z-index:1;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:#8A6472;white-space:nowrap">{{ m.conteo }}</span>
+          <span class="marca-ver" style="position:relative;z-index:1;display:block;font-size:8.5px;letter-spacing:.14em;white-space:nowrap;text-transform:uppercase;font-weight:600;color:#4C0F2E">Ver piezas →</span>
         </button>
       </sc-for>
     </div>
@@ -1569,8 +1569,8 @@ class Component extends DCLogic {
       gridProductos: esMobile ? "repeat(2,minmax(0,1fr))" : "repeat(auto-fill,minmax(min(100%,240px),1fr))",
 
       columnasEditorial: esMobile ? "1fr" : "minmax(0,.8fr) minmax(0,1.2fr)",
-      columnasMarcas: esMobile ? "repeat(2,minmax(0,1fr))" : "repeat(5,minmax(0,1fr))",
-      marcas: ((s.datos && s.datos.marcas) || []).map((nombre, idxM) => {
+      columnasMarcas: esMobile ? "repeat(2,minmax(0,1fr))" : "repeat(auto-fit,minmax(132px,1fr))",
+      marcas: ((s.datos && s.datos.marcas) || []).map((nombre, idxM, arrM) => {
         const n = prods.filter(p => p.marca === nombre).length;
         const iniciales = nombre.split(/\s+/).filter(Boolean).map(w => w[0]).join("").slice(0, 2).toUpperCase();
         const slug = nombre.toLowerCase().replace(/[^a-z0-9]+/g, "-");
@@ -1585,8 +1585,9 @@ class Component extends DCLogic {
         };
         const logo = logosMarca[slug] || "";
         return {
-          nombre, iniciales, slug, logo, sinLogo: !logo, orden: String(idxM), slotId: "logo-" + slug, conteo: n + (n === 1 ? " pieza" : " piezas"),
-          atenua: (s.hoverMarca && s.hoverMarca !== slug) ? "0.36" : "1",
+          nombre, iniciales, slug, logo, sinLogo: !logo, orden: String(idxM),
+          span: (esMobile && idxM === arrM.length - 1 && arrM.length % 2 === 1) ? "span 2" : "auto", slotId: "logo-" + slug, conteo: n + (n === 1 ? " pieza" : " piezas"),
+          atenua: (s.hoverMarca && s.hoverMarca !== slug) ? "0.62" : "1",
           sobre: () => { if (s.hoverMarca !== slug) this.setState({ hoverMarca: slug }); },
           salir: () => { if (s.hoverMarca === slug) this.setState({ hoverMarca: null }); },
           ir: () => this.ir({ n: "tienda" }, { marca: nombre, cat: "todas", visibles: 8 })
