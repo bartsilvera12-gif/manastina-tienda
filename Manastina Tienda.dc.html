@@ -478,7 +478,7 @@ input,select,textarea{font-family:inherit;color:#331821}
       <sc-for list="{{ marcas }}" as="m" hint-placeholder-count="5">
         <button onClick="{{ m.ir }}" onMouseEnter="{{ m.sobre }}" onMouseLeave="{{ m.salir }}" onFocus="{{ m.sobre }}" onBlur="{{ m.salir }}" class="marca-cell" style="--k:{{ m.orden }};grid-column:{{ m.span }};position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(9px,1vw,13px);background:#F9F1EA;border:0;min-height:clamp(112px,11vw,142px);padding:clamp(12px,1.2vw,18px) clamp(10px,1.1vw,16px);cursor:pointer;text-align:center;color:#331821;opacity:{{ m.atenua }};transition:background .45s ease,opacity .35s ease" style-hover="background:#F3E7DE">
           <sc-if value="{{ m.logo }}">
-            <img src="{{ m.logo }}" alt="Logo {{ m.nombre }}" loading="lazy" class="marca-logo" style="position:relative;z-index:1;max-width:min(90%,150px);max-height:clamp(40px,4.6vw,60px);width:auto;height:auto;object-fit:contain;mix-blend-mode:multiply">
+            <img src="{{ m.logo }}" alt="Logo {{ m.nombre }}" loading="lazy" class="marca-logo" style="position:relative;z-index:1;max-width:min(96%,172px);max-height:clamp(46px,5.2vw,68px);width:auto;height:auto;object-fit:contain;mix-blend-mode:multiply">
           </sc-if>
           <sc-if value="{{ m.sinLogo }}">
             <span style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(23px,2.1vw,32px);font-weight:600;line-height:1.1;letter-spacing:.01em;color:#331821">{{ m.nombre }}</span>
