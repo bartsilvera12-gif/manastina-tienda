@@ -43,6 +43,13 @@ input,select,textarea{font-family:inherit;color:#331821}
 .cat-card:hover .cat-info,.cat-card:focus-visible .cat-info{transform:translateY(-6px)}
 .cat-card .cat-ver{max-height:0;opacity:0;overflow:hidden;transition:max-height .5s ease,opacity .45s ease,margin-top .5s ease}
 .cat-card:hover .cat-ver,.cat-card:focus-visible .cat-ver{max-height:24px;opacity:1;margin-top:8px}
+@media (max-width:899px){
+  .gal-cont{overflow-x:auto!important;overflow-y:hidden!important;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;-ms-overflow-style:none}
+  .gal-cont::-webkit-scrollbar{display:none}
+  .gal-track{transform:none!important;transition:none!important}
+  .gal-track > figure{scroll-snap-align:center}
+  .gal-flecha{display:none}
+}
 .cat-card .cat-arrow{transition:transform .45s ease}
 .cat-card:hover .cat-arrow,.cat-card:focus-visible .cat-arrow{transform:translateX(5px)}
 @keyframes entrarIzq{from{transform:translateX(-100%)}to{transform:none}}
@@ -466,10 +473,10 @@ input,select,textarea{font-family:inherit;color:#331821}
     <div style="text-align:center;margin-bottom:clamp(24px,3vw,40px);padding:0 clamp(20px,5vw,72px)">
       <p style="margin:0 0 12px;font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:#E9C9D2;font-weight:600">Selección Manastina</p>
       <h2 style="margin:0;font-family:'Cormorant Garamond',Georgia,serif;font-weight:700;font-size:clamp(28px,3.6vw,48px);color:#F9F1EA">Galería</h2>
-      <p style="margin:12px 0 0;font-size:11px;letter-spacing:.06em;color:#D7BCC3">Mové el cursor para recorrer · o usá las flechas</p>
+      <p style="margin:12px 0 0;font-size:11px;letter-spacing:.06em;color:#D7BCC3">{{ galAyuda }}</p>
     </div>
-    <div ref="{{ refGalCont }}" onMouseMove="{{ galMove }}" style="position:relative;overflow:hidden;padding:8px clamp(20px,5vw,72px)">
-      <div ref="{{ refGalTrack }}" style="display:flex;align-items:flex-start;gap:clamp(14px,1.8vw,30px);will-change:transform">
+    <div ref="{{ refGalCont }}" onMouseMove="{{ galMove }}" class="gal-cont" style="position:relative;overflow:hidden;padding:8px clamp(20px,5vw,72px)">
+      <div ref="{{ refGalTrack }}" class="gal-track" style="display:flex;align-items:flex-start;gap:clamp(14px,1.8vw,30px);will-change:transform">
         <sc-for list="{{ galeria }}" as="g" hint-placeholder-count="5">
           <figure onClick="{{ g.abrir }}" style="flex:0 0 auto;width:{{ g.w }}px;height:{{ g.h }}px;margin:{{ g.dy }}px 0 0;position:relative;overflow:hidden;background:#EFE3DA;box-shadow:0 22px 44px -26px rgba(51,24,33,.45);cursor:pointer">
             <img src="{{ g.thumb }}" alt="{{ g.title }}" loading="lazy" style="width:100%;height:100%;object-fit:cover;transition:transform .9s cubic-bezier(.2,.7,.2,1)" style-hover="transform:scale(1.06)">
@@ -483,8 +490,8 @@ input,select,textarea{font-family:inherit;color:#331821}
           </figure>
         </sc-for>
       </div>
-      <button onClick="{{ galAnterior }}" aria-label="Anteriores" style="position:absolute;top:50%;left:clamp(8px,2.4vw,30px);transform:translateY(-50%);z-index:5;width:48px;height:48px;border:1px solid rgba(51,24,33,.28);background:rgba(249,241,234,.92);border-radius:50%;cursor:pointer;font-size:16px;line-height:1;color:#331821;box-shadow:0 6px 18px -8px rgba(51,24,33,.4);transition:background .35s ease,color .35s ease" style-hover="background:#331821;color:#F9F1EA">←</button>
-      <button onClick="{{ galSiguiente }}" aria-label="Siguientes" style="position:absolute;top:50%;right:clamp(8px,2.4vw,30px);transform:translateY(-50%);z-index:5;width:48px;height:48px;border:1px solid rgba(51,24,33,.28);background:rgba(249,241,234,.92);border-radius:50%;cursor:pointer;font-size:16px;line-height:1;color:#331821;box-shadow:0 6px 18px -8px rgba(51,24,33,.4);transition:background .35s ease,color .35s ease" style-hover="background:#331821;color:#F9F1EA">→</button>
+      <button onClick="{{ galAnterior }}" aria-label="Anteriores" class="gal-flecha" style="position:absolute;top:50%;left:clamp(8px,2.4vw,30px);transform:translateY(-50%);z-index:5;width:48px;height:48px;border:1px solid rgba(51,24,33,.28);background:rgba(249,241,234,.92);border-radius:50%;cursor:pointer;font-size:16px;line-height:1;color:#331821;box-shadow:0 6px 18px -8px rgba(51,24,33,.4);transition:background .35s ease,color .35s ease" style-hover="background:#331821;color:#F9F1EA">←</button>
+      <button onClick="{{ galSiguiente }}" aria-label="Siguientes" class="gal-flecha" style="position:absolute;top:50%;right:clamp(8px,2.4vw,30px);transform:translateY(-50%);z-index:5;width:48px;height:48px;border:1px solid rgba(51,24,33,.28);background:rgba(249,241,234,.92);border-radius:50%;cursor:pointer;font-size:16px;line-height:1;color:#331821;box-shadow:0 6px 18px -8px rgba(51,24,33,.4);transition:background .35s ease,color .35s ease" style-hover="background:#331821;color:#F9F1EA">→</button>
     </div>
     <div style="text-align:center;margin-top:clamp(28px,3vw,40px);padding:0 clamp(20px,5vw,72px)">
       <a href="https://www.instagram.com/manastina.py" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:16px 34px;border:1px solid rgba(249,241,234,.7);border-radius:2px;color:#F9F1EA;font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;transition:background .4s ease,color .4s ease,border-color .4s ease" style-hover="background:#F9F1EA;color:#4A0F2D;border-color:#F9F1EA">Seguir en Instagram</a>
@@ -1587,6 +1594,7 @@ class Component extends DCLogic {
       cerrarLightbox: () => this.setState({ lightbox: null }),
       lightboxAnterior: () => this.setState({ lightbox: (lbIdx - 1 + galItems.length) % galItems.length }),
       lightboxSiguiente: () => this.setState({ lightbox: (lbIdx + 1) % galItems.length }),
+      galAyuda: esMobile ? "Deslizá para recorrer" : "Mové el cursor para recorrer · o usá las flechas",
       refGalCont: this._galCont,
       refGalTrack: this._galTrack,
       galMove: e => {
