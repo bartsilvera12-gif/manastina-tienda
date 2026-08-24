@@ -67,8 +67,9 @@ input,select,textarea{font-family:inherit;color:#331821}
 .marca-cell .marca-ver{max-height:0;opacity:0;overflow:hidden;transition:max-height .45s ease,opacity .4s ease,margin-top .45s ease}
 .marca-cell:hover .marca-ver,.marca-cell:focus-visible .marca-ver{max-height:22px;opacity:1;margin-top:6px}
 .marca-cell::after{content:"";position:absolute;top:0;bottom:0;left:0;width:36%;pointer-events:none;opacity:0;
+  transform:translateX(-140%) skewX(-18deg);transition:opacity .3s ease;
   background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.6),rgba(255,255,255,0))}
-.marca-cell:hover::after{opacity:1;animation:brillo .95s ease}
+.marca-cell:hover::after,.marca-cell:focus-visible::after{opacity:1;animation:brillo 1.6s ease infinite}
 @supports (animation-timeline:view()){
   .marca-cell{animation:marcaEntra linear both;animation-timeline:view();animation-range:entry calc(4% + var(--k,0) * 7%) cover 40%}
 }
