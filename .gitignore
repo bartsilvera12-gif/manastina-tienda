@@ -1,0 +1,15 @@
+# Originales pesados (las versiones optimizadas viven en assets/)
+/galeria/
+/uploads/
+/logos/
+/catalogo/
+
+# Imágenes sueltas de la raíz (ya copiadas a assets/)
+/*.png
+/*.jpg
+/*.jpeg
+
+# Sistema
+.thumbnail
+Thumbs.db
+.DS_Store
