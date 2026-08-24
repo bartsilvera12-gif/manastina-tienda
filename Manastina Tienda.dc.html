@@ -176,15 +176,15 @@ input,select,textarea{font-family:inherit;color:#331821}
         <span style="display:block;width:26px;height:1.5px;background:currentColor;transition:transform .28s ease,opacity .2s ease"></span>
         <span style="display:block;width:26px;height:1.5px;background:currentColor;transition:transform .28s ease,opacity .2s ease"></span>
       </button>
-      <button onClick="{{ irHome }}" aria-label="MANASTINA, ir al inicio" style="background:none;border:0;cursor:pointer;padding:0">
+      <button onClick="{{ irHome }}" aria-label="MANASTINA, ir al inicio" style="background:none;border:0;cursor:pointer;padding:0;justify-self:center">
         <sc-if value="{{ headerClaro }}">
-          <img src="assets/manastina-wordmark-rosa.png" alt="MANASTINA, Llena de Gracia" style="width:132px;height:auto;display:block">
+          <img src="assets/manastina-wordmark-rosa.png" alt="MANASTINA, Llena de Gracia" style="width:min(132px,34vw);height:auto;display:block">
         </sc-if>
         <sc-if value="{{ headerOscuro }}" hint-placeholder-val="{{ true }}">
-          <img src="assets/manastina-wordmark-borgona.png" alt="MANASTINA, Llena de Gracia" style="width:132px;height:auto;display:block">
+          <img src="assets/manastina-wordmark-borgona.png" alt="MANASTINA, Llena de Gracia" style="width:min(132px,34vw);height:auto;display:block">
         </sc-if>
       </button>
-      <button onClick="{{ abrirCarrito }}" aria-label="Abrir carrito" style="background:none;border:0;width:44px;height:44px;display:flex;align-items:center;justify-content:flex-end;gap:6px;cursor:pointer;font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:0">Bolsa<span style="min-width:18px;height:18px;border:1px solid currentColor;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:600">{{ cantidadCarrito }}</span></button>
+      <button onClick="{{ abrirCarrito }}" aria-label="Abrir carrito" style="background:none;border:0;width:auto;min-width:44px;height:44px;justify-self:end;display:flex;align-items:center;justify-content:flex-end;gap:6px;cursor:pointer;font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:0;white-space:nowrap">Bolsa<span style="min-width:18px;height:18px;border:1px solid currentColor;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:600">{{ cantidadCarrito }}</span></button>
     </div>
   </sc-if>
 </header>
