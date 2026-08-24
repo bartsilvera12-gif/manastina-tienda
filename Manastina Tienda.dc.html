@@ -87,9 +87,9 @@ input,select,textarea{font-family:inherit;color:#331821}
   .menu-col{width:50%;flex:0 0 50%;overflow-y:auto}
   .menu-foto{width:50%;flex:0 0 50%;height:100%}
 }
-.tienda-hero{position:relative;overflow:hidden;background:linear-gradient(120deg,#5A1236 0%,#4A0F2D 52%,#3B0E25 100%);color:#F9F1EA;padding:clamp(30px,4vw,58px) clamp(20px,5vw,72px) clamp(30px,4vw,54px)}
+.tienda-hero{position:relative;overflow:hidden;overflow:clip;background:linear-gradient(120deg,#5A1236 0%,#4A0F2D 52%,#3B0E25 100%);color:#F9F1EA;padding:clamp(30px,4vw,58px) clamp(20px,5vw,72px) clamp(30px,4vw,54px)}
 .tienda-hero .hero-marca{position:absolute;right:clamp(-90px,-5vw,-24px);top:50%;transform:translateY(-50%);width:clamp(240px,30vw,480px);height:auto;opacity:.10;pointer-events:none;user-select:none}
-.tienda-fondo{position:relative;isolation:isolate;overflow:hidden;
+.tienda-fondo{position:relative;isolation:isolate;overflow:hidden;overflow:clip;
   background:
     radial-gradient(62% 40% at 8% 0%, rgba(215,188,195,.42), rgba(215,188,195,0) 68%),
     radial-gradient(46% 34% at 100% 12%, rgba(159,80,125,.16), rgba(159,80,125,0) 70%),
@@ -600,7 +600,7 @@ input,select,textarea{font-family:inherit;color:#331821}
 
   <div style="display:grid;grid-template-columns:{{ columnasCatalogo }};gap:clamp(24px,3vw,56px);align-items:start">
     <sc-if value="{{ esDesktop }}">
-      <aside class="panel-filtros" style="position:sticky;top:150px;display:flex;flex-direction:column;gap:28px">
+      <aside class="panel-filtros" style="position:sticky;top:96px;display:flex;flex-direction:column;gap:28px">
         <div>
           <label for="cat-buscar" style="display:block;font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;color:#9F507D;font-weight:600;margin-bottom:12px">Buscar</label>
           <input id="cat-buscar" type="search" value="{{ consulta }}" onChange="{{ onConsulta }}" placeholder="Nombre o palabra clave" style="width:100%;height:44px;padding:0 12px;border:1px solid rgba(51,24,33,.25);background:transparent;border-radius:2px;font-size:13px">
@@ -674,21 +674,19 @@ input,select,textarea{font-family:inherit;color:#331821}
                 </sc-if>
               </div>
             </button>
-            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-top:14px">
-              <div>
-                <p style="margin:0;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#9F507D">{{ p.catNombre }}</p>
-                <button onClick="{{ p.abrir }}" style="background:none;border:0;padding:4px 0 0;cursor:pointer;text-align:left;font-family:'Cormorant Garamond',Georgia,serif;font-size:21px;font-weight:600">{{ p.nombre }}</button>
-                <p style="margin:4px 0 0;font-size:12.5px;letter-spacing:.04em;font-weight:500">{{ p.precioFmt }}</p>
-              </div>
-              <button onClick="{{ p.agregar }}" aria-label="Agregar al carrito" style="flex:0 0 auto;width:44px;height:44px;border:1px solid rgba(51,24,33,.3);background:transparent;border-radius:2px;cursor:pointer;font-size:18px;line-height:1;transition:background .35s ease,color .35s ease" style-hover="background:#4C0F2E;color:#F9F1EA;border-color:#4C0F2E">+</button>
+            <div style="margin-top:14px">
+              <p style="margin:0;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#9F507D">{{ p.catNombre }}</p>
+              <button onClick="{{ p.abrir }}" style="background:none;border:0;padding:4px 0 0;cursor:pointer;text-align:left;font-family:'Cormorant Garamond',Georgia,serif;font-size:21px;font-weight:600;line-height:1.18;text-wrap:pretty">{{ p.nombre }}</button>
+              <p style="margin:4px 0 0;font-size:12.5px;letter-spacing:.04em;font-weight:500">{{ p.precioFmt }}</p>
             </div>
-            <div style="display:flex;align-items:center;gap:10px;margin-top:10px">
+            <div style="display:flex;align-items:center;gap:10px;margin-top:12px">
               <div style="display:flex;gap:6px">
                 <sc-for list="{{ p.colores }}" as="col" hint-placeholder-count="2">
                   <span title="{{ col.nombre }}" style="width:11px;height:11px;border-radius:50%;border:1px solid rgba(51,24,33,.28);background:{{ col.hex }};display:block"></span>
                 </sc-for>
               </div>
               <span style="font-size:10px;letter-spacing:.1em;color:#7A5460">{{ p.estado }}</span>
+              <button onClick="{{ p.agregar }}" aria-label="Agregar al carrito" style="flex:0 0 auto;margin-left:auto;width:40px;height:40px;border:1px solid rgba(51,24,33,.3);background:transparent;border-radius:2px;cursor:pointer;font-size:17px;line-height:1;transition:background .35s ease,color .35s ease,border-color .35s ease" style-hover="background:#4C0F2E;color:#F9F1EA;border-color:#4C0F2E">+</button>
             </div>
           </article>
         </sc-for>
