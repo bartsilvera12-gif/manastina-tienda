@@ -23,8 +23,8 @@
 <script src="./image-slot.js"></script>
 <style>
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;background:#F9F1EA;color:#331821;font-family:Montserrat,Helvetica,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+html{scroll-behavior:smooth;overflow-x:clip}
+body{margin:0;overflow-x:clip;background:#F9F1EA;color:#331821;font-family:Montserrat,Helvetica,sans-serif;-webkit-font-smoothing:antialiased}
 a{color:#331821;text-decoration:none}
 a:hover{color:#4C0F2E}
 button{font-family:inherit;color:inherit}
@@ -55,6 +55,10 @@ input,select,textarea{font-family:inherit;color:#331821}
 .ct-card .ct-flecha{margin-left:auto;transition:transform .4s ease;opacity:.5}
 .ct-card:hover .ct-flecha{transform:translateX(5px);opacity:1}
 .ct-ico{flex:0 0 auto;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(159,80,125,.12);font-size:16px}
+@media (max-width:899px){
+  .tienda-marca{right:-8%;top:6%;width:min(58vw,300px)}
+  .tienda-hero .hero-marca{right:-12%;width:min(48vw,240px)}
+}
 @keyframes marcaEntra{from{transform:translateY(26px);filter:blur(7px)}to{transform:none;filter:blur(0)}}
 @keyframes brillo{0%{transform:translateX(-140%) skewX(-18deg)}100%{transform:translateX(340%) skewX(-18deg)}}
 .marca-cell{overflow:hidden}
@@ -84,7 +88,7 @@ input,select,textarea{font-family:inherit;color:#331821}
 }
 .tienda-hero{position:relative;overflow:hidden;background:linear-gradient(120deg,#5A1236 0%,#4A0F2D 52%,#3B0E25 100%);color:#F9F1EA;padding:clamp(30px,4vw,58px) clamp(20px,5vw,72px) clamp(30px,4vw,54px)}
 .tienda-hero .hero-marca{position:absolute;right:clamp(-90px,-5vw,-24px);top:50%;transform:translateY(-50%);width:clamp(240px,30vw,480px);height:auto;opacity:.10;pointer-events:none;user-select:none}
-.tienda-fondo{position:relative;isolation:isolate;
+.tienda-fondo{position:relative;isolation:isolate;overflow:hidden;
   background:
     radial-gradient(62% 40% at 8% 0%, rgba(215,188,195,.42), rgba(215,188,195,0) 68%),
     radial-gradient(46% 34% at 100% 12%, rgba(159,80,125,.16), rgba(159,80,125,0) 70%),
@@ -93,7 +97,7 @@ input,select,textarea{font-family:inherit;color:#331821}
 .tienda-fondo::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.5;
   background-image:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.32'/%3E%3C/svg%3E");
   mix-blend-mode:multiply}
-.tienda-marca{position:absolute;right:-6%;top:12%;width:min(46vw,620px);height:auto;opacity:.05;pointer-events:none;user-select:none;z-index:-1}
+.tienda-marca{position:absolute;right:-4%;top:12%;width:min(46vw,620px);height:auto;opacity:.05;pointer-events:none;user-select:none;z-index:-1}
 .panel-filtros{background:rgba(255,252,249,.72);border:1px solid rgba(51,24,33,.10);border-radius:3px;padding:clamp(18px,1.8vw,26px);backdrop-filter:blur(6px);box-shadow:0 18px 40px -34px rgba(51,24,33,.5)}
 .card-prod{background:#FDF8F4;border:1px solid rgba(51,24,33,.08);border-radius:3px;padding:10px 10px 16px;transition:transform .5s cubic-bezier(.2,.7,.2,1),box-shadow .5s ease,border-color .5s ease}
 .card-prod:hover{transform:translateY(-6px);box-shadow:0 26px 46px -30px rgba(51,24,33,.5);border-color:rgba(159,80,125,.28)}
