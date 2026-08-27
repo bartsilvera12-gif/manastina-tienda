@@ -205,6 +205,42 @@ export async function consultarPedido(
 // falta una clave, rechaza el pedido. Estas constantes son el contrato.
 // -----------------------------------------------------------------------------
 
+/**
+ * Los 9 campos del cuerpo de iniciar-transacción. PagoPar los cuenta: si falta
+ * o sobra alguno responde "Jsonb: No coinciden los campos o la cantidad no es
+ * 9" y no crea el pedido.
+ *
+ * `forma_pago`, `url_respuesta` y `url_notificacion` NO van acá: se configuran
+ * en el panel del comercio.
+ */
+export const CLAVES_PAYLOAD = [
+  "token",
+  "comprador",
+  "public_key",
+  "monto_total",
+  "tipo_pedido",
+  "compras_items",
+  "fecha_maxima_pago",
+  "id_pedido_comercio",
+  "descripcion_resumen",
+] as const;
+
+export function validarPayload(payload: Record<string, unknown>): void {
+  const claves = Object.keys(payload);
+  if (claves.length !== CLAVES_PAYLOAD.length) {
+    const sobran = claves.filter((k) => !CLAVES_PAYLOAD.includes(k as never));
+    const faltan = CLAVES_PAYLOAD.filter((k) => !claves.includes(k));
+    throw new Error(
+      `[pagopar] el cuerpo debe tener exactamente ${CLAVES_PAYLOAD.length} campos, tiene ${claves.length}.` +
+        (sobran.length ? ` Sobran: ${sobran.join(", ")}.` : "") +
+        (faltan.length ? ` Faltan: ${faltan.join(", ")}.` : ""),
+    );
+  }
+  for (const k of CLAVES_PAYLOAD) {
+    if (!claves.includes(k)) throw new Error(`[pagopar] el cuerpo no tiene "${k}".`);
+  }
+}
+
 export const CLAVES_COMPRADOR = [
   "ruc",
   "email",

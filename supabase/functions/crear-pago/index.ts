@@ -19,6 +19,7 @@ import {
   tokenIniciar,
   validarComprador,
   validarItem,
+  validarPayload,
   validarSuma,
 } from "../_shared/pagopar.ts";
 import { ciudadPorClave, esZonaACoordinar } from "../_shared/ciudades.ts";
@@ -39,12 +40,11 @@ const SITIO_URL = env("SITIO_URL", "https://manastina.com").replace(/\/+$/, "");
 const SCHEMA = env("SUPABASE_SCHEMA", "manastina");
 const EMPRESA_ID = env("MANASTINA_EMPRESA_ID");
 
-const FORMA_PAGO = Number(env("PAGOPAR_FORMA_PAGO", "9")) || 9;
 const ITEM_CATEGORIA = env("PAGOPAR_ITEM_CATEGORIA", "909");
 const ITEM_CIUDAD = env("PAGOPAR_ITEM_CIUDAD", "5");
 const DIAS_VENCIMIENTO = Number(env("PAGOPAR_DIAS_VENCIMIENTO", "3")) || 3;
-const RETURN_URL = env("PAGOPAR_RETURN_URL");
-const WEBHOOK_URL = env("PAGOPAR_WEBHOOK_URL");
+// La URL de retorno y la de aviso se configuran en el panel de PagoPar, no
+// se mandan en el pedido: si van en el cuerpo, lo rechaza por tener campos de mas.
 
 const VENDEDOR_TELEFONO = env("PAGOPAR_VENDEDOR_TELEFONO");
 const VENDEDOR_DIRECCION = env("PAGOPAR_VENDEDOR_DIRECCION");
@@ -442,6 +442,12 @@ Deno.serve(async (req) => {
 
     const vence = new Date(Date.now() + DIAS_VENCIMIENTO * 86_400_000);
 
+    // PagoPar exige EXACTAMENTE estos 9 campos, ni uno más ni uno menos. Si
+    // sobra alguno responde "Jsonb: No coinciden los campos o la cantidad no
+    // es 9" y no genera el pedido.
+    //
+    // Por eso no van acá `forma_pago`, `url_respuesta` ni `url_notificacion`:
+    // esas tres se configuran en el panel del comercio.
     const payload: Record<string, unknown> = {
       token: await tokenIniciar(PAGOPAR_PRIVATE_KEY, idPedidoComercio, total),
       comprador,
@@ -452,10 +458,8 @@ Deno.serve(async (req) => {
       fecha_maxima_pago: vence.toISOString().slice(0, 19).replace("T", " "),
       id_pedido_comercio: idPedidoComercio,
       descripcion_resumen: `MANASTINA #${idPedidoComercio}`,
-      forma_pago: FORMA_PAGO,
     };
-    if (RETURN_URL) payload.url_respuesta = RETURN_URL;
-    if (WEBHOOK_URL) payload.url_notificacion = WEBHOOK_URL;
+    validarPayload(payload);
 
     // --- Llamada a PagoPar --------------------------------------------------
     const pp = await iniciarTransaccion(payload);
