@@ -62,7 +62,29 @@
   var WA_VISIBLE = "+595 972 897875";   // número de ventas
 
   var contenido = document.getElementById("contenido");
-  var hash = new URLSearchParams(location.search).get("hash") || "";
+
+  /* PagoPar arma esta URL con lo que esté cargado en su panel, y no siempre
+     usa el nombre de parámetro que uno espera. Así que se busca el hash con
+     tolerancia: primero por nombre, y si no aparece, cualquier valor que
+     tenga pinta de hash (largo y sin espacios). */
+  var hash = (function () {
+    var p = new URLSearchParams(location.search);
+    var directo = p.get("hash") || p.get("hash_pedido") || p.get("data");
+    if (directo) return directo.trim();
+
+    var candidatos = [];
+    p.forEach(function (v) {
+      if (v && v.length >= 20 && /^[A-Za-z0-9_-]+$/.test(v)) candidatos.push(v);
+    });
+    if (candidatos.length) return candidatos[0];
+
+    // Último recurso: el hash pegado al final de la ruta.
+    var trozos = location.pathname.split("/").filter(Boolean);
+    var ultimo = trozos[trozos.length - 1] || "";
+    if (ultimo.length >= 20 && /^[A-Za-z0-9_-]+$/.test(ultimo)) return ultimo;
+
+    return "";
+  })();
 
   function gs(n) {
     return "Gs. " + Number(n || 0).toLocaleString("es-PY").replace(/,/g, ".");
