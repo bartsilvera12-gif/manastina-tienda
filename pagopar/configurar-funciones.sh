@@ -68,7 +68,7 @@ else
   # Se inserta `env_file:` dentro del servicio `functions`, justo antes de su
   # primera clave hija. Se ubica por número de línea para no rozar otro
   # servicio del archivo.
-  LINEA_SERVICIO=$(grep -n '^  functions:' "$COMPOSE" | head -1 | cut -d: -f1)
+  LINEA_SERVICIO=$(grep -n -m1 '^  functions:' "$COMPOSE" | cut -d: -f1)
   if [ -z "${LINEA_SERVICIO:-}" ]; then
     error "No encontré el servicio 'functions' en $COMPOSE"
     exit 1
@@ -116,10 +116,13 @@ sleep 4
 # --- 5. Comprobar ------------------------------------------------------------
 azul "5. Comprobando"
 
-# El `|| true` evita que un fallo del exec corte el script por el pipefail.
+# Sin tuberías a propósito: `head` cerraba el caño antes de tiempo y, con
+# pipefail, eso cortaba el script entero sin imprimir nada.
 leer_del_contenedor() {
-  { docker compose exec -T functions sh -c "echo \${$1:-}" 2>/dev/null || true; } \
-    | tr -d '\r' | head -1
+  local v
+  v=$(docker compose exec -T functions printenv "$1" 2>/dev/null || true)
+  v=${v%%$'\n'*}          # primera línea
+  printf '%s' "${v%$'\r'}" # sin el retorno de carro de Windows
 }
 
 VISTO=$(leer_del_contenedor MANASTINA_PAGOPAR_PUBLIC_KEY)
