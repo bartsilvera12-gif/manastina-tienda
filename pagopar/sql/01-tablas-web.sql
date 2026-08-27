@@ -44,6 +44,9 @@ create table if not exists manastina.web_pedidos (
   -- --- Montos en guaraníes, siempre enteros ---
   subtotal              bigint not null,
   envio                 bigint not null default 0,
+
+  -- true = el envio NO se cobro online; el cliente lo paga al recibirlo.
+  envio_aparte          boolean not null default false,
   total                 bigint not null,
 
   -- --- Estado del cobro ---

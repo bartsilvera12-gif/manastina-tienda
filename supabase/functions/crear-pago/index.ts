@@ -21,7 +21,7 @@ import {
   validarItem,
   validarSuma,
 } from "../_shared/pagopar.ts";
-import { ciudadPorCodigo, esInterior } from "../_shared/ciudades.ts";
+import { ciudadPorCodigo } from "../_shared/ciudades.ts";
 
 // -----------------------------------------------------------------------------
 // Configuración (viene de los secretos de Supabase)
@@ -46,10 +46,33 @@ const VENDEDOR_DIRECCION = env("PAGOPAR_VENDEDOR_DIRECCION");
 const VENDEDOR_REFERENCIA = env("PAGOPAR_VENDEDOR_DIRECCION_REFERENCIA");
 const VENDEDOR_COORDENADAS = env("PAGOPAR_VENDEDOR_DIRECCION_COORDENADAS");
 
-const ENVIO_MODO = env("ENVIO_MODO", "fijo");
+// Modos de envío:
+//   aparte -> se cobra solo la mercadería; el envío lo paga el cliente al
+//             recibirlo. No hay que conocer la tarifa de antemano.
+//   fijo   -> un solo monto para todo el país.
+//   tabla  -> un monto por ciudad, definido en ENVIO_TARIFAS_JSON.
+//   gratis -> siempre 0.
+const ENVIO_MODO = env("ENVIO_MODO", "aparte");
 const ENVIO_MONTO = Number(env("ENVIO_MONTO", "0")) || 0;
-const ENVIO_MONTO_INTERIOR = Number(env("ENVIO_MONTO_INTERIOR", "0")) || 0;
 const ENVIO_GRATIS_DESDE = Number(env("ENVIO_GRATIS_DESDE", "0")) || 0;
+
+/** { "codigo_ciudad": monto }. Las ciudades que falten usan ENVIO_MONTO. */
+const ENVIO_TARIFAS: Record<string, number> = (() => {
+  const raw = env("ENVIO_TARIFAS_JSON");
+  if (!raw) return {};
+  try {
+    const obj = JSON.parse(raw);
+    const salida: Record<string, number> = {};
+    for (const [k, v] of Object.entries(obj)) {
+      const n = Math.round(Number(v));
+      if (Number.isFinite(n) && n >= 0) salida[String(k).trim()] = n;
+    }
+    return salida;
+  } catch {
+    console.error("[crear-pago] ENVIO_TARIFAS_JSON no es JSON válido; se ignora");
+    return {};
+  }
+})();
 
 // Orígenes que pueden llamar a esta función.
 const ORIGENES_OK = new Set([
@@ -113,14 +136,32 @@ function emailValido(s: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(s);
 }
 
-function calcularEnvio(modalidad: string, ciudadCodigo: string, subtotal: number): number {
-  if (modalidad === "retiro") return 0;
-  if (ENVIO_GRATIS_DESDE > 0 && subtotal >= ENVIO_GRATIS_DESDE) return 0;
-  if (ENVIO_MODO === "gratis") return 0;
-  if (ENVIO_MODO === "ciudad") {
-    return esInterior(ciudadCodigo) ? ENVIO_MONTO_INTERIOR : ENVIO_MONTO;
+/**
+ * Cuánto se le suma al cobro por el envío.
+ * Devuelve además si queda algo pendiente de pagar aparte, para poder
+ * avisárselo al cliente antes de mandarlo a PagoPar.
+ */
+function calcularEnvio(
+  modalidad: string,
+  ciudadCodigo: string,
+  subtotal: number,
+): { monto: number; seCobraAparte: boolean } {
+  if (modalidad === "retiro") return { monto: 0, seCobraAparte: false };
+
+  // El envío no entra en este cobro: lo abona el cliente al recibirlo.
+  if (ENVIO_MODO === "aparte") return { monto: 0, seCobraAparte: true };
+
+  if (ENVIO_MODO === "gratis") return { monto: 0, seCobraAparte: false };
+  if (ENVIO_GRATIS_DESDE > 0 && subtotal >= ENVIO_GRATIS_DESDE) {
+    return { monto: 0, seCobraAparte: false };
   }
-  return ENVIO_MONTO;
+
+  if (ENVIO_MODO === "tabla") {
+    const tarifa = ENVIO_TARIFAS[String(ciudadCodigo).trim()];
+    return { monto: Number.isFinite(tarifa) ? tarifa : ENVIO_MONTO, seCobraAparte: false };
+  }
+
+  return { monto: ENVIO_MONTO, seCobraAparte: false };
 }
 
 /** `id_pedido_comercio` tiene que ser entero; es el mismo valor que firma el token. */
@@ -211,7 +252,11 @@ Deno.serve(async (req) => {
     }
 
     const subtotal = lineas.reduce((a, l) => a + l.total_linea, 0);
-    const envio = calcularEnvio(modalidad, ciudadCodigo, subtotal);
+    const { monto: envio, seCobraAparte: envioAparte } = calcularEnvio(
+      modalidad,
+      ciudadCodigo,
+      subtotal,
+    );
     const total = subtotal + envio;
     if (total <= 0) return json({ error: "Total inválido." }, 400, origen);
 
@@ -241,6 +286,7 @@ Deno.serve(async (req) => {
         observaciones,
         subtotal,
         envio,
+        envio_aparte: envioAparte,
         total,
         estado_pago: "pendiente",
       })
@@ -346,7 +392,16 @@ Deno.serve(async (req) => {
     });
 
     return json(
-      { link, pedido_id: pedido.id, numero: idPedidoComercio, subtotal, envio, total },
+      {
+        link,
+        pedido_id: pedido.id,
+        numero: idPedidoComercio,
+        subtotal,
+        envio,
+        total,
+        // true = el envío no va incluido en este cobro; lo abona al recibirlo
+        envio_aparte: envioAparte,
+      },
       200,
       origen,
     );
