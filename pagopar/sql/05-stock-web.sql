@@ -3,10 +3,11 @@
 -- =============================================================================
 -- Correr DESPUÉS de 04-productos-erp.sql.
 --
--- Deja tres cosas:
---   1. v_web_catalogo  -> precio y stock reales, para que la web los muestre.
---   2. web_vincular_items -> ata cada línea del pedido con el producto del ERP.
---   3. web_confirmar_pedido -> descuenta el stock cuando el pago se confirma.
+-- Deja dos funciones:
+--   1. web_vincular_items -> ata cada línea del pedido con el producto del ERP.
+--   2. web_confirmar_pedido -> descuenta el stock cuando el pago se confirma.
+--
+-- La vista v_web_catalogo la crea 06-visible-en-la-web.sql.
 --
 -- Sobre el descuento de stock: el ERP lleva los movimientos en
 -- manastina.movimientos_inventario y actualiza productos.stock_actual desde la
@@ -28,27 +29,13 @@ comment on column manastina.web_pedidos.stock_descontado_at is
 
 
 -- -----------------------------------------------------------------------------
--- 1) Catálogo real, para que la web muestre precio y stock del ERP
+-- La vista v_web_catalogo NO se crea acá.
 -- -----------------------------------------------------------------------------
--- Se borra antes de crearla: `create or replace view` no permite quitar
--- columnas, y esta vista cambia de forma entre un script y otro.
-drop view if exists manastina.v_web_catalogo;
-
-create view manastina.v_web_catalogo as
-select
-  lower(replace(p.sku, 'MAN-', ''))  as codigo_web,   -- 'MAN-C01' -> 'c01'
-  p.id                               as producto_id,
-  p.sku,
-  p.nombre,
-  coalesce(p.precio_venta, 0)::bigint            as precio,
-  greatest(0, coalesce(p.stock_actual, 0))::int  as stock,
-  p.activo
-from manastina.productos p
-where p.sku like 'MAN-%';
-
-comment on view manastina.v_web_catalogo is
-  'Precio y stock reales de los productos de la tienda web. La Edge Function los sirve al sitio.';
-
+-- La define 06-visible-en-la-web.sql, que es donde vive el chip que decide qué
+-- se publica. Tenerla en dos scripts hacía que el segundo pisara al primero.
+-- Las funciones de abajo la usan, pero plpgsql resuelve el nombre recién al
+-- ejecutarse, así que no importa que todavía no exista al crearlas.
+-- -----------------------------------------------------------------------------
 
 -- -----------------------------------------------------------------------------
 -- 2) Atar las líneas del pedido con los productos del ERP
