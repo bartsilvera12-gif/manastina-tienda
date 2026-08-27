@@ -50,6 +50,7 @@ type FilaCatalogo = {
   categoria_nombre: string | null;
   nuevo_web: boolean | null;
   destacado_web: boolean | null;
+  marca_nombre: string | null;
 };
 
 /** Una fila de v_web_colecciones. */
@@ -61,6 +62,16 @@ type FilaColeccion = {
   imagen_web_url: string | null;
   imagen_path: string | null;
   productos: string[] | null;
+};
+
+/** Una fila de v_web_marcas. */
+type FilaMarca = {
+  marca_id: string;
+  clave: string;
+  nombre: string | null;
+  imagen_web_url: string | null;
+  imagen_path: string | null;
+  productos: number | null;
 };
 
 /** Una fila de v_web_categorias. */
@@ -106,7 +117,7 @@ Deno.serve(async (req) => {
       .select(
         "codigo_web, producto_id, nombre, precio, stock, activo, " +
           "descripcion_web, imagen_web_url, imagen_path, categoria_codigo, categoria_nombre, " +
-          "nuevo_web, destacado_web",
+          "nuevo_web, destacado_web, marca_nombre",
       );
 
     if (error) throw error;
@@ -127,6 +138,7 @@ Deno.serve(async (req) => {
       imagen: nuevas.get(String(p.producto_id)) ?? p.imagen_web_url ?? "",
       nuevo: p.nuevo_web === true,
       destacado: p.destacado_web === true,
+      marca: String(p.marca_nombre ?? "").trim(),
     }));
 
     // --- Categorías ---------------------------------------------------------
@@ -170,6 +182,39 @@ Deno.serve(async (req) => {
       }));
     }
 
+    // --- Marcas -------------------------------------------------------------
+    // Las que estén activas en el ERP, con su logo. Si la vista todavía no
+    // existe, el sitio usa las que trae escritas.
+    let marcas: { id: string; nombre: string; logo: string; productos: number }[] = [];
+
+    const { data: mks, error: errMks } = await sb
+      .from("v_web_marcas")
+      .select("marca_id, clave, nombre, imagen_web_url, imagen_path, productos");
+
+    if (errMks) {
+      console.warn("[catalogo] sin marcas del ERP:", errMks.message);
+    } else if (mks?.length) {
+      const filasMk = mks as unknown as FilaMarca[];
+
+      const nuevasMk = await publicarFotosPendientes(
+        sb,
+        filasMk.map((m) => ({
+          producto_id: m.marca_id,
+          imagen_path: m.imagen_path,
+          imagen_web_url: m.imagen_web_url,
+        })),
+        "marcas",
+        "marcas",
+      );
+
+      marcas = filasMk.map((m) => ({
+        id: String(m.clave),
+        nombre: String(m.nombre ?? ""),
+        logo: nuevasMk.get(String(m.marca_id)) ?? m.imagen_web_url ?? "",
+        productos: Number(m.productos ?? 0),
+      }));
+    }
+
     // --- Colección de portada -----------------------------------------------
     // La que esté marcada como activa en el ERP. Si no hay ninguna, o la vista
     // todavía no existe, el sitio muestra la colección que trae escrita.
@@ -208,7 +253,7 @@ Deno.serve(async (req) => {
     }
 
     return new Response(
-      JSON.stringify({ productos, categorias, coleccion, actualizado: new Date().toISOString() }),
+      JSON.stringify({ productos, categorias, marcas, coleccion, actualizado: new Date().toISOString() }),
       { headers: { ...cabeceras(origen), "Content-Type": "application/json" } },
     );
   } catch (e) {

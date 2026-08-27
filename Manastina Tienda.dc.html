@@ -1374,6 +1374,20 @@ const fmt = n => "Gs. " + Number(n).toLocaleString("es-PY").replace(/,/g, ".");
    cargaron ninguna, la web sigue mostrando exactamente lo que mostraba antes. */
 const COL_NOMBRE = "Nueva colección";
 const COL_FRASE = "Presencia\nen cada detalle";
+/* Logos que vienen con el sitio. Se usan mientras el ERP no tenga el suyo
+   cargado, así la grilla de marcas nunca queda con casilleros vacíos. */
+const LOGOS_LOCALES = {
+  "nine-west": "assets/marca-nine-west.png",
+  "guess": "assets/marca-guess.jpg",
+  "prune": "assets/marca-prune.png",
+  "david-jones": "assets/marca-david-jones.jpg",
+  "rosa-amora": "assets/marca-rosa-amora.png",
+  "timberland": "assets/marca-timberland.jpg",
+  "chrisbella": "assets/marca-chrisbella.png"
+};
+
+const clave = t => String(t || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+
 const COL_FOTO = "https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=1600&auto=format&fit=crop";
 
 /* Parte la frase en los dos renglones que se cruzan al hacer scroll. El corte
@@ -1648,7 +1662,17 @@ class Component extends DCLogic {
            frase, la foto y qué productos la componen. */
         const col = d.coleccion && d.coleccion.id ? d.coleccion : null;
 
-        this.setState({ datos: Object.assign({}, datos, { productos, categorias }), coleccion: col });
+        /* Las marcas también: los nombres, el orden y los logos. Las que ya
+           tenían logo en el sitio lo conservan hasta que suban el suyo. */
+        const mks = (d.marcas || []).filter(m => m.productos > 0);
+        const marcas = mks.length ? mks.map(m => m.nombre) : datos.marcas;
+        const logosMarca = Object.assign({}, LOGOS_LOCALES);
+        mks.forEach(m => { if (m.logo) logosMarca[m.id] = m.logo; });
+
+        this.setState({
+          datos: Object.assign({}, datos, { productos, categorias, marcas, logosMarca }),
+          coleccion: col
+        });
         this.limpiarCarritoSinStock(porId);
       })
       .catch(() => {});
@@ -1668,6 +1692,7 @@ class Component extends DCLogic {
          ERP es qué se destaca en la portada. */
       return Object.assign({}, base, {
         nombre: real.nombre || base.nombre,
+        marca: real.marca || base.marca || "",
         precio: precio,
         stock: stock,
         nuevo: real.nuevo === true,
@@ -1685,7 +1710,7 @@ class Component extends DCLogic {
     return {
       id: real.id,
       nombre: real.nombre,
-      marca: "",
+      marca: real.marca || "",
       categoria: real.categoria || "accesorios",
       precio: precio,
       stock: stock,
@@ -1970,16 +1995,8 @@ class Component extends DCLogic {
       marcas: ((s.datos && s.datos.marcas) || []).map((nombre, idxM, arrM) => {
         const n = prods.filter(p => p.marca === nombre).length;
         const iniciales = nombre.split(/\s+/).filter(Boolean).map(w => w[0]).join("").slice(0, 2).toUpperCase();
-        const slug = nombre.toLowerCase().replace(/[^a-z0-9]+/g, "-");
-        const logosMarca = {
-          "nine-west": "assets/marca-nine-west.png",
-          "guess": "assets/marca-guess.jpg",
-          "prune": "assets/marca-prune.png",
-          "david-jones": "assets/marca-david-jones.jpg",
-          "rosa-amora": "assets/marca-rosa-amora.png",
-          "timberland": "assets/marca-timberland.jpg",
-          "chrisbella": "assets/marca-chrisbella.png"
-        };
+        const slug = clave(nombre);
+        const logosMarca = (s.datos && s.datos.logosMarca) || LOGOS_LOCALES;
         const logo = logosMarca[slug] || "";
         return {
           nombre, iniciales, slug, logo, sinLogo: !logo, orden: String(idxM),
@@ -1992,7 +2009,7 @@ class Component extends DCLogic {
       }),
       marcaHoverNombre: (() => {
         if (!s.hoverMarca) return "";
-        return ((s.datos && s.datos.marcas) || []).find(m => m.toLowerCase().replace(/[^a-z0-9]+/g, "-") === s.hoverMarca) || "";
+        return ((s.datos && s.datos.marcas) || []).find(m => clave(m) === s.hoverMarca) || "";
       })(),
       marcaDefOp: s.hoverMarca ? "0" : "1",
       marcaDefY: s.hoverMarca ? "-16px" : "0px",
