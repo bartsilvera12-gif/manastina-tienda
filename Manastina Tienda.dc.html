@@ -1588,7 +1588,23 @@ class Component extends DCLogic {
         const porId = {};
         delErp.forEach(p => { porId[p.id] = p; });
 
-        this.setState({ datos: Object.assign({}, datos, { productos }) });
+        /* Las categorías también salen del ERP: si crean una nueva y la marcan
+           visible, aparece sola en el menú y en la portada. Las que ya estaban
+           conservan su foto del sitio si el ERP todavía no tiene una. */
+        const cats = (d.categorias || []).filter(c => c.productos > 0);
+        const categorias = cats.length
+          ? cats.map(c => {
+              const vieja = datos.categorias.find(x => x.id === c.id);
+              return {
+                id: c.id,
+                nombre: c.nombre || (vieja ? vieja.nombre : c.id),
+                descripcion: c.descripcion || (vieja ? vieja.descripcion : ""),
+                imagen: c.imagen || (vieja ? vieja.imagen : "")
+              };
+            })
+          : datos.categorias;
+
+        this.setState({ datos: Object.assign({}, datos, { productos, categorias }) });
         this.limpiarCarritoSinStock(porId);
       })
       .catch(() => {});
@@ -1786,6 +1802,8 @@ class Component extends DCLogic {
     const galItems = galBase.map((g, i) => Object.assign({}, g, (i % 2 === 0)
       ? { w: 330, h: 470, dy: 0 }
       : { w: 232, h: 330, dy: 84 }));
+    /* Fotos de respaldo. Si la categoria tiene foto cargada en el ERP, esa
+       gana; estas quedan para las que todavia no tienen. */
     const catImgs = {
       carteras: "https://images.unsplash.com/photo-1605733513597-a8f8341084e6?q=80&w=900&auto=format&fit=crop",
       sets: "assets/gal-bolsos.jpg",
@@ -1941,7 +1959,10 @@ class Component extends DCLogic {
       opacidadPistaExpandir: String(s.expandir > 0.7 ? 0 : 1),
       columnasIndice: esMobile ? "1fr" : "minmax(0,.62fr) minmax(0,1.38fr)",
       catActivaNombre: (this.cats()[s.catActiva] || this.cats()[0] || {}).nombre || "",
-      catActivaImg: (catImgs[(this.cats()[s.catActiva] || this.cats()[0] || {}).id] || "assets/gal-bolsos.jpg"),
+      catActivaImg: (() => {
+        const c = this.cats()[s.catActiva] || this.cats()[0] || {};
+        return c.imagen || catImgs[c.id] || "assets/gal-bolsos.jpg";
+      })(),
       colsCat: esMobile ? "repeat(2,1fr)" : "repeat(4,1fr)",
       filaCat: esMobile ? "clamp(150px,42vw,210px)" : "clamp(150px,17vw,205px)",
       categorias: this.cats().map((c, k) => {
@@ -1954,7 +1975,7 @@ class Component extends DCLogic {
         const sp = (!esMobile && spans[k]) ? spans[k] : { col: "auto", row: "auto" };
         return {
           nombre: c.nombre,
-          img: catImgs[c.id] || "assets/gal-bolsos.jpg",
+          img: c.imagen || catImgs[c.id] || "assets/gal-bolsos.jpg",
           gridCol: sp.col,
           gridRow: sp.row,
           fuente: (!esMobile && k === 0) ? "clamp(28px,2.6vw,44px)" : "clamp(19px,1.6vw,25px)",

@@ -51,6 +51,7 @@ export async function publicarFoto(
   sb: any,
   productoId: string,
   imagenPath: string,
+  prefijo = "productos",
 ): Promise<string | null> {
   if (!imagenPath) return null;
 
@@ -59,7 +60,7 @@ export async function publicarFoto(
 
     // El path del ERP es `{empresa}/{producto}/principal.{ext}`.
     const ext = (imagenPath.split(".").pop() || "jpg").toLowerCase();
-    const destino = `productos/${productoId}.${ext}`;
+    const destino = `${prefijo}/${productoId}.${ext}`;
 
     const { data: archivo, error: errBajar } = await sb.storage
       .from(BUCKET_PRIVADO)
@@ -97,6 +98,8 @@ export async function publicarFoto(
 export async function publicarFotosPendientes(
   sb: any,
   productos: { producto_id: string; imagen_path?: string | null; imagen_web_url?: string | null }[],
+  tabla = "productos",
+  prefijo = "productos",
 ): Promise<Map<string, string>> {
   const urls = new Map<string, string>();
 
@@ -106,12 +109,12 @@ export async function publicarFotosPendientes(
   console.info("[fotos] publicando", pendientes.length, "foto(s)");
 
   for (const p of pendientes) {
-    const url = await publicarFoto(sb, p.producto_id, p.imagen_path as string);
+    const url = await publicarFoto(sb, p.producto_id, p.imagen_path as string, prefijo);
     if (!url) continue;
 
     urls.set(p.producto_id, url);
     const { error } = await sb
-      .from("productos")
+      .from(tabla)
       .update({ imagen_web_url: url })
       .eq("id", p.producto_id);
 

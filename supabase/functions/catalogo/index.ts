@@ -50,17 +50,28 @@ type FilaCatalogo = {
   categoria_nombre: string | null;
 };
 
-/** Categoría del ERP -> categoría de la tienda. Si no coincide, va a la genérica. */
-const CATEGORIAS_WEB = new Set(["carteras", "bandoleras", "accesorios", "sets"]);
+/** Una fila de v_web_categorias. */
+type FilaCategoria = {
+  clave: string;
+  categoria_id: string;
+  nombre: string | null;
+  descripcion: string | null;
+  imagen_web_url: string | null;
+  imagen_path: string | null;
+  productos: number | null;
+  orden_web: number | null;
+};
 
+/**
+ * La clave con la que la tienda agrupa el producto. Sale del código de la
+ * categoría en el ERP, o de su nombre si no tiene código. Ya no hay una lista
+ * fija: si crean una categoría nueva, sus productos caen ahí solos.
+ */
 function categoriaWeb(codigo: string | null, nombre: string | null): string {
   const c = String(codigo ?? "").trim().toLowerCase();
-  if (CATEGORIAS_WEB.has(c)) return c;
+  if (c) return c;
   const n = String(nombre ?? "").trim().toLowerCase();
-  for (const cat of CATEGORIAS_WEB) {
-    if (n.includes(cat.slice(0, 6))) return cat;
-  }
-  return "accesorios";
+  return n ? n.replace(/\s+/g, "-") : "otros";
 }
 
 Deno.serve(async (req) => {
@@ -102,8 +113,49 @@ Deno.serve(async (req) => {
       imagen: nuevas.get(String(p.producto_id)) ?? p.imagen_web_url ?? "",
     }));
 
+    // --- Categorías ---------------------------------------------------------
+    // Se piden aparte porque son pocas y cambian poco. Si la vista todavía no
+    // existe, se devuelve lista vacía y el sitio usa las suyas.
+    let categorias: {
+      id: string;
+      nombre: string;
+      descripcion: string;
+      imagen: string;
+      productos: number;
+    }[] = [];
+
+    const { data: cats, error: errCats } = await sb
+      .from("v_web_categorias")
+      .select("clave, categoria_id, nombre, descripcion, imagen_web_url, imagen_path, productos, orden_web");
+
+    if (errCats) {
+      console.warn("[catalogo] sin categorías del ERP:", errCats.message);
+    } else if (cats?.length) {
+      const filasCat = cats as unknown as FilaCategoria[];
+
+      // Igual que con los productos: la foto se copia una vez al bucket público.
+      const nuevasCat = await publicarFotosPendientes(
+        sb,
+        filasCat.map((c) => ({
+          producto_id: c.categoria_id,
+          imagen_path: c.imagen_path,
+          imagen_web_url: c.imagen_web_url,
+        })),
+        "categorias_productos",
+        "categorias",
+      );
+
+      categorias = filasCat.map((c) => ({
+        id: String(c.clave),
+        nombre: String(c.nombre ?? ""),
+        descripcion: String(c.descripcion ?? "").trim(),
+        imagen: nuevasCat.get(String(c.categoria_id)) ?? c.imagen_web_url ?? "",
+        productos: Number(c.productos ?? 0),
+      }));
+    }
+
     return new Response(
-      JSON.stringify({ productos, actualizado: new Date().toISOString() }),
+      JSON.stringify({ productos, categorias, actualizado: new Date().toISOString() }),
       { headers: { ...cabeceras(origen), "Content-Type": "application/json" } },
     );
   } catch (e) {
