@@ -9,11 +9,11 @@
 --   3. web_confirmar_pedido -> descuenta el stock cuando el pago se confirma.
 --
 -- Sobre el descuento de stock: el ERP lleva los movimientos en
--- manastina.movimientos_inventario, y `productos.stock_actual` puede estar
--- mantenido por un trigger o por la aplicación. En vez de asumir cuál de las
--- dos, la función mide el stock antes y después de insertar el movimiento y
--- solo lo ajusta a mano si el trigger no lo hizo. Funciona en los dos casos
--- sin descontar de más.
+-- manastina.movimientos_inventario y actualiza productos.stock_actual desde la
+-- aplicación, no con un trigger (ver saveMovimiento en neura-erp-manastia,
+-- src/lib/inventario/storage.ts). Aun así la función mide el stock antes y
+-- después de insertar el movimiento y solo lo ajusta si hizo falta: si algún
+-- día agregan un trigger, esto sigue andando sin descontar dos veces.
 -- =============================================================================
 
 
@@ -115,15 +115,16 @@ begin
 
   perform manastina.web_vincular_items(p_pedido);
 
-  -- Qué palabra usa este ERP para una salida de stock. Se toma la que ya
-  -- venga usando; si la tabla está vacía, 'salida'.
+  -- El ERP usa ENTRADA / SALIDA / AJUSTE en mayúsculas (ver TipoMovimiento en
+  -- neura-erp-manastia, src/lib/inventario/types.ts). Se toma el valor que la
+  -- tabla ya venga usando, y si está vacía, 'SALIDA'.
   select tipo into v_tipo
     from manastina.movimientos_inventario
-   where lower(tipo) in ('salida', 'egreso', 'venta', 'out')
+   where upper(tipo) in ('SALIDA', 'EGRESO', 'OUT')
    order by created_at desc
    limit 1;
 
-  v_tipo := coalesce(v_tipo, 'salida');
+  v_tipo := coalesce(v_tipo, 'SALIDA');
 
   for v_item in
     select d.*, p.id as pid, p.nombre as pnombre, p.sku as psku,
@@ -150,7 +151,10 @@ begin
     ) values (
       v_pedido.empresa_id, v_item.pid, v_item.pnombre, v_item.psku,
       v_tipo, v_item.cantidad, coalesce(v_item.costo_promedio, 0),
-      'tienda-web', 'Pedido web #' || v_pedido.id_pedido_comercio, now()
+      -- origen solo admite compra | venta | ajuste_manual | inventario_inicial
+      -- (OrigenMovimiento en el ERP). Una venta web es una venta; que vino de
+      -- la tienda online queda dicho en la referencia.
+      'venta', 'Tienda web · pedido #' || v_pedido.id_pedido_comercio, now()
     );
 
     -- ¿El trigger del ERP ya bajó el stock? Si no, lo bajamos nosotros.
