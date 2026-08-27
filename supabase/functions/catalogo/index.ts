@@ -52,6 +52,17 @@ type FilaCatalogo = {
   destacado_web: boolean | null;
 };
 
+/** Una fila de v_web_colecciones. */
+type FilaColeccion = {
+  coleccion_id: string;
+  clave: string;
+  nombre: string | null;
+  frase: string | null;
+  imagen_web_url: string | null;
+  imagen_path: string | null;
+  productos: string[] | null;
+};
+
 /** Una fila de v_web_categorias. */
 type FilaCategoria = {
   clave: string;
@@ -159,8 +170,45 @@ Deno.serve(async (req) => {
       }));
     }
 
+    // --- Colección de portada -----------------------------------------------
+    // La que esté marcada como activa en el ERP. Si no hay ninguna, o la vista
+    // todavía no existe, el sitio muestra la colección que trae escrita.
+    let coleccion: {
+      id: string;
+      nombre: string;
+      frase: string;
+      imagen: string;
+      productos: string[];
+    } | null = null;
+
+    const { data: cols, error: errCols } = await sb
+      .from("v_web_colecciones")
+      .select("coleccion_id, clave, nombre, frase, imagen_web_url, imagen_path, productos")
+      .limit(1);
+
+    if (errCols) {
+      console.warn("[catalogo] sin colección del ERP:", errCols.message);
+    } else if (cols?.length) {
+      const c = (cols as unknown as FilaColeccion[])[0];
+
+      const nuevasCol = await publicarFotosPendientes(
+        sb,
+        [{ producto_id: c.coleccion_id, imagen_path: c.imagen_path, imagen_web_url: c.imagen_web_url }],
+        "colecciones_web",
+        "colecciones",
+      );
+
+      coleccion = {
+        id: String(c.clave),
+        nombre: String(c.nombre ?? ""),
+        frase: String(c.frase ?? "").trim(),
+        imagen: nuevasCol.get(String(c.coleccion_id)) ?? c.imagen_web_url ?? "",
+        productos: (c.productos ?? []).map((x) => String(x)),
+      };
+    }
+
     return new Response(
-      JSON.stringify({ productos, categorias, actualizado: new Date().toISOString() }),
+      JSON.stringify({ productos, categorias, coleccion, actualizado: new Date().toISOString() }),
       { headers: { ...cabeceras(origen), "Content-Type": "application/json" } },
     );
   } catch (e) {
