@@ -59,6 +59,7 @@
   var SUPABASE_URL = "https://api.neura.com.py";
   var SUPABASE_ANON = "";
   var WA = "595972897875";
+  var WA_VISIBLE = "+595 972 897875";   // número de ventas
 
   var contenido = document.getElementById("contenido");
   var hash = new URLSearchParams(location.search).get("hash") || "";
@@ -118,8 +119,12 @@
       '" target="_blank" rel="noopener">Escribirnos por WhatsApp</a>' +
       "</div>";
 
-    if (estado === "pagado" && d.modalidad !== "retiro") {
-      html += '<p class="nota">El costo del envío se abona al recibir el pedido.</p>';
+    if (estado === "pagado") {
+      html += '<p class="nota">' +
+        (d.modalidad === "retiro"
+          ? "Te avisamos por WhatsApp apenas tu pedido esté listo para retirar."
+          : "El costo del envío se lo abonás al repartidor cuando recibas el pedido.") +
+        "<br><br>Guardá nuestro número de ventas: <strong>" + WA_VISIBLE + "</strong></p>";
     }
 
     contenido.innerHTML = html;

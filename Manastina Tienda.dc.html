@@ -1918,8 +1918,8 @@ class Component extends DCLogic {
       fondoBotonPago: s.pagando ? "#8A6472" : "#4C0F2E",
       cursorBotonPago: s.pagando ? "wait" : "pointer",
       avisoEnvio: s.form.modalidad === "retiro"
-        ? "Retirás tu pedido en el local, sin costo."
-        : "El envío se abona al recibirlo.",
+        ? "Retirás tu pedido en el local, sin costo adicional."
+        : "El envío se lo abonás al repartidor cuando recibas el pedido.",
       pagarOnline: () => this.pagarConPagopar(),
       enviarPedido: e => {
         e.preventDefault();
