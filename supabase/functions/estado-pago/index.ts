@@ -97,6 +97,17 @@ Deno.serve(async (req) => {
               ...(nuevo === "pagado" ? { pagado_at: new Date().toISOString() } : {}),
             })
             .eq("id", pedido.id);
+
+          // El cliente volvió antes que el aviso de PagoPar: descontamos acá.
+          // Es idempotente, así que cuando llegue el webhook no repite.
+          if (nuevo === "pagado") {
+            const { error: errStock } = await sb.rpc("web_confirmar_pedido", {
+              p_pedido: pedido.id,
+            });
+            if (errStock) {
+              console.error("[estado-pago][stock] no se pudo descontar", errStock.message);
+            }
+          }
         }
       } catch (e) {
         // Si PagoPar no contesta, se queda en pendiente y el webhook lo resolverá.

@@ -124,6 +124,33 @@ Deno.serve(async (req) => {
         numero: actualizado.id_pedido_comercio,
         estado,
       });
+
+      // Pago confirmado: descontar el stock en el ERP.
+      // La función es idempotente, así que si PagoPar reintenta el aviso no
+      // se descuenta dos veces. Si falla, NO se rompe la respuesta a PagoPar:
+      // la plata ya se cobró y el pedido quedó marcado como pagado igual.
+      if (estado === "pagado") {
+        try {
+          const { data: r, error: errStock } = await sb.rpc("web_confirmar_pedido", {
+            p_pedido: actualizado.id,
+          });
+          if (errStock) {
+            console.error("[webhook][stock] no se pudo descontar", errStock.message);
+          } else if (r?.repetido) {
+            console.info("[webhook][stock] ya estaba descontado", { pedido_id: actualizado.id });
+          } else {
+            console.info("[webhook][stock] descontado", r);
+            if (r?.lineas_sin_producto > 0) {
+              console.warn(
+                "[webhook][stock] hay lineas sin producto en el ERP; revisar a mano",
+                r.faltantes,
+              );
+            }
+          }
+        } catch (e) {
+          console.error("[webhook][stock] excepción", e instanceof Error ? e.message : e);
+        }
+      }
     }
 
     // --- Respuesta: PagoPar espera de vuelta su propio `resultado` ----------

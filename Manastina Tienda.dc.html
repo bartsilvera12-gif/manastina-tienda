@@ -1349,7 +1349,10 @@ class Component extends DCLogic {
 
   componentDidMount() {
     const cargar = () => {
-      if (window.MANASTINA_DATOS) this.setState({ datos: window.MANASTINA_DATOS });
+      if (window.MANASTINA_DATOS) {
+        this.setState({ datos: window.MANASTINA_DATOS });
+        this.sincronizarStock();
+      }
       else setTimeout(cargar, 60);
     };
     cargar();
@@ -1438,7 +1441,13 @@ class Component extends DCLogic {
     this.setState(Object.assign({ ruta, menuAbierto: false, buscarAbierto: false, coleccionesAbierto: false, filtrosAbiertos: false, pError: "" }, extra || {}));
     setTimeout(() => window.scrollTo({ top: 0, behavior: "auto" }), 0);
   }
-  productos() { return (this.state.datos && this.state.datos.productos) || []; }
+  /* Todo lo cargado, incluidos los productos ocultos. Solo se usa para
+     resolver un link directo (?p=...), no para listar la tienda. */
+  todosLosProductos() { return (this.state.datos && this.state.datos.productos) || []; }
+
+  /* Lo que se muestra al público. Los marcados `oculto` quedan afuera de la
+     tienda, del buscador, de las novedades y de los relacionados. */
+  productos() { return this.todosLosProductos().filter(p => !p.oculto); }
   topePrecio() {
     const ps = this.productos();
     if (!ps.length) return 500000;
@@ -1521,6 +1530,70 @@ class Component extends DCLogic {
     m += "Quedo pendiente de la confirmación y del costo de envío. Gracias.";
     return m;
   }
+  /* Trae precio y stock reales del ERP y los pisa sobre el catálogo estático.
+     Las fotos, descripciones y colores siguen viniendo del archivo; de acá
+     solo viene lo que cambia solo: cuánto sale y cuánto queda.
+
+     Si falla, no pasa nada: la tienda sigue con los valores del archivo. */
+  sincronizarStock() {
+    if (!PAGO_ACTIVO) return;
+
+    fetch(SUPABASE_URL + "/functions/v1/catalogo", {
+      headers: { apikey: SUPABASE_ANON, Authorization: "Bearer " + SUPABASE_ANON }
+    })
+      .then(r => r.ok ? r.json() : null)
+      .then(d => {
+        const lista = d && d.productos;
+        if (!lista || !lista.length) return;
+
+        const porId = {};
+        lista.forEach(p => { porId[p.id] = p; });
+
+        const datos = this.state.datos;
+        if (!datos) return;
+
+        const productos = datos.productos.map(p => {
+          const real = porId[p.id];
+          if (!real) return p;
+          return Object.assign({}, p, {
+            precio: typeof real.precio === "number" && real.precio > 0 ? real.precio : p.precio,
+            stock: typeof real.stock === "number" ? real.stock : p.stock
+          });
+        });
+
+        this.setState({ datos: Object.assign({}, datos, { productos }) });
+        this.limpiarCarritoSinStock(porId);
+      })
+      .catch(() => {});
+  }
+
+  /* Si algo del carrito se agotó mientras el cliente lo tenía guardado,
+     se ajusta antes de que llegue a pagar y se lleve una sorpresa. */
+  limpiarCarritoSinStock(porId) {
+    const carrito = this.state.carrito;
+    if (!carrito.length) return;
+
+    let cambio = false;
+    const ajustado = [];
+
+    carrito.forEach(i => {
+      const real = porId[i.id];
+      if (!real) { ajustado.push(i); return; }
+      if (real.stock <= 0) { cambio = true; return; }
+      if (i.cantidad > real.stock) {
+        cambio = true;
+        ajustado.push(Object.assign({}, i, { cantidad: real.stock, stock: real.stock }));
+        return;
+      }
+      ajustado.push(Object.assign({}, i, { stock: real.stock }));
+    });
+
+    if (cambio) {
+      this.guardar(ajustado);
+      this.avisar("Ajustamos tu carrito: cambió la disponibilidad de algún producto");
+    }
+  }
+
   setF(k, v) { this.setState({ form: Object.assign({}, this.state.form, { [k]: v }) }); }
 
   /* Cómo queda el envío según ciudad y modalidad. Es solo para mostrar:

@@ -93,30 +93,96 @@ function json(cuerpo: unknown, status: number, origen: string | null) {
 }
 
 // -----------------------------------------------------------------------------
-// Catálogo: se relee del sitio publicado para validar precios del lado servidor.
-// Se cachea en memoria un rato para no pedirlo en cada compra.
+// Catálogo
 // -----------------------------------------------------------------------------
-type ProductoCatalogo = { id: string; nombre: string; precio: number; stock: number };
+// La fuente de verdad es el ERP: manastina.productos, vía v_web_catalogo.
+// Precio y stock salen de ahí, nunca del navegador.
+//
+// Si el ERP todavía no tiene los productos cargados (o la vista no existe),
+// se cae al catalogo.json publicado, para que la tienda no deje de vender.
+// -----------------------------------------------------------------------------
+type ProductoCatalogo = {
+  id: string;
+  nombre: string;
+  precio: number;
+  stock: number;
+  producto_id?: string | null;
+  activo?: boolean;
+};
+
+/** Cliente con la service_role, apuntando al schema del ERP. */
+function erp() {
+  return createClient(
+    Deno.env.get("SUPABASE_URL")!,
+    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+    { db: { schema: SCHEMA } },
+  );
+}
+type Erp = ReturnType<typeof erp>;
+
+/** El stock se relee seguido: es lo que evita vender algo que ya no está. */
+const CACHE_MS = 30 * 1000;
 
 let catalogoCache: { datos: Map<string, ProductoCatalogo>; vence: number } | null = null;
 
-async function traerCatalogo(): Promise<Map<string, ProductoCatalogo>> {
-  const ahora = Date.now();
-  if (catalogoCache && catalogoCache.vence > ahora) return catalogoCache.datos;
+async function catalogoDesdeErp(
+  sb: Erp,
+): Promise<Map<string, ProductoCatalogo> | null> {
+  const { data, error } = await sb
+    .from("v_web_catalogo")
+    .select("codigo_web, producto_id, nombre, precio, stock, activo");
 
+  if (error) {
+    console.warn("[crear-pago] no se pudo leer el catálogo del ERP:", error.message);
+    return null;
+  }
+  if (!data || data.length === 0) return null;
+
+  const mapa = new Map<string, ProductoCatalogo>();
+  for (const p of data) {
+    if (!p?.codigo_web) continue;
+    mapa.set(String(p.codigo_web), {
+      id: String(p.codigo_web),
+      nombre: String(p.nombre ?? ""),
+      precio: Number(p.precio ?? 0),
+      stock: Number(p.stock ?? 0),
+      producto_id: p.producto_id ? String(p.producto_id) : null,
+      activo: p.activo !== false,
+    });
+  }
+  return mapa;
+}
+
+async function catalogoDesdeSitio(): Promise<Map<string, ProductoCatalogo>> {
   const res = await fetch(`${SITIO_URL}/catalogo.json`, { headers: { Accept: "application/json" } });
   if (!res.ok) throw new Error(`No se pudo leer el catálogo (HTTP ${res.status})`);
   const lista = (await res.json()) as ProductoCatalogo[];
   if (!Array.isArray(lista) || lista.length === 0) {
     throw new Error("El catálogo publicado está vacío");
   }
-
   const mapa = new Map<string, ProductoCatalogo>();
   for (const p of lista) {
-    if (p && p.id) mapa.set(String(p.id), p);
+    if (p && p.id) mapa.set(String(p.id), { ...p, activo: true });
   }
-  catalogoCache = { datos: mapa, vence: ahora + 5 * 60 * 1000 };
   return mapa;
+}
+
+async function traerCatalogo(
+  sb: Erp,
+): Promise<{ datos: Map<string, ProductoCatalogo>; fuente: "erp" | "sitio" }> {
+  const ahora = Date.now();
+  if (catalogoCache && catalogoCache.vence > ahora) {
+    return { datos: catalogoCache.datos, fuente: "erp" };
+  }
+
+  const delErp = await catalogoDesdeErp(sb);
+  if (delErp) {
+    catalogoCache = { datos: delErp, vence: ahora + CACHE_MS };
+    return { datos: delErp, fuente: "erp" };
+  }
+
+  console.warn("[crear-pago] ERP sin catálogo; se usa catalogo.json del sitio");
+  return { datos: await catalogoDesdeSitio(), fuente: "sitio" };
 }
 
 // -----------------------------------------------------------------------------
@@ -223,9 +289,13 @@ Deno.serve(async (req) => {
     if (entrada.length === 0) return json({ error: "El carrito está vacío." }, 400, origen);
     if (entrada.length > 50) return json({ error: "Demasiados ítems." }, 400, origen);
 
-    const catalogo = await traerCatalogo();
+    const sb = erp();
+
+    const { datos: catalogo, fuente } = await traerCatalogo(sb);
+
     const lineas: {
       producto_codigo: string;
+      producto_id: string | null;
       nombre: string;
       color: string;
       cantidad: number;
@@ -233,23 +303,56 @@ Deno.serve(async (req) => {
       total_linea: number;
     }[] = [];
 
+    // Un mismo producto puede venir en varias líneas (distinto color): el stock
+    // se controla sobre el total pedido, no línea por línea.
+    const pedidoPorProducto = new Map<string, number>();
+    for (const it of entrada) {
+      const codigo = texto(it?.id, 40);
+      const cant = Math.floor(Number(it?.cantidad) || 0);
+      pedidoPorProducto.set(codigo, (pedidoPorProducto.get(codigo) ?? 0) + cant);
+    }
+
     for (const it of entrada) {
       const codigo = texto(it?.id, 40);
       const producto = catalogo.get(codigo);
-      if (!producto) {
+      if (!producto || producto.activo === false) {
         return json({ error: `El producto "${codigo}" ya no está disponible.` }, 409, origen);
       }
       const cantidad = Math.floor(Number(it?.cantidad) || 0);
       if (cantidad < 1 || cantidad > 99) {
         return json({ error: `Cantidad inválida para ${producto.nombre}.` }, 400, origen);
       }
+
+      // Stock real del ERP. Se mira una sola vez por producto, sumando todas
+      // las líneas que lo incluyan.
+      const totalPedido = pedidoPorProducto.get(codigo) ?? cantidad;
+      const disponible = Number(producto.stock ?? 0);
+      if (disponible <= 0) {
+        return json({ error: `${producto.nombre} está sin stock.` }, 409, origen);
+      }
+      if (totalPedido > disponible) {
+        return json(
+          {
+            error: disponible === 1
+              ? `Queda una sola unidad de ${producto.nombre}.`
+              : `Quedan ${disponible} unidades de ${producto.nombre}.`,
+            codigo,
+            disponible,
+          },
+          409,
+          origen,
+        );
+      }
+
       // El precio SIEMPRE sale del catálogo, nunca del navegador.
       const precio = Math.round(Number(producto.precio) || 0);
       if (precio <= 0) {
         return json({ error: `El producto ${producto.nombre} no tiene precio.` }, 409, origen);
       }
+
       lineas.push({
         producto_codigo: codigo,
+        producto_id: producto.producto_id ?? null,
         nombre: producto.nombre,
         color: texto(it?.color, 60),
         cantidad,
@@ -266,12 +369,6 @@ Deno.serve(async (req) => {
     if (total <= 0) return json({ error: "Total inválido." }, 400, origen);
 
     // --- Guardar el pedido antes de llamar a PagoPar ------------------------
-    const sb = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
-      { db: { schema: SCHEMA } },
-    );
-
     const idPedidoComercio = nuevoIdPedidoComercio();
 
     const { data: pedido, error: errPedido } = await sb
@@ -396,6 +493,7 @@ Deno.serve(async (req) => {
       id_pedido_comercio: idPedidoComercio,
       total,
       hash_prefijo: hash.slice(0, 8),
+      catalogo: fuente,
     });
 
     return json(
