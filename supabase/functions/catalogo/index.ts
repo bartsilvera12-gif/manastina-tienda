@@ -28,9 +28,10 @@ const SCHEMA = env("SUPABASE_SCHEMA", "manastina");
 function cabeceras(origen: string | null) {
   return {
     ...cors(origen, SITIO_URL, "GET, OPTIONS"),
-    // Medio minuto: no golpea la base en cada visita y un agotado se refleja
-    // enseguida.
-    "Cache-Control": "public, max-age=30",
+    // `private`: solo el navegador de cada visitante puede guardarla. Con
+    // `public`, Cloudflare la cachearia y les serviria a todos el mismo stock
+    // durante minutos, mostrando disponible algo ya agotado.
+    "Cache-Control": "private, max-age=30",
   };
 }
 
