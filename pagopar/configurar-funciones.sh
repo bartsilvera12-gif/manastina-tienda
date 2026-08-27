@@ -98,7 +98,7 @@ fi
 azul "3. Validando el docker-compose.yml"
 
 cd "$DOCKER_DIR"
-if ! docker compose config >/dev/null 2>&1; then
+if ! docker compose config </dev/null >/dev/null 2>&1; then
   error "Quedó mal formado. Restauro la copia y no aplico nada."
   [ -f "$COMPOSE.bak-$SELLO" ] && cp -p "$COMPOSE.bak-$SELLO" "$COMPOSE"
   docker compose config 2>&1 | head -20
@@ -109,18 +109,20 @@ ok "Archivo válido"
 # --- 4. Aplicar --------------------------------------------------------------
 azul "4. Levantando el contenedor"
 
-docker compose up -d functions
+docker compose up -d functions </dev/null
 ok "Contenedor levantado"
 sleep 4
 
 # --- 5. Comprobar ------------------------------------------------------------
 azul "5. Comprobando"
 
-# Sin tuberías a propósito: `head` cerraba el caño antes de tiempo y, con
-# pipefail, eso cortaba el script entero sin imprimir nada.
+# El </dev/null es imprescindible: este script suele correrse con
+# `curl | bash`, asi que bash lo va leyendo de la entrada estandar. Sin
+# cerrarsela, `docker compose exec -T` se come el resto del script y todo
+# termina en silencio a la mitad.
 leer_del_contenedor() {
   local v
-  v=$(docker compose exec -T functions printenv "$1" 2>/dev/null || true)
+  v=$(docker compose exec -T functions printenv "$1" </dev/null 2>/dev/null || true)
   v=${v%%$'\n'*}          # primera línea
   printf '%s' "${v%$'\r'}" # sin el retorno de carro de Windows
 }

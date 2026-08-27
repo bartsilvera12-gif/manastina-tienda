@@ -19,6 +19,9 @@
 # Las variables de entorno NO se cargan acá: van en el .env de Docker.
 # El script te dice cuáles faltan antes de reiniciar.
 # =============================================================================
+# Los comandos de docker llevan </dev/null porque este script se corre con
+# `curl | bash`: bash lee el script de la entrada estandar, y cualquier comando
+# que tambien la lea se come lo que falta ejecutar.
 set -euo pipefail
 
 DOCKER_DIR="${DOCKER_DIR:-/root/supabase/docker}"
@@ -153,13 +156,13 @@ fi
 azul "6. Reiniciando el contenedor de funciones"
 
 cd "$DOCKER_DIR"
-if docker compose ps functions >/dev/null 2>&1; then
-  docker compose up -d functions
+if docker compose ps functions </dev/null >/dev/null 2>&1; then
+  docker compose up -d functions </dev/null
   ok "Contenedor reiniciado"
 else
   aviso "No encontré un servicio llamado 'functions'."
   echo "     Servicios disponibles:"
-  docker compose ps --services 2>/dev/null | sed 's/^/       /'
+  docker compose ps --services </dev/null 2>/dev/null | sed 's/^/       /'
 fi
 
 azul "Listo"
