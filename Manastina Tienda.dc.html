@@ -1530,11 +1530,15 @@ class Component extends DCLogic {
     m += "Quedo pendiente de la confirmación y del costo de envío. Gracias.";
     return m;
   }
-  /* Trae precio y stock reales del ERP y los pisa sobre el catálogo estático.
-     Las fotos, descripciones y colores siguen viniendo del archivo; de acá
-     solo viene lo que cambia solo: cuánto sale y cuánto queda.
+  /* Trae del ERP los productos publicados y arma con eso el catálogo.
 
-     Si falla, no pasa nada: la tienda sigue con los valores del archivo. */
+     Manda el ERP: lo que esté marcado como visible aparece, lo que no, no.
+     El archivo datos-manastina.js queda como capa de enriquecimiento — le
+     suma las fotos por ángulo, los colores y la marca a los productos que
+     ya tenía cargados.
+
+     Si la consulta falla o vuelve vacía, no se toca nada: la tienda sigue
+     funcionando con el archivo, como antes. */
   sincronizarStock() {
     if (!PAGO_ACTIVO) return;
 
@@ -1543,28 +1547,64 @@ class Component extends DCLogic {
     })
       .then(r => r.ok ? r.json() : null)
       .then(d => {
-        const lista = d && d.productos;
-        if (!lista || !lista.length) return;
-
-        const porId = {};
-        lista.forEach(p => { porId[p.id] = p; });
+        const delErp = d && d.productos;
+        if (!delErp || !delErp.length) return;
 
         const datos = this.state.datos;
         if (!datos) return;
 
-        const productos = datos.productos.map(p => {
-          const real = porId[p.id];
-          if (!real) return p;
-          return Object.assign({}, p, {
-            precio: typeof real.precio === "number" && real.precio > 0 ? real.precio : p.precio,
-            stock: typeof real.stock === "number" ? real.stock : p.stock
-          });
-        });
+        const ficha = {};
+        datos.productos.forEach(p => { ficha[p.id] = p; });
+
+        const productos = delErp.map(real => this.fusionarProducto(ficha[real.id], real));
+
+        const porId = {};
+        delErp.forEach(p => { porId[p.id] = p; });
 
         this.setState({ datos: Object.assign({}, datos, { productos }) });
         this.limpiarCarritoSinStock(porId);
       })
       .catch(() => {});
+  }
+
+  /* Combina lo que sabe el ERP con lo que hay cargado en el archivo.
+     `base` puede no existir: es un producto nuevo, cargado solo en el ERP. */
+  fusionarProducto(base, real) {
+    const precio = typeof real.precio === "number" && real.precio > 0
+      ? real.precio
+      : (base ? base.precio : 0);
+    const stock = typeof real.stock === "number" ? real.stock : (base ? base.stock : 0);
+
+    if (base) {
+      /* Ya estaba en la web: las fotos y los colores del archivo son mejores
+         que la única foto del ERP, así que se respetan. */
+      return Object.assign({}, base, {
+        nombre: real.nombre || base.nombre,
+        precio: precio,
+        stock: stock,
+        descripcion: base.descripcion || real.descripcion || "",
+        imagenes: (base.imagenes && base.imagenes.length)
+          ? base.imagenes
+          : (real.imagen ? [real.imagen] : [])
+      });
+    }
+
+    /* Producto nuevo: sale con lo que tenga el ERP. Sin colores cargados
+       todavía, así que se le pone una variante única para que el carrito
+       y el mensaje de WhatsApp sigan funcionando igual. */
+    return {
+      id: real.id,
+      nombre: real.nombre,
+      marca: "",
+      categoria: real.categoria || "accesorios",
+      precio: precio,
+      stock: stock,
+      nuevo: true,
+      seleccion: false,
+      descripcion: real.descripcion || "",
+      colores: [{ nombre: "Único", hex: "#4C0F2E" }],
+      imagenes: real.imagen ? [real.imagen] : []
+    };
   }
 
   /* Si algo del carrito se agotó mientras el cliente lo tenía guardado,
@@ -1755,6 +1795,9 @@ class Component extends DCLogic {
 
     const prod = s.ruta.n === "producto" ? prods.find(p => p.id === s.ruta.id) : null;
     const colores = prod ? prod.colores : [];
+    /* Con una sola variante no tiene sentido obligar a elegirla. Importa sobre
+       todo al entrar por link directo (?p=...), donde pColor llega sin definir. */
+    const colorSel = s.pColor || (colores.length === 1 ? colores[0].nombre : null);
     const prodFotos = (prod && prod.imagenes) ? prod.imagenes : [];
     const relacionados = prod ? prods.filter(p => p.categoria === prod.categoria && p.id !== prod.id).slice(0, 4).map(p => this.prep(p)) : [];
 
@@ -2000,8 +2043,8 @@ class Component extends DCLogic {
       prodEstado: prod ? (prod.stock <= 0 ? "Agotado" : (prod.stock <= 3 ? "Últimas unidades" : "Disponible")) : "",
       prodEstadoColor: prod && prod.stock <= 0 ? "#9F507D" : "#4C0F2E",
       textoStock: prod ? (prod.stock > 0 ? prod.stock + " unidades disponibles" : "Sin stock por ahora") : "",
-      prodColores: colores.map(c => ({ nombre: c.nombre, hex: c.hex, borde: s.pColor === c.nombre ? "#4C0F2E" : "rgba(51,24,33,.25)", elegir: () => this.setState({ pColor: c.nombre, pError: "" }) })),
-      colorElegidoNombre: s.pColor || "elegí una opción",
+      prodColores: colores.map(c => ({ nombre: c.nombre, hex: c.hex, borde: colorSel === c.nombre ? "#4C0F2E" : "rgba(51,24,33,.25)", elegir: () => this.setState({ pColor: c.nombre, pError: "" }) })),
+      colorElegidoNombre: colorSel || "elegí una opción",
       cantidad: s.pCant, imagenActual: s.pImg,
       prodFotoActual: prodFotos.length ? (prodFotos[Math.min(s.pImg, prodFotos.length) - 1] || prodFotos[0]) : "",
       prodFotosLista: prodFotos.map(url => ({ url })),
@@ -2018,8 +2061,8 @@ class Component extends DCLogic {
       agregarDesdeFicha: () => {
         if (!prod) return;
         if (prod.stock <= 0) { this.setState({ pError: "Esta pieza está agotada. Consultanos por WhatsApp para reponerla." }); return; }
-        if (!s.pColor) { this.setState({ pError: "Elegí un color antes de agregar la pieza al carrito." }); return; }
-        this.agregar(prod, s.pColor, s.pCant);
+        if (!colorSel) { this.setState({ pError: "Elegí un color antes de agregar la pieza al carrito." }); return; }
+        this.agregar(prod, colorSel, s.pCant);
         this.setState({ pError: "", carritoAbierto: true });
       },
       waProducto: prod ? "https://wa.me/" + WA + "?text=" + encodeURIComponent("Hola, Manastina. Quiero consultar por " + prod.nombre + " (" + fmt(prod.precio) + ").") : "https://wa.me/" + WA,
