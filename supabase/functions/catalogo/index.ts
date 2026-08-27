@@ -18,7 +18,8 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.4";
 import { publicarFotosPendientes } from "../_shared/fotos.ts";
 
-const env = (k: string, def = "") => (Deno.env.get(k) ?? def).trim();
+const env = (k: string, def = "") =>
+  (Deno.env.get("MANASTINA_" + k) ?? Deno.env.get(k) ?? def).trim();
 
 const SITIO_URL = env("SITIO_URL", "https://manastina.com").replace(/\/+$/, "");
 const SCHEMA = env("SUPABASE_SCHEMA", "manastina");

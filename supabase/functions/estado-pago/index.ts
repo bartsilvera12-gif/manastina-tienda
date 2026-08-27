@@ -18,7 +18,8 @@ import {
   primerResultado,
 } from "../_shared/pagopar.ts";
 
-const env = (k: string, def = "") => (Deno.env.get(k) ?? def).trim();
+const env = (k: string, def = "") =>
+  (Deno.env.get("MANASTINA_" + k) ?? Deno.env.get(k) ?? def).trim();
 
 const PAGOPAR_PUBLIC_KEY = limpiarClave(env("PAGOPAR_PUBLIC_KEY"));
 const PAGOPAR_PRIVATE_KEY = limpiarClave(env("PAGOPAR_PRIVATE_KEY"));

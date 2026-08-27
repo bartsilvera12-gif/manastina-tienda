@@ -19,8 +19,13 @@ import {
   tokenWebhookValido,
 } from "../_shared/pagopar.ts";
 
-const PAGOPAR_PRIVATE_KEY = limpiarClave(Deno.env.get("PAGOPAR_PRIVATE_KEY") ?? "");
-const SCHEMA = (Deno.env.get("SUPABASE_SCHEMA") ?? "manastina").trim();
+// Prefijo MANASTINA_ para no chocar con las variables de otros clientes en el
+// .env compartido del servidor. Si no está prefijada, se usa el nombre pelado.
+const env = (k: string, def = "") =>
+  (Deno.env.get("MANASTINA_" + k) ?? Deno.env.get(k) ?? def).trim();
+
+const PAGOPAR_PRIVATE_KEY = limpiarClave(env("PAGOPAR_PRIVATE_KEY"));
+const SCHEMA = env("SUPABASE_SCHEMA", "manastina");
 
 /** PagoPar manda JSON, pero algunos avisos llegan como formulario. */
 async function leerCuerpo(req: Request): Promise<Record<string, unknown>> {
