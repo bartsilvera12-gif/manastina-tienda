@@ -58,7 +58,9 @@ Deno.serve(async (req) => {
 
     const { data: pedido, error } = await sb
       .from("web_pedidos")
-      .select("id, id_pedido_comercio, estado_pago, total, modalidad, cliente_nombre")
+      .select(
+        "id, id_pedido_comercio, estado_pago, total, modalidad, cliente_nombre, consultado_at",
+      )
       .eq("pagopar_hash", hash)
       .maybeSingle();
 
@@ -67,39 +69,51 @@ Deno.serve(async (req) => {
 
     let estado = pedido.estado_pago as string;
 
-    // El cliente puede volver antes de que llegue el aviso de PagoPar.
-    // En ese caso preguntamos directo y guardamos lo que responda.
-    if (estado === "pendiente" && PAGOPAR_PUBLIC_KEY && PAGOPAR_PRIVATE_KEY) {
+    // Se le pregunta a PagoPar una vez por pedido, incluso si el aviso ya
+    // llegó. Confirmar contra el origen es más sólido que fiarse solo del
+    // aviso, y es además lo que PagoPar exige ver para habilitar producción.
+    //
+    // La marca `consultado_at` evita repetir la consulta si el cliente
+    // recarga la página varias veces.
+    const yaConsultado = pedido.consultado_at != null;
+    const hayClaves = Boolean(PAGOPAR_PUBLIC_KEY && PAGOPAR_PRIVATE_KEY);
+
+    if (!yaConsultado && hayClaves) {
       try {
         const pp = await consultarPedido(hash, {
           publica: PAGOPAR_PUBLIC_KEY,
           privada: PAGOPAR_PRIVATE_KEY,
         });
         const nuevo = estadoDesdePagopar(primerResultado(pp.resultado), pp);
-        if (nuevo !== "pendiente") {
-          estado = nuevo;
-          await sb
-            .from("web_pedidos")
-            .update({
-              estado_pago: nuevo,
-              pagopar_respuesta: pp,
-              ...(nuevo === "pagado" ? { pagado_at: new Date().toISOString() } : {}),
-            })
-            .eq("id", pedido.id);
 
-          // El cliente volvió antes que el aviso de PagoPar: descontamos acá.
-          // Es idempotente, así que cuando llegue el webhook no repite.
-          if (nuevo === "pagado") {
-            const { error: errStock } = await sb.rpc("web_confirmar_pedido", {
-              p_pedido: pedido.id,
-            });
-            if (errStock) {
-              console.error("[estado-pago][stock] no se pudo descontar", errStock.message);
-            }
+        const cambios: Record<string, unknown> = {
+          consultado_at: new Date().toISOString(),
+        };
+
+        // Solo se pisa el estado si PagoPar dice algo concreto. Si contesta
+        // "pendiente" cuando el aviso ya lo dio por pagado, manda el aviso:
+        // viene firmado y es posterior.
+        if (nuevo !== "pendiente" && nuevo !== estado) {
+          estado = nuevo;
+          cambios.estado_pago = nuevo;
+          cambios.pagopar_respuesta = pp;
+          if (nuevo === "pagado") cambios.pagado_at = new Date().toISOString();
+        }
+
+        await sb.from("web_pedidos").update(cambios).eq("id", pedido.id);
+
+        // Si acá nos enteramos del pago antes que el aviso, se cierra el
+        // pedido igual. Es idempotente: cuando llegue el aviso no repite.
+        if (estado === "pagado") {
+          const { error: errVenta } = await sb.rpc("web_confirmar_pedido", {
+            p_pedido: pedido.id,
+          });
+          if (errVenta) {
+            console.error("[estado-pago] no se pudo cerrar el pedido:", errVenta.message);
           }
         }
       } catch (e) {
-        // Si PagoPar no contesta, se queda en pendiente y el webhook lo resolverá.
+        // Si PagoPar no contesta, queda como estaba y el aviso lo resolverá.
         console.warn("[estado-pago] consulta a PagoPar falló:", e instanceof Error ? e.message : e);
       }
     }
