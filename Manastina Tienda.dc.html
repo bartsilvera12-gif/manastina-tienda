@@ -1698,8 +1698,13 @@ class Component extends DCLogic {
     const f = this.state.form, ec = {};
     if (!f.nombre.trim()) ec.nombre = 1;
     if (f.telefono.replace(/\D/g, "").length < 7) ec.telefono = 1;
-    if (!f.ciudad.trim()) ec.ciudad = 1;
-    if (f.modalidad === "envio" && !f.direccion.trim()) ec.direccion = 1;
+    /* Ciudad y dirección solo cuentan si el pedido se envía. Con retiro esos
+       campos ni siquiera se muestran, así que exigirlos dejaba el formulario
+       trabado pidiendo algo que no estaba a la vista. */
+    if (f.modalidad === "envio") {
+      if (!f.ciudad.trim()) ec.ciudad = 1;
+      if (!f.direccion.trim()) ec.direccion = 1;
+    }
     if (paraPagar) {
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(f.email.trim())) ec.email = 1;
       if (f.documento.replace(/\D/g, "").length < 5) ec.documento = 1;

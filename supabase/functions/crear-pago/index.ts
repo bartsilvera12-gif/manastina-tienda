@@ -23,6 +23,9 @@ import {
 } from "../_shared/pagopar.ts";
 import { ciudadPorClave, esZonaACoordinar } from "../_shared/ciudades.ts";
 
+/** Ciudad del local. Se usa cuando el cliente retira y no eligio ninguna. */
+const CIUDAD_LOCAL = "capiata";
+
 // -----------------------------------------------------------------------------
 // Configuración (viene de los secretos de Supabase)
 // -----------------------------------------------------------------------------
@@ -278,7 +281,12 @@ Deno.serve(async (req) => {
     if (!emailValido(email)) faltantes.push("email");
     if (telefono.length < 6) faltantes.push("teléfono");
     if (documento.length < 5) faltantes.push("cédula");
-    const ciudad = ciudadPorClave(ciudadClave);
+    // En retiro no se pide ciudad: el pedido se busca por el local. Igual hay
+    // que mandarle una a PagoPar, así que va la del comercio.
+    const ciudad = modalidad === "retiro"
+      ? (ciudadPorClave(ciudadClave) ?? ciudadPorClave(CIUDAD_LOCAL))
+      : ciudadPorClave(ciudadClave);
+
     if (!ciudad) faltantes.push("ciudad");
     if (modalidad === "envio" && direccion.length < 5) faltantes.push("dirección");
     if (faltantes.length) {
@@ -381,7 +389,7 @@ Deno.serve(async (req) => {
         cliente_email: email,
         cliente_telefono: telefono,
         cliente_documento: documento,
-        ciudad_codigo: ciudadClave,
+        ciudad_codigo: ciudad!.clave,
         ciudad_nombre: ciudad!.nombre,
         ciudad_hub_pagopar: ciudad!.hub,
         envio_estimado: env2.estimado,
