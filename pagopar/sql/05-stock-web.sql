@@ -30,7 +30,11 @@ comment on column manastina.web_pedidos.stock_descontado_at is
 -- -----------------------------------------------------------------------------
 -- 1) Catálogo real, para que la web muestre precio y stock del ERP
 -- -----------------------------------------------------------------------------
-create or replace view manastina.v_web_catalogo as
+-- Se borra antes de crearla: `create or replace view` no permite quitar
+-- columnas, y esta vista cambia de forma entre un script y otro.
+drop view if exists manastina.v_web_catalogo;
+
+create view manastina.v_web_catalogo as
 select
   lower(replace(p.sku, 'MAN-', ''))  as codigo_web,   -- 'MAN-C01' -> 'c01'
   p.id                               as producto_id,

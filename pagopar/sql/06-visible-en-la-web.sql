@@ -59,7 +59,11 @@ update manastina.productos
 --   - 'MAN-C01' -> 'c01', para no romper los que ya existían.
 --   - cualquier otro sku -> el sku en minúsculas.
 -- -----------------------------------------------------------------------------
-create or replace view manastina.v_web_catalogo as
+-- Se borra antes de crearla: `create or replace view` no permite quitar
+-- columnas, y esta vista cambia de forma entre un script y otro.
+drop view if exists manastina.v_web_catalogo;
+
+create view manastina.v_web_catalogo as
 select
   case
     when p.sku like 'MAN-%' then lower(replace(p.sku, 'MAN-', ''))
