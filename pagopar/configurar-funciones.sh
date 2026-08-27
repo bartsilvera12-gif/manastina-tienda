@@ -146,10 +146,10 @@ RETORNO=$(leer_del_contenedor MANASTINA_PAGOPAR_RETURN_URL)
 echo "     ${RETORNO:-(vacía)}"
 
 case "$RETORNO" in
-  # El panel de PagoPar documenta `$hash`; algunas integraciones usan
-  # `${hash}`. Las dos son válidas: lo que importa es que Docker no se lo
-  # haya comido y siga estando el marcador.
-  *'$hash'* | *'{hash}'*)
+  # PagoPar exige el marcador CON paréntesis: ($hash). Si no lo encuentra tal
+  # cual, rechaza la URL al guardarla. Se aceptan también las otras formas por
+  # si algún día cambian el formato.
+  *'($hash)'* | *'$hash'* | *'{hash}'*)
     ok "El marcador de PagoPar llegó entero" ;;
   *hash=)
     error "El marcador se perdió: PagoPar no va a poder marcar el pedido."
