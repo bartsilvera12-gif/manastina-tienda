@@ -1190,23 +1190,37 @@ input,select,textarea{font-family:inherit;color:#331821}
           <label for="o-ciudad" style="display:block;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#9F507D;font-weight:600;margin-bottom:8px">Ciudad</label>
           <select id="o-ciudad" value="{{ fCiudad }}" onChange="{{ onFCiudad }}" style="width:100%;height:50px;padding:0 12px;border:1px solid {{ bCiudad }};background:transparent;border-radius:2px;font-size:14px">
             <option value="">Elegí tu ciudad</option>
-            <option value="1">Asunción</option>
-            <option value="5">Capiatá</option>
-            <option value="3">San Lorenzo</option>
-            <option value="4">Luque</option>
-            <option value="6">Lambaré</option>
-            <option value="7">Fernando de la Mora</option>
-            <option value="8">Limpio</option>
-            <option value="9">Ñemby</option>
-            <option value="15">Itauguá</option>
-            <option value="2">Ciudad del Este</option>
-            <option value="10">Encarnación</option>
-            <option value="11">Pedro Juan Caballero</option>
-            <option value="12">Coronel Oviedo</option>
-            <option value="13">Villarrica</option>
-            <option value="14">Caaguazú</option>
+            <option value="capiata">Capiatá — Gs. 10.000</option>
+            <option value="san-lorenzo">San Lorenzo — Gs. 10.000</option>
+            <option value="j-augusto-saldivar">J. Augusto Saldívar — Gs. 10.000</option>
+            <option value="nemby">Ñemby — Gs. 15.000</option>
+            <option value="ypane">Ypané — Gs. 15.000</option>
+            <option value="asuncion">Asunción — Gs. 20.000</option>
+            <option value="fernando-de-la-mora">Fernando de la Mora — Gs. 20.000</option>
+            <option value="lambare">Lambaré — Gs. 20.000</option>
+            <option value="luque">Luque — Gs. 20.000</option>
+            <option value="itaugua">Itauguá — Gs. 20.000</option>
+            <option value="aregua">Areguá — Gs. 20.000</option>
+            <option value="villa-elisa">Villa Elisa — Gs. 20.000</option>
+            <option value="san-antonio">San Antonio — Gs. 20.000</option>
+            <option value="ita">Itá — Gs. 20.000</option>
+            <option value="mariano-roque-alonso">Mariano Roque Alonso — Gs. 30.000</option>
+            <option value="limpio">Limpio — Gs. 30.000</option>
+            <option value="otra">Otra ciudad — coordinamos el envío</option>
           </select>
+          <sc-if value="{{ ciudadACoordinar }}">
+            <p style="margin:7px 0 0;font-size:10.5px;color:#8A6472;line-height:1.6">Te pasamos el costo del envío por WhatsApp y se lo abonás al repartidor.</p>
+          </sc-if>
         </div>
+        <sc-if value="{{ mostrarCuandoPagaEnvio }}">
+          <div>
+            <p style="margin:0 0 8px;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#9F507D;font-weight:600">El envío lo pagás</p>
+            <div style="display:flex;gap:10px">
+              <button type="button" onClick="{{ envioPagaAhora }}" style="flex:1;min-height:48px;border:1px solid {{ bordeEnvioAhora }};background:{{ fondoEnvioAhora }};color:{{ textoEnvioAhora }};border-radius:2px;cursor:pointer;font-size:12px;letter-spacing:.06em;line-height:1.3">Ahora<br><span style="font-size:10.5px;opacity:.8">junto con la compra</span></button>
+              <button type="button" onClick="{{ envioPagaAlRecibir }}" style="flex:1;min-height:48px;border:1px solid {{ bordeEnvioRecibir }};background:{{ fondoEnvioRecibir }};color:{{ textoEnvioRecibir }};border-radius:2px;cursor:pointer;font-size:12px;letter-spacing:.06em;line-height:1.3">Al recibir<br><span style="font-size:10.5px;opacity:.8">al repartidor</span></button>
+            </div>
+          </div>
+        </sc-if>
         <div>
           <p style="margin:0 0 8px;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#9F507D;font-weight:600">Modalidad</p>
           <div style="display:flex;gap:10px">
@@ -1248,9 +1262,13 @@ input,select,textarea{font-family:inherit;color:#331821}
             <span style="font-size:13px;white-space:nowrap">{{ i.subtotalFmt }}</span>
           </div>
         </sc-for>
-        <div style="display:flex;justify-content:space-between;margin-top:18px;font-size:13px"><span style="color:#6B4753">Total de productos</span><span style="font-weight:600">{{ totalCarritoFmt }}</span></div>
-        <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:13px"><span style="color:#6B4753">Envío</span><span>A coordinar</span></div>
-        <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:13px"><span style="color:#6B4753">Unidades</span><span>{{ cantidadCarrito }}</span></div>
+        <div style="display:flex;justify-content:space-between;margin-top:18px;font-size:13px"><span style="color:#6B4753">Productos</span><span>{{ totalCarritoFmt }}</span></div>
+        <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:13px"><span style="color:#6B4753">Envío</span><span>{{ envioTexto }}</span></div>
+        <div style="display:flex;justify-content:space-between;margin-top:14px;padding-top:14px;border-top:1px solid rgba(51,24,33,.14);font-size:15px"><span style="font-weight:600">{{ etiquetaTotal }}</span><span style="font-weight:600">{{ totalPagarFmt }}</span></div>
+        <sc-if value="{{ hayEnvioAlRecibir }}">
+          <p style="margin:10px 0 0;font-size:11.5px;color:#8A6472;line-height:1.6">+ {{ envioAlRecibirFmt }} al repartidor cuando recibas el pedido.</p>
+        </sc-if>
+        <div style="display:flex;justify-content:space-between;margin-top:12px;font-size:12px;color:#8A6472"><span>Unidades</span><span>{{ cantidadCarrito }}</span></div>
       </div>
     </div>
   </div>
@@ -1296,12 +1314,24 @@ const SUPABASE_URL = "https://api.neura.com.py";
 const SUPABASE_ANON = "";              // se completa al desplegar
 const PAGO_ACTIVO = !!SUPABASE_ANON;   // sin anon key, el botón no se muestra
 
-/* PagoPar identifica la ciudad por código, no por nombre escrito a mano. */
-const CIUDADES = { "1": "Asunción", "2": "Ciudad del Este", "3": "San Lorenzo", "4": "Luque",
-  "5": "Capiatá", "6": "Lambaré", "7": "Fernando de la Mora", "8": "Limpio", "9": "Ñemby",
-  "10": "Encarnación", "11": "Pedro Juan Caballero", "12": "Coronel Oviedo",
-  "13": "Villarrica", "14": "Caaguazú", "15": "Itauguá" };
+/* Ciudades de reparto. Los nombres acompañan al <select> de arriba. */
+const CIUDADES = {
+  "capiata": "Capiatá", "san-lorenzo": "San Lorenzo", "j-augusto-saldivar": "J. Augusto Saldívar",
+  "nemby": "Ñemby", "ypane": "Ypané", "asuncion": "Asunción",
+  "fernando-de-la-mora": "Fernando de la Mora", "lambare": "Lambaré", "luque": "Luque",
+  "itaugua": "Itauguá", "aregua": "Areguá", "villa-elisa": "Villa Elisa",
+  "san-antonio": "San Antonio", "ita": "Itá",
+  "mariano-roque-alonso": "Mariano Roque Alonso", "limpio": "Limpio",
+  "otra": "Otra ciudad"
+};
+
+/* Costo del delivery por ciudad. build.js reescribe esta línea desde
+   pagopar/config.env, que es la fuente de verdad. Acá solo se muestra:
+   el monto que se cobra lo recalcula siempre el servidor. */
+const TARIFAS_ENVIO = {"capiata":10000,"san-lorenzo":10000,"j-augusto-saldivar":10000,"nemby":15000,"ypane":15000,"itaugua":20000,"fernando-de-la-mora":20000,"aregua":20000,"villa-elisa":20000,"luque":20000,"san-antonio":20000,"asuncion":20000,"lambare":20000,"ita":20000,"mariano-roque-alonso":30000,"limpio":30000};
+
 const nombreCiudad = c => CIUDADES[String(c || "").trim()] || "";
+const tarifaEnvio = c => { const t = TARIFAS_ENVIO[String(c || "").trim()]; return typeof t === "number" ? t : null; };
 const fmt = n => "Gs. " + Number(n).toLocaleString("es-PY").replace(/,/g, ".");
 
 class Component extends DCLogic {
@@ -1312,7 +1342,7 @@ class Component extends DCLogic {
     filtrosAbiertos: false, visibles: 8, catActiva: 0, expandir: 0, nuevoActivo: 0, arrastre: 0, arrastrando: false,
     pColor: null, pCant: 1, pImg: 1, pError: "", zoom: false,
     checkout: false, pagando: false,
-    form: { nombre: "", email: "", documento: "", telefono: "", ciudad: "", direccion: "", modalidad: "envio", obs: "" },
+    form: { nombre: "", email: "", documento: "", telefono: "", ciudad: "", direccion: "", modalidad: "envio", envioPago: "ahora", obs: "" },
     errPedido: "", errCampos: {}, aviso: "", menuSlide: 0, hoverMarca: null, heroCol: 0, lightbox: null,
     cNombre: "", cContacto: "", cMensaje: "", errContacto: "", okContacto: ""
   };
@@ -1483,11 +1513,44 @@ class Component extends DCLogic {
     m += "Ciudad: " + (nombreCiudad(f.ciudad) || f.ciudad) + "\n";
     m += "Dirección: " + (f.direccion || "-") + "\n";
     m += "Modalidad: " + (f.modalidad === "envio" ? "Envío" : "Retiro") + "\n";
+    if (f.modalidad === "envio") {
+      const t = tarifaEnvio(f.ciudad);
+      m += "Envío: " + (t == null ? "a coordinar" : fmt(t)) + "\n";
+    }
     m += "Observaciones: " + (f.obs || "-") + "\n\n";
     m += "Quedo pendiente de la confirmación y del costo de envío. Gracias.";
     return m;
   }
   setF(k, v) { this.setState({ form: Object.assign({}, this.state.form, { [k]: v }) }); }
+
+  /* Cómo queda el envío según ciudad y modalidad. Es solo para mostrar:
+     el monto que realmente se cobra lo decide la Edge Function. */
+  resumenEnvio() {
+    const f = this.state.form;
+    if (f.modalidad === "retiro") {
+      return { texto: "Retiro en el local", cobraAhora: 0, alRecibir: 0 };
+    }
+    if (!f.ciudad) return { texto: "Elegí tu ciudad", cobraAhora: 0, alRecibir: 0 };
+
+    const tarifa = tarifaEnvio(f.ciudad);
+    if (tarifa == null) {
+      return { texto: "A coordinar", cobraAhora: 0, alRecibir: 0 };
+    }
+    return f.envioPago === "recibir"
+      ? { texto: fmt(tarifa) + " · al recibir", cobraAhora: 0, alRecibir: tarifa }
+      : { texto: fmt(tarifa), cobraAhora: tarifa, alRecibir: 0 };
+  }
+
+  avisoEnvio() {
+    const f = this.state.form;
+    if (f.modalidad === "retiro") return "Retirás tu pedido en el local, sin costo adicional.";
+    if (f.ciudad === "otra") return "El costo del envío lo coordinamos por WhatsApp.";
+    const tarifa = tarifaEnvio(f.ciudad);
+    if (tarifa == null) return "";
+    return f.envioPago === "recibir"
+      ? "El envío se lo abonás al repartidor cuando recibas el pedido."
+      : "El envío ya va incluido en este pago.";
+  }
 
   /* Campos que faltan para poder cobrar online.
      PagoPar exige correo y cédula; para WhatsApp alcanza con menos. */
@@ -1533,7 +1596,7 @@ class Component extends DCLogic {
         cliente: {
           nombre: f.nombre, email: f.email, telefono: f.telefono,
           documento: f.documento, ciudad: f.ciudad, direccion: f.direccion,
-          modalidad: f.modalidad, observaciones: f.obs
+          modalidad: f.modalidad, envio_pago: f.envioPago, observaciones: f.obs
         },
         items: this.state.carrito.map(i => ({ id: i.id, cantidad: i.cantidad, color: i.color }))
       })
@@ -1656,6 +1719,8 @@ class Component extends DCLogic {
     const err = s.errCampos;
     const borde = k => err[k] ? "#9F507D" : "rgba(51,24,33,.25)";
     const modEnvio = s.form.modalidad === "envio";
+    const pagaAhora = s.form.envioPago !== "recibir";
+    const envioResumen = this.resumenEnvio();
 
     return {
       esMobile, esDesktop, esHome: enHome, esTienda: s.ruta.n === "tienda", esProducto: !!prod,
@@ -1917,10 +1982,27 @@ class Component extends DCLogic {
       textoBotonPago: s.pagando ? "Generando el pago…" : "Pagar con PagoPar",
       fondoBotonPago: s.pagando ? "#8A6472" : "#4C0F2E",
       cursorBotonPago: s.pagando ? "wait" : "pointer",
-      avisoEnvio: s.form.modalidad === "retiro"
-        ? "Retirás tu pedido en el local, sin costo adicional."
-        : "El envío se lo abonás al repartidor cuando recibas el pedido.",
+      avisoEnvio: this.avisoEnvio(),
       pagarOnline: () => this.pagarConPagopar(),
+
+      /* --- Envío --------------------------------------------------------- */
+      ciudadACoordinar: modEnvio && s.form.ciudad === "otra",
+      /* El toggle solo tiene sentido si sabemos cuánto sale el envío. */
+      mostrarCuandoPagaEnvio: modEnvio && tarifaEnvio(s.form.ciudad) != null,
+      envioPagaAhora: () => this.setF("envioPago", "ahora"),
+      envioPagaAlRecibir: () => this.setF("envioPago", "recibir"),
+      bordeEnvioAhora: pagaAhora ? "#4C0F2E" : "rgba(51,24,33,.25)",
+      fondoEnvioAhora: pagaAhora ? "#4C0F2E" : "transparent",
+      textoEnvioAhora: pagaAhora ? "#F9F1EA" : "#331821",
+      bordeEnvioRecibir: !pagaAhora ? "#4C0F2E" : "rgba(51,24,33,.25)",
+      fondoEnvioRecibir: !pagaAhora ? "#4C0F2E" : "transparent",
+      textoEnvioRecibir: !pagaAhora ? "#F9F1EA" : "#331821",
+
+      envioTexto: envioResumen.texto,
+      etiquetaTotal: envioResumen.cobraAhora > 0 ? "Total a pagar ahora" : "Total",
+      totalPagarFmt: fmt(total + envioResumen.cobraAhora),
+      hayEnvioAlRecibir: envioResumen.alRecibir > 0,
+      envioAlRecibirFmt: fmt(envioResumen.alRecibir),
       enviarPedido: e => {
         e.preventDefault();
         const ec = this.camposFaltantes(false);

@@ -1,33 +1,50 @@
 // =============================================================================
-// Códigos de ciudad (hubs) de PagoPar
+// Ciudades de reparto de MANASTINA
 // =============================================================================
-// PagoPar no acepta el nombre de la ciudad escrito a mano: espera uno de estos
-// códigos. Esta misma lista alimenta el desplegable del checkout.
+// Dos cosas distintas que conviene no mezclar:
+//
+//   clave -> la ciudad real que elige el cliente. Es la que manda para calcular
+//            el envío, y la que se guarda en el pedido para el ERP.
+//
+//   hub   -> el código que espera PagoPar. Su catálogo agrupa el país en pocas
+//            zonas, así que varias ciudades caen en el mismo número. Sirve para
+//            que la API acepte el pedido, no para tarifar.
+//
+// Las tarifas NO están acá: viven en ENVIO_TARIFAS_JSON (pagopar/config.env),
+// para poder cambiarlas sin tocar código ni volver a desplegar.
 // =============================================================================
 
-export const CIUDADES_PAGOPAR = [
-  { codigo: "1", nombre: "Asunción", interior: false },
-  { codigo: "2", nombre: "Ciudad del Este", interior: true },
-  { codigo: "3", nombre: "San Lorenzo", interior: false },
-  { codigo: "4", nombre: "Luque", interior: false },
-  { codigo: "5", nombre: "Capiatá", interior: false },
-  { codigo: "6", nombre: "Lambaré", interior: false },
-  { codigo: "7", nombre: "Fernando de la Mora", interior: false },
-  { codigo: "8", nombre: "Limpio", interior: false },
-  { codigo: "9", nombre: "Ñemby", interior: false },
-  { codigo: "10", nombre: "Encarnación", interior: true },
-  { codigo: "11", nombre: "Pedro Juan Caballero", interior: true },
-  { codigo: "12", nombre: "Coronel Oviedo", interior: true },
-  { codigo: "13", nombre: "Villarrica", interior: true },
-  { codigo: "14", nombre: "Caaguazú", interior: true },
-  { codigo: "15", nombre: "Itauguá", interior: false },
-] as const;
+export type Ciudad = { clave: string; nombre: string; hub: string };
 
-export function ciudadPorCodigo(codigo: string) {
-  return CIUDADES_PAGOPAR.find((c) => c.codigo === String(codigo).trim()) ?? null;
+export const CIUDADES: Ciudad[] = [
+  { clave: "capiata", nombre: "Capiatá", hub: "5" },
+  { clave: "san-lorenzo", nombre: "San Lorenzo", hub: "3" },
+  { clave: "j-augusto-saldivar", nombre: "J. Augusto Saldívar", hub: "1" },
+  { clave: "nemby", nombre: "Ñemby", hub: "9" },
+  { clave: "ypane", nombre: "Ypané", hub: "1" },
+  { clave: "itaugua", nombre: "Itauguá", hub: "15" },
+  { clave: "fernando-de-la-mora", nombre: "Fernando de la Mora", hub: "7" },
+  { clave: "aregua", nombre: "Areguá", hub: "1" },
+  { clave: "villa-elisa", nombre: "Villa Elisa", hub: "1" },
+  { clave: "luque", nombre: "Luque", hub: "4" },
+  { clave: "san-antonio", nombre: "San Antonio", hub: "1" },
+  { clave: "asuncion", nombre: "Asunción", hub: "1" },
+  { clave: "lambare", nombre: "Lambaré", hub: "6" },
+  { clave: "ita", nombre: "Itá", hub: "1" },
+  { clave: "mariano-roque-alonso", nombre: "Mariano Roque Alonso", hub: "1" },
+  { clave: "limpio", nombre: "Limpio", hub: "8" },
+
+  // Fuera de la zona de reparto habitual: el costo se acuerda por WhatsApp y
+  // se le cobra al entregar, porque no hay tarifa publicada.
+  { clave: "otra", nombre: "Otra ciudad (coordinamos el envío)", hub: "1" },
+];
+
+export function ciudadPorClave(clave: string): Ciudad | null {
+  const c = String(clave ?? "").trim();
+  return CIUDADES.find((x) => x.clave === c) ?? null;
 }
 
-/** true si la ciudad está fuera del Gran Asunción (tarifa de envío distinta). */
-export function esInterior(codigo: string): boolean {
-  return ciudadPorCodigo(codigo)?.interior ?? true;
+/** true si la ciudad no tiene tarifa publicada y hay que acordarla aparte. */
+export function esZonaACoordinar(clave: string): boolean {
+  return String(clave ?? "").trim() === "otra";
 }

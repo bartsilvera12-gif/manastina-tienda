@@ -30,9 +30,13 @@ create table if not exists manastina.web_pedidos (
   cliente_telefono      text not null,
   cliente_documento     text not null,
 
-  -- Ciudad: código de hub PagoPar (1-15) + el nombre para mostrar.
+  -- Ciudad real de reparto (clave interna, ej. "capiata") + nombre para mostrar.
   ciudad_codigo         text not null,
   ciudad_nombre         text,
+
+  -- Zona con la que se identificó el pedido ante PagoPar. Es una agrupación
+  -- gruesa de su catálogo; no sirve para tarifar, solo para su registro.
+  ciudad_hub_pagopar    text,
 
   direccion             text default '',
   direccion_referencia  text default '',
@@ -45,8 +49,12 @@ create table if not exists manastina.web_pedidos (
   subtotal              bigint not null,
   envio                 bigint not null default 0,
 
-  -- true = el envio NO se cobro online; el cliente lo paga al recibirlo.
+  -- true = el envío NO se cobró online; el cliente lo paga al recibirlo.
   envio_aparte          boolean not null default false,
+
+  -- Tarifa de esa ciudad, se haya cobrado ahora o quede para el reparto.
+  -- null = fuera de la zona de reparto, hay que acordarla por WhatsApp.
+  envio_estimado        bigint,
   total                 bigint not null,
 
   -- --- Estado del cobro ---

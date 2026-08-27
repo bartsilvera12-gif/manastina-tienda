@@ -56,7 +56,7 @@ select
 
   -- --- Entrega -----------------------------------------------------------
   p.modalidad,
-  p.ciudad_codigo,
+  p.ciudad_codigo                                   as ciudad_clave,
   p.ciudad_nombre,
   p.direccion,
   p.direccion_referencia,
@@ -66,6 +66,13 @@ select
   p.subtotal,
   p.envio                                           as envio_cobrado,
   p.total                                           as total_cobrado,
+
+  -- Cuánto sale el envío a esa ciudad. null = hay que acordarlo.
+  p.envio_estimado                                  as envio_tarifa,
+
+  -- Plata que el repartidor tiene que cobrar al entregar.
+  case when p.envio_aparte then p.envio_estimado else 0 end
+                                                    as envio_a_cobrar,
 
   -- --- Qué hay que preparar ----------------------------------------------
   coalesce(i.cantidad_articulos, 0)                 as cantidad_articulos,

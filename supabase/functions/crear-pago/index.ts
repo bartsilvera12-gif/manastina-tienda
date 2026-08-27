@@ -21,7 +21,7 @@ import {
   validarItem,
   validarSuma,
 } from "../_shared/pagopar.ts";
-import { ciudadPorCodigo } from "../_shared/ciudades.ts";
+import { ciudadPorClave, esZonaACoordinar } from "../_shared/ciudades.ts";
 
 // -----------------------------------------------------------------------------
 // Configuración (viene de los secretos de Supabase)
@@ -46,17 +46,7 @@ const VENDEDOR_DIRECCION = env("PAGOPAR_VENDEDOR_DIRECCION");
 const VENDEDOR_REFERENCIA = env("PAGOPAR_VENDEDOR_DIRECCION_REFERENCIA");
 const VENDEDOR_COORDENADAS = env("PAGOPAR_VENDEDOR_DIRECCION_COORDENADAS");
 
-// Modos de envío:
-//   aparte -> se cobra solo la mercadería; el envío lo paga el cliente al
-//             recibirlo. No hay que conocer la tarifa de antemano.
-//   fijo   -> un solo monto para todo el país.
-//   tabla  -> un monto por ciudad, definido en ENVIO_TARIFAS_JSON.
-//   gratis -> siempre 0.
-const ENVIO_MODO = env("ENVIO_MODO", "aparte");
-const ENVIO_MONTO = Number(env("ENVIO_MONTO", "0")) || 0;
-const ENVIO_GRATIS_DESDE = Number(env("ENVIO_GRATIS_DESDE", "0")) || 0;
-
-/** { "codigo_ciudad": monto }. Las ciudades que falten usan ENVIO_MONTO. */
+/** { "clave_ciudad": monto en guaraníes }. Ver pagopar/config.env. */
 const ENVIO_TARIFAS: Record<string, number> = (() => {
   const raw = env("ENVIO_TARIFAS_JSON");
   if (!raw) return {};
@@ -73,6 +63,9 @@ const ENVIO_TARIFAS: Record<string, number> = (() => {
     return {};
   }
 })();
+
+/** Envío gratis a partir de este monto de compra. 0 = nunca. */
+const ENVIO_GRATIS_DESDE = Number(env("ENVIO_GRATIS_DESDE", "0")) || 0;
 
 // Orígenes que pueden llamar a esta función.
 const ORIGENES_OK = new Set([
@@ -137,31 +130,44 @@ function emailValido(s: string): boolean {
 }
 
 /**
- * Cuánto se le suma al cobro por el envío.
- * Devuelve además si queda algo pendiente de pagar aparte, para poder
- * avisárselo al cliente antes de mandarlo a PagoPar.
+ * Resuelve el envío del pedido.
+ *
+ *   cobrado   -> lo que se le suma al pago online (entra en monto_total).
+ *   estimado  -> la tarifa de esa ciudad, se cobre ahora o al entregar.
+ *                null cuando no hay tarifa publicada y hay que acordarla.
+ *   aparte    -> true si queda plata por cobrar al momento de entregar.
+ *
+ * Reglas:
+ *   - Retiro en el local: no hay envío.
+ *   - Ciudad fuera de la lista: siempre aparte, porque no sabemos cuánto sale.
+ *   - Si el cliente eligió pagarlo al recibir, no entra en el cobro online.
  */
-function calcularEnvio(
+function resolverEnvio(
   modalidad: string,
-  ciudadCodigo: string,
+  ciudadClave: string,
+  cuandoPaga: string,
   subtotal: number,
-): { monto: number; seCobraAparte: boolean } {
-  if (modalidad === "retiro") return { monto: 0, seCobraAparte: false };
+): { cobrado: number; estimado: number | null; aparte: boolean } {
+  if (modalidad === "retiro") return { cobrado: 0, estimado: 0, aparte: false };
 
-  // El envío no entra en este cobro: lo abona el cliente al recibirlo.
-  if (ENVIO_MODO === "aparte") return { monto: 0, seCobraAparte: true };
+  // Fuera de la zona de reparto: el costo se acuerda y se cobra al entregar.
+  if (esZonaACoordinar(ciudadClave)) return { cobrado: 0, estimado: null, aparte: true };
 
-  if (ENVIO_MODO === "gratis") return { monto: 0, seCobraAparte: false };
+  const tarifa = ENVIO_TARIFAS[String(ciudadClave).trim()];
+  if (!Number.isFinite(tarifa)) {
+    // Ciudad conocida pero sin tarifa cargada: no inventamos un precio.
+    console.warn("[crear-pago] sin tarifa para la ciudad", ciudadClave);
+    return { cobrado: 0, estimado: null, aparte: true };
+  }
+
   if (ENVIO_GRATIS_DESDE > 0 && subtotal >= ENVIO_GRATIS_DESDE) {
-    return { monto: 0, seCobraAparte: false };
+    return { cobrado: 0, estimado: 0, aparte: false };
   }
 
-  if (ENVIO_MODO === "tabla") {
-    const tarifa = ENVIO_TARIFAS[String(ciudadCodigo).trim()];
-    return { monto: Number.isFinite(tarifa) ? tarifa : ENVIO_MONTO, seCobraAparte: false };
-  }
+  // El cliente eligió abonárselo al repartidor.
+  if (cuandoPaga === "recibir") return { cobrado: 0, estimado: tarifa, aparte: true };
 
-  return { monto: ENVIO_MONTO, seCobraAparte: false };
+  return { cobrado: tarifa, estimado: tarifa, aparte: false };
 }
 
 /** `id_pedido_comercio` tiene que ser entero; es el mismo valor que firma el token. */
@@ -193,7 +199,8 @@ Deno.serve(async (req) => {
     const email = texto(c.email).toLowerCase();
     const telefono = soloDigitos(c.telefono).slice(0, 20);
     const documento = soloDigitos(c.documento).slice(0, 20);
-    const ciudadCodigo = texto(c.ciudad, 4);
+    const ciudadClave = texto(c.ciudad, 40);
+    const envioCuandoPaga = c.envio_pago === "recibir" ? "recibir" : "ahora";
     const direccion = texto(c.direccion);
     const referencia = texto(c.referencia);
     const modalidad = c.modalidad === "retiro" ? "retiro" : "envio";
@@ -204,7 +211,7 @@ Deno.serve(async (req) => {
     if (!emailValido(email)) faltantes.push("email");
     if (telefono.length < 6) faltantes.push("teléfono");
     if (documento.length < 5) faltantes.push("cédula");
-    const ciudad = ciudadPorCodigo(ciudadCodigo);
+    const ciudad = ciudadPorClave(ciudadClave);
     if (!ciudad) faltantes.push("ciudad");
     if (modalidad === "envio" && direccion.length < 5) faltantes.push("dirección");
     if (faltantes.length) {
@@ -252,11 +259,9 @@ Deno.serve(async (req) => {
     }
 
     const subtotal = lineas.reduce((a, l) => a + l.total_linea, 0);
-    const { monto: envio, seCobraAparte: envioAparte } = calcularEnvio(
-      modalidad,
-      ciudadCodigo,
-      subtotal,
-    );
+    const env2 = resolverEnvio(modalidad, ciudadClave, envioCuandoPaga, subtotal);
+    const envio = env2.cobrado;
+    const envioAparte = env2.aparte;
     const total = subtotal + envio;
     if (total <= 0) return json({ error: "Total inválido." }, 400, origen);
 
@@ -278,8 +283,10 @@ Deno.serve(async (req) => {
         cliente_email: email,
         cliente_telefono: telefono,
         cliente_documento: documento,
-        ciudad_codigo: ciudadCodigo,
+        ciudad_codigo: ciudadClave,
         ciudad_nombre: ciudad!.nombre,
+        ciudad_hub_pagopar: ciudad!.hub,
+        envio_estimado: env2.estimado,
         direccion,
         direccion_referencia: referencia,
         modalidad,
@@ -304,7 +311,7 @@ Deno.serve(async (req) => {
     const comprador = {
       ruc: "",
       email,
-      ciudad: ciudadCodigo,
+      ciudad: ciudad!.hub,
       nombre,
       telefono,
       direccion,
@@ -398,6 +405,7 @@ Deno.serve(async (req) => {
         numero: idPedidoComercio,
         subtotal,
         envio,
+        envio_estimado: env2.estimado,
         total,
         // true = el envío no va incluido en este cobro; lo abona al recibirlo
         envio_aparte: envioAparte,

@@ -45,10 +45,40 @@ function inyectarSupabase(txt, esHtmlSuelto) {
     );
 }
 
+/* Las tarifas de envío viven en config.env. Acá se copian al HTML: al objeto
+   TARIFAS_ENVIO y también a las etiquetas del <select>, para que el precio que
+   ve el cliente y el que cobra el servidor no puedan desfasarse. */
+function sincronizarEnvios(txt) {
+  let tarifas;
+  try {
+    tarifas = JSON.parse(conf.ENVIO_TARIFAS_JSON || '{}');
+  } catch (e) {
+    console.warn('  aviso: ENVIO_TARIFAS_JSON no es JSON válido; se dejan las tarifas del HTML');
+    return txt;
+  }
+  if (!Object.keys(tarifas).length) return txt;
+
+  txt = txt.replace(
+    /const TARIFAS_ENVIO = \{[^;]*\};/,
+    'const TARIFAS_ENVIO = ' + JSON.stringify(tarifas) + ';'
+  );
+
+  // <option value="capiata">Capiatá — Gs. 10.000</option>
+  return txt.replace(
+    /(<option value="([a-z0-9-]+)">)([^<—]+)(?: — [^<]*)?(<\/option>)/g,
+    (todo, abre, clave, nombre, cierra) => {
+      if (!(clave in tarifas)) return todo;
+      const gs = 'Gs. ' + Number(tarifas[clave]).toLocaleString('es-PY').replace(/,/g, '.');
+      return abre + nombre.trim() + ' — ' + gs + cierra;
+    }
+  );
+}
+
 // 1) la página pasa a llamarse index.html y apunta al dominio real
 let html = fs.readFileSync('Manastina Tienda.dc.html', 'utf8');
 html = html.replace(/const SITIO = "[^"]*";/, 'const SITIO = "' + SITIO + '";');
 html = inyectarSupabase(html, false);
+html = sincronizarEnvios(html);
 fs.writeFileSync(path.join(OUT, 'index.html'), html);
 
 // 1b) página de retorno de PagoPar
