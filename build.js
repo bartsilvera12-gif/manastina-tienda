@@ -9,8 +9,17 @@ const path = require('path');
 const SITIO = 'https://manastina.com';   // dominio de producción
 const OUT = 'build';
 
-fs.rmSync(OUT, { recursive: true, force: true });
-fs.mkdirSync(OUT, { recursive: true });
+/* Se vacía el contenido en vez de borrar la carpeta: en Windows es muy común
+   que algo la tenga tomada (el explorador, un servidor local, el antivirus) y
+   entonces borrarla falla con EPERM aunque los archivos de adentro sí se
+   puedan reemplazar. */
+if (fs.existsSync(OUT)) {
+  for (const entrada of fs.readdirSync(OUT)) {
+    fs.rmSync(path.join(OUT, entrada), { recursive: true, force: true });
+  }
+} else {
+  fs.mkdirSync(OUT, { recursive: true });
+}
 
 /* Datos de Supabase para el cobro online. Salen de pagopar/config.env, que no
    se sube a git. La anon key es pública por diseño: puede ir en el HTML.

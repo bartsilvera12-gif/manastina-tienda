@@ -1186,52 +1186,68 @@ input,select,textarea{font-family:inherit;color:#331821}
           <input id="o-doc" type="text" inputmode="numeric" value="{{ fDocumento }}" onChange="{{ onFDocumento }}" placeholder="Sin puntos" style="width:100%;height:50px;padding:0 14px;border:1px solid {{ bDocumento }};background:transparent;border-radius:2px;font-size:14px">
           <p style="margin:7px 0 0;font-size:10.5px;color:#8A6472;line-height:1.6">Necesarios para emitir el comprobante del pago.</p>
         </div>
+        <!-- Primero cómo lo recibe: de eso depende todo lo que sigue -->
         <div>
-          <label for="o-ciudad" style="display:block;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#9F507D;font-weight:600;margin-bottom:8px">Ciudad</label>
-          <select id="o-ciudad" value="{{ fCiudad }}" onChange="{{ onFCiudad }}" style="width:100%;height:50px;padding:0 12px;border:1px solid {{ bCiudad }};background:transparent;border-radius:2px;font-size:14px">
-            <option value="">Elegí tu ciudad</option>
-            <option value="capiata">Capiatá — Gs. 10.000</option>
-            <option value="san-lorenzo">San Lorenzo — Gs. 10.000</option>
-            <option value="j-augusto-saldivar">J. Augusto Saldívar — Gs. 10.000</option>
-            <option value="nemby">Ñemby — Gs. 15.000</option>
-            <option value="ypane">Ypané — Gs. 15.000</option>
-            <option value="asuncion">Asunción — Gs. 20.000</option>
-            <option value="fernando-de-la-mora">Fernando de la Mora — Gs. 20.000</option>
-            <option value="lambare">Lambaré — Gs. 20.000</option>
-            <option value="luque">Luque — Gs. 20.000</option>
-            <option value="itaugua">Itauguá — Gs. 20.000</option>
-            <option value="aregua">Areguá — Gs. 20.000</option>
-            <option value="villa-elisa">Villa Elisa — Gs. 20.000</option>
-            <option value="san-antonio">San Antonio — Gs. 20.000</option>
-            <option value="ita">Itá — Gs. 20.000</option>
-            <option value="mariano-roque-alonso">Mariano Roque Alonso — Gs. 30.000</option>
-            <option value="limpio">Limpio — Gs. 30.000</option>
-            <option value="otra">Otra ciudad — coordinamos el envío</option>
-          </select>
-          <sc-if value="{{ ciudadACoordinar }}">
-            <p style="margin:7px 0 0;font-size:10.5px;color:#8A6472;line-height:1.6">Te pasamos el costo del envío por WhatsApp y se lo abonás al repartidor.</p>
-          </sc-if>
+          <p style="margin:0 0 8px;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#9F507D;font-weight:600">Cómo lo recibís</p>
+          <div style="display:flex;gap:10px">
+            <button type="button" onClick="{{ elegirEnvio }}" style="flex:1;min-height:54px;border:1px solid {{ bordeEnvio }};background:{{ fondoEnvio }};color:{{ textoEnvio }};border-radius:2px;cursor:pointer;font-size:12px;letter-spacing:.08em;line-height:1.35;transition:background .3s ease,border-color .3s ease,color .3s ease">Envío<br><span style="font-size:10.5px;opacity:.75">a tu domicilio</span></button>
+            <button type="button" onClick="{{ elegirRetiro }}" style="flex:1;min-height:54px;border:1px solid {{ bordeRetiro }};background:{{ fondoRetiro }};color:{{ textoRetiro }};border-radius:2px;cursor:pointer;font-size:12px;letter-spacing:.08em;line-height:1.35;transition:background .3s ease,border-color .3s ease,color .3s ease">Retiro<br><span style="font-size:10.5px;opacity:.75">en el local</span></button>
+          </div>
         </div>
-        <sc-if value="{{ mostrarCuandoPagaEnvio }}">
-          <div>
-            <p style="margin:0 0 8px;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#9F507D;font-weight:600">El envío lo pagás</p>
-            <div style="display:flex;gap:10px">
-              <button type="button" onClick="{{ envioPagaAhora }}" style="flex:1;min-height:48px;border:1px solid {{ bordeEnvioAhora }};background:{{ fondoEnvioAhora }};color:{{ textoEnvioAhora }};border-radius:2px;cursor:pointer;font-size:12px;letter-spacing:.06em;line-height:1.3">Ahora<br><span style="font-size:10.5px;opacity:.8">junto con la compra</span></button>
-              <button type="button" onClick="{{ envioPagaAlRecibir }}" style="flex:1;min-height:48px;border:1px solid {{ bordeEnvioRecibir }};background:{{ fondoEnvioRecibir }};color:{{ textoEnvioRecibir }};border-radius:2px;cursor:pointer;font-size:12px;letter-spacing:.06em;line-height:1.3">Al recibir<br><span style="font-size:10.5px;opacity:.8">al repartidor</span></button>
-            </div>
+
+        <!-- Retiro: no hace falta ciudad ni dirección -->
+        <sc-if value="{{ esRetiro }}">
+          <div style="padding:16px 18px;border:1px solid rgba(51,24,33,.14);border-radius:2px;background:rgba(76,15,46,.03)">
+            <p style="margin:0;font-size:13px;line-height:1.7;color:#5C3A47">Te esperamos en <strong>Capiatá</strong>. Te avisamos por WhatsApp apenas tu pedido esté listo para retirar.</p>
           </div>
         </sc-if>
-        <div>
-          <p style="margin:0 0 8px;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#9F507D;font-weight:600">Modalidad</p>
-          <div style="display:flex;gap:10px">
-            <button type="button" onClick="{{ elegirEnvio }}" style="flex:1;min-height:48px;border:1px solid {{ bordeEnvio }};background:{{ fondoEnvio }};color:{{ textoEnvio }};border-radius:2px;cursor:pointer;font-size:12px;letter-spacing:.08em">Envío</button>
-            <button type="button" onClick="{{ elegirRetiro }}" style="flex:1;min-height:48px;border:1px solid {{ bordeRetiro }};background:{{ fondoRetiro }};color:{{ textoRetiro }};border-radius:2px;cursor:pointer;font-size:12px;letter-spacing:.08em">Retiro</button>
+
+        <!-- Envío: ciudad, cuándo paga el envío, y dirección -->
+        <sc-if value="{{ esEnvio }}">
+          <div>
+            <p style="margin:0 0 8px;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#9F507D;font-weight:600">Ciudad</p>
+
+            <!-- Selector propio: el nativo no deja alinear el precio ni darle
+                 el aire que tiene el resto del formulario -->
+            <div style="position:relative">
+              <button type="button" onClick="{{ alternarCiudades }}" aria-haspopup="listbox" aria-expanded="{{ ciudadesAbiertas }}" style="width:100%;min-height:50px;padding:0 16px;border:1px solid {{ bCiudad }};background:transparent;border-radius:2px;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;color:{{ colorCiudadElegida }};transition:border-color .3s ease">
+                <span>{{ ciudadElegidaTexto }}</span>
+                <span aria-hidden="true" style="flex:0 0 auto;font-size:10px;opacity:.55;transform:rotate({{ giroFlechaCiudad }});transition:transform .3s ease">▼</span>
+              </button>
+
+              <sc-if value="{{ ciudadesAbiertas }}">
+                <div onClick="{{ cerrarCiudades }}" style="position:fixed;inset:0;z-index:1"></div>
+                <div role="listbox" style="position:absolute;z-index:2;top:calc(100% + 6px);left:0;right:0;max-height:290px;overflow-y:auto;background:#FFFDFB;border:1px solid rgba(51,24,33,.16);border-radius:2px;box-shadow:0 18px 40px -18px rgba(51,24,33,.35);animation:aparecer .18s ease both;padding:5px 0">
+                  <sc-for list="{{ listaCiudades }}" as="c" hint-placeholder-count="4">
+                    <button type="button" onClick="{{ c.elegir }}" role="option" aria-selected="{{ c.elegida }}" style="width:100%;min-height:44px;padding:11px 16px;border:0;background:{{ c.fondo }};cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:14px;font-size:13.5px;text-align:left;color:#331821;border-top:{{ c.separador }};transition:background .2s ease" style-hover="background:rgba(76,15,46,.07)">
+                      <span style="font-weight:{{ c.peso }}">{{ c.nombre }}</span>
+                      <span style="flex:0 0 auto;font-size:12px;color:{{ c.colorPrecio }};letter-spacing:.02em">{{ c.precio }}</span>
+                    </button>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </div>
+
+            <sc-if value="{{ ciudadACoordinar }}">
+              <p style="margin:9px 0 0;font-size:11px;color:#8A6472;line-height:1.65">Te pasamos el costo del envío por WhatsApp y se lo abonás al repartidor.</p>
+            </sc-if>
           </div>
-        </div>
-        <div>
-          <label for="o-dir" style="display:block;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#9F507D;font-weight:600;margin-bottom:8px">Dirección o referencia de entrega</label>
-          <input id="o-dir" type="text" value="{{ fDireccion }}" onChange="{{ onFDireccion }}" style="width:100%;height:50px;padding:0 14px;border:1px solid {{ bDireccion }};background:transparent;border-radius:2px;font-size:14px">
-        </div>
+
+          <sc-if value="{{ mostrarCuandoPagaEnvio }}">
+            <div>
+              <p style="margin:0 0 8px;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#9F507D;font-weight:600">El envío lo pagás</p>
+              <div style="display:flex;gap:10px">
+                <button type="button" onClick="{{ envioPagaAhora }}" style="flex:1;min-height:54px;border:1px solid {{ bordeEnvioAhora }};background:{{ fondoEnvioAhora }};color:{{ textoEnvioAhora }};border-radius:2px;cursor:pointer;font-size:12px;letter-spacing:.06em;line-height:1.35;transition:background .3s ease,border-color .3s ease,color .3s ease">Ahora<br><span style="font-size:10.5px;opacity:.75">junto con la compra</span></button>
+                <button type="button" onClick="{{ envioPagaAlRecibir }}" style="flex:1;min-height:54px;border:1px solid {{ bordeEnvioRecibir }};background:{{ fondoEnvioRecibir }};color:{{ textoEnvioRecibir }};border-radius:2px;cursor:pointer;font-size:12px;letter-spacing:.06em;line-height:1.35;transition:background .3s ease,border-color .3s ease,color .3s ease">Al recibir<br><span style="font-size:10.5px;opacity:.75">al repartidor</span></button>
+              </div>
+            </div>
+          </sc-if>
+
+          <div>
+            <label for="o-dir" style="display:block;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#9F507D;font-weight:600;margin-bottom:8px">Dirección de entrega</label>
+            <input id="o-dir" type="text" value="{{ fDireccion }}" onChange="{{ onFDireccion }}" placeholder="Calle, número y alguna referencia" style="width:100%;height:50px;padding:0 14px;border:1px solid {{ bDireccion }};background:transparent;border-radius:2px;font-size:14px">
+          </div>
+        </sc-if>
         <div>
           <label for="o-obs" style="display:block;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#9F507D;font-weight:600;margin-bottom:8px">Observaciones</label>
           <textarea id="o-obs" rows="3" value="{{ fObs }}" onChange="{{ onFObs }}" style="width:100%;padding:12px 14px;border:1px solid rgba(51,24,33,.25);background:transparent;border-radius:2px;font-size:14px;resize:vertical"></textarea>
@@ -1330,6 +1346,17 @@ const CIUDADES = {
    el monto que se cobra lo recalcula siempre el servidor. */
 const TARIFAS_ENVIO = {"capiata":10000,"san-lorenzo":10000,"j-augusto-saldivar":10000,"nemby":15000,"ypane":15000,"itaugua":20000,"fernando-de-la-mora":20000,"aregua":20000,"villa-elisa":20000,"luque":20000,"san-antonio":20000,"asuncion":20000,"lambare":20000,"ita":20000,"mariano-roque-alonso":30000,"limpio":30000};
 
+/* Orden del desplegable: de la tarifa mas baja a la mas alta, y la opcion
+   abierta siempre al final. */
+const ORDEN_CIUDADES = [
+  "capiata", "san-lorenzo", "j-augusto-saldivar",
+  "nemby", "ypane",
+  "asuncion", "fernando-de-la-mora", "lambare", "luque", "itaugua",
+  "aregua", "villa-elisa", "san-antonio", "ita",
+  "mariano-roque-alonso", "limpio",
+  "otra"
+];
+
 const nombreCiudad = c => CIUDADES[String(c || "").trim()] || "";
 const tarifaEnvio = c => { const t = TARIFAS_ENVIO[String(c || "").trim()]; return typeof t === "number" ? t : null; };
 const fmt = n => "Gs. " + Number(n).toLocaleString("es-PY").replace(/,/g, ".");
@@ -1341,7 +1368,7 @@ class Component extends DCLogic {
     consulta: "", cat: "todas", marca: "todas", precioMax: null, color: "todos", soloDisponibles: false, orden: "nuevos",
     filtrosAbiertos: false, visibles: 8, catActiva: 0, expandir: 0, nuevoActivo: 0, arrastre: 0, arrastrando: false,
     pColor: null, pCant: 1, pImg: 1, pError: "", zoom: false,
-    checkout: false, pagando: false,
+    checkout: false, pagando: false, ciudadesAbiertas: false,
     form: { nombre: "", email: "", documento: "", telefono: "", ciudad: "", direccion: "", modalidad: "envio", envioPago: "ahora", obs: "" },
     errPedido: "", errCampos: {}, aviso: "", menuSlide: 0, hoverMarca: null, heroCol: 0, lightbox: null,
     cNombre: "", cContacto: "", cMensaje: "", errContacto: "", okContacto: ""
@@ -1395,7 +1422,7 @@ class Component extends DCLogic {
     };
     window.addEventListener("resize", this._r);
     window.addEventListener("scroll", this._s, { passive: true });
-    this._k = e => { if (e.key === "Escape") this.setState({ carritoAbierto: false, menuAbierto: false, buscarAbierto: false, filtrosAbiertos: false, zoom: false, checkout: false, coleccionesAbierto: false, lightbox: null }); };
+    this._k = e => { if (e.key === "Escape") this.setState({ carritoAbierto: false, menuAbierto: false, buscarAbierto: false, filtrosAbiertos: false, zoom: false, checkout: false, coleccionesAbierto: false, lightbox: null, ciudadesAbiertas: false }); };
     window.addEventListener("keydown", this._k);
     this._menuTimer = setInterval(() => {
       if (!this.state.menuAbierto) return;
@@ -2102,9 +2129,42 @@ class Component extends DCLogic {
       pagarOnline: () => this.pagarConPagopar(),
 
       /* --- Envío --------------------------------------------------------- */
+      esEnvio: modEnvio,
+      esRetiro: !modEnvio,
       ciudadACoordinar: modEnvio && s.form.ciudad === "otra",
       /* El toggle solo tiene sentido si sabemos cuánto sale el envío. */
       mostrarCuandoPagaEnvio: modEnvio && tarifaEnvio(s.form.ciudad) != null,
+
+      /* --- Selector de ciudad -------------------------------------------- */
+      ciudadesAbiertas: s.ciudadesAbiertas,
+      alternarCiudades: () => this.setState({ ciudadesAbiertas: !s.ciudadesAbiertas }),
+      cerrarCiudades: () => this.setState({ ciudadesAbiertas: false }),
+      giroFlechaCiudad: s.ciudadesAbiertas ? "180deg" : "0deg",
+      ciudadElegidaTexto: s.form.ciudad
+        ? nombreCiudad(s.form.ciudad) + (tarifaEnvio(s.form.ciudad) != null
+            ? " · " + fmt(tarifaEnvio(s.form.ciudad))
+            : " · a coordinar")
+        : "Elegí tu ciudad",
+      colorCiudadElegida: s.form.ciudad ? "#331821" : "#9A7A87",
+      listaCiudades: ORDEN_CIUDADES.map((clave, i) => {
+        const elegida = s.form.ciudad === clave;
+        const tarifa = tarifaEnvio(clave);
+        return {
+          clave, elegida,
+          nombre: nombreCiudad(clave),
+          precio: tarifa != null ? fmt(tarifa) : "A coordinar",
+          colorPrecio: tarifa != null ? "#7A5460" : "#9F507D",
+          fondo: elegida ? "rgba(76,15,46,.09)" : "transparent",
+          peso: elegida ? "600" : "400",
+          /* Una línea separa las ciudades con tarifa de la opción abierta. */
+          separador: clave === "otra" ? "1px solid rgba(51,24,33,.12)" : "0",
+          elegir: () => this.setState({
+            form: Object.assign({}, s.form, { ciudad: clave }),
+            ciudadesAbiertas: false,
+            errCampos: Object.assign({}, s.errCampos, { ciudad: 0 })
+          })
+        };
+      }),
       envioPagaAhora: () => this.setF("envioPago", "ahora"),
       envioPagaAlRecibir: () => this.setF("envioPago", "recibir"),
       bordeEnvioAhora: pagaAhora ? "#4C0F2E" : "rgba(51,24,33,.25)",
