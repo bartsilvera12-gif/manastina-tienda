@@ -1178,8 +1178,34 @@ input,select,textarea{font-family:inherit;color:#331821}
           <input id="o-tel" type="tel" value="{{ fTelefono }}" onChange="{{ onFTelefono }}" placeholder="09XX XXXXXX" style="width:100%;height:50px;padding:0 14px;border:1px solid {{ bTelefono }};background:transparent;border-radius:2px;font-size:14px">
         </div>
         <div>
+          <label for="o-email" style="display:block;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#9F507D;font-weight:600;margin-bottom:8px">Correo electrónico</label>
+          <input id="o-email" type="email" autocomplete="email" value="{{ fEmail }}" onChange="{{ onFEmail }}" placeholder="tunombre@correo.com" style="width:100%;height:50px;padding:0 14px;border:1px solid {{ bEmail }};background:transparent;border-radius:2px;font-size:14px">
+        </div>
+        <div>
+          <label for="o-doc" style="display:block;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#9F507D;font-weight:600;margin-bottom:8px">Cédula de identidad</label>
+          <input id="o-doc" type="text" inputmode="numeric" value="{{ fDocumento }}" onChange="{{ onFDocumento }}" placeholder="Sin puntos" style="width:100%;height:50px;padding:0 14px;border:1px solid {{ bDocumento }};background:transparent;border-radius:2px;font-size:14px">
+          <p style="margin:7px 0 0;font-size:10.5px;color:#8A6472;line-height:1.6">Necesarios para emitir el comprobante del pago.</p>
+        </div>
+        <div>
           <label for="o-ciudad" style="display:block;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#9F507D;font-weight:600;margin-bottom:8px">Ciudad</label>
-          <input id="o-ciudad" type="text" value="{{ fCiudad }}" onChange="{{ onFCiudad }}" style="width:100%;height:50px;padding:0 14px;border:1px solid {{ bCiudad }};background:transparent;border-radius:2px;font-size:14px">
+          <select id="o-ciudad" value="{{ fCiudad }}" onChange="{{ onFCiudad }}" style="width:100%;height:50px;padding:0 12px;border:1px solid {{ bCiudad }};background:transparent;border-radius:2px;font-size:14px">
+            <option value="">Elegí tu ciudad</option>
+            <option value="1">Asunción</option>
+            <option value="5">Capiatá</option>
+            <option value="3">San Lorenzo</option>
+            <option value="4">Luque</option>
+            <option value="6">Lambaré</option>
+            <option value="7">Fernando de la Mora</option>
+            <option value="8">Limpio</option>
+            <option value="9">Ñemby</option>
+            <option value="15">Itauguá</option>
+            <option value="2">Ciudad del Este</option>
+            <option value="10">Encarnación</option>
+            <option value="11">Pedro Juan Caballero</option>
+            <option value="12">Coronel Oviedo</option>
+            <option value="13">Villarrica</option>
+            <option value="14">Caaguazú</option>
+          </select>
         </div>
         <div>
           <p style="margin:0 0 8px;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#9F507D;font-weight:600">Modalidad</p>
@@ -1199,8 +1225,17 @@ input,select,textarea{font-family:inherit;color:#331821}
         <sc-if value="{{ errorPedido }}">
           <p role="alert" style="margin:0;padding:12px 14px;border:1px solid #9F507D;background:rgba(159,80,125,.07);font-size:12.5px;border-radius:2px">✕ {{ errorPedido }}</p>
         </sc-if>
-        <button type="submit" style="min-height:58px;background:#4C0F2E;color:#F9F1EA;border:0;border-radius:2px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;cursor:pointer;transition:background .4s ease" style-hover="background:#331821">Enviar pedido por WhatsApp</button>
-        <p style="margin:0;font-size:11px;color:#8A6472;line-height:1.7">No pedimos datos de tarjeta. Confirmamos disponibilidad y costo de envío por WhatsApp antes de cobrar.</p>
+        <sc-if value="{{ pagoActivo }}">
+          <button type="button" onClick="{{ pagarOnline }}" disabled="{{ pagando }}" style="min-height:58px;background:{{ fondoBotonPago }};color:#F9F1EA;border:0;border-radius:2px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;cursor:{{ cursorBotonPago }};transition:background .4s ease" style-hover="background:#331821">{{ textoBotonPago }}</button>
+          <p style="margin:-4px 0 0;font-size:11px;color:#8A6472;line-height:1.7">Te lleva a PagoPar para pagar con tarjeta, Tigo Money, Personal, Aqui Pago o transferencia. {{ avisoEnvio }}</p>
+          <div style="display:flex;align-items:center;gap:12px;margin:2px 0">
+            <span style="flex:1;height:1px;background:rgba(51,24,33,.14)"></span>
+            <span style="font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#8A6472">o</span>
+            <span style="flex:1;height:1px;background:rgba(51,24,33,.14)"></span>
+          </div>
+        </sc-if>
+        <button type="submit" style="min-height:58px;background:transparent;color:#4C0F2E;border:1px solid #4C0F2E;border-radius:2px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;cursor:pointer;transition:background .4s ease,color .4s ease" style-hover="background:#4C0F2E;color:#F9F1EA">Coordinar por WhatsApp</button>
+        <p style="margin:0;font-size:11px;color:#8A6472;line-height:1.7">Si preferís, te confirmamos disponibilidad y coordinamos el pago y la entrega por chat.</p>
       </form>
       <div style="border:1px solid rgba(51,24,33,.14);padding:22px">
         <p style="margin:0 0 18px;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:#9F507D;font-weight:600">Tu pedido</p>
@@ -1253,6 +1288,20 @@ input,select,textarea{font-family:inherit;color:#331821}
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900}}">
 const WA = "595972897875";
 const SITIO = "https://manastina-tienda.vercel.app";
+
+/* Cobro online con PagoPar.
+   La clave privada NO está acá: vive en la Edge Function del servidor.
+   Esta anon key es pública por diseño, igual que la del resto de Supabase. */
+const SUPABASE_URL = "https://api.neura.com.py";
+const SUPABASE_ANON = "";              // se completa al desplegar
+const PAGO_ACTIVO = !!SUPABASE_ANON;   // sin anon key, el botón no se muestra
+
+/* PagoPar identifica la ciudad por código, no por nombre escrito a mano. */
+const CIUDADES = { "1": "Asunción", "2": "Ciudad del Este", "3": "San Lorenzo", "4": "Luque",
+  "5": "Capiatá", "6": "Lambaré", "7": "Fernando de la Mora", "8": "Limpio", "9": "Ñemby",
+  "10": "Encarnación", "11": "Pedro Juan Caballero", "12": "Coronel Oviedo",
+  "13": "Villarrica", "14": "Caaguazú", "15": "Itauguá" };
+const nombreCiudad = c => CIUDADES[String(c || "").trim()] || "";
 const fmt = n => "Gs. " + Number(n).toLocaleString("es-PY").replace(/,/g, ".");
 
 class Component extends DCLogic {
@@ -1262,7 +1311,8 @@ class Component extends DCLogic {
     consulta: "", cat: "todas", marca: "todas", precioMax: null, color: "todos", soloDisponibles: false, orden: "nuevos",
     filtrosAbiertos: false, visibles: 8, catActiva: 0, expandir: 0, nuevoActivo: 0, arrastre: 0, arrastrando: false,
     pColor: null, pCant: 1, pImg: 1, pError: "", zoom: false,
-    checkout: false, form: { nombre: "", telefono: "", ciudad: "", direccion: "", modalidad: "envio", obs: "" },
+    checkout: false, pagando: false,
+    form: { nombre: "", email: "", documento: "", telefono: "", ciudad: "", direccion: "", modalidad: "envio", obs: "" },
     errPedido: "", errCampos: {}, aviso: "", menuSlide: 0, hoverMarca: null, heroCol: 0, lightbox: null,
     cNombre: "", cContacto: "", cMensaje: "", errContacto: "", okContacto: ""
   };
@@ -1430,7 +1480,7 @@ class Component extends DCLogic {
     m += "Datos de entrega:\n";
     m += "Nombre: " + f.nombre + "\n";
     m += "Teléfono: " + f.telefono + "\n";
-    m += "Ciudad: " + f.ciudad + "\n";
+    m += "Ciudad: " + (nombreCiudad(f.ciudad) || f.ciudad) + "\n";
     m += "Dirección: " + (f.direccion || "-") + "\n";
     m += "Modalidad: " + (f.modalidad === "envio" ? "Envío" : "Retiro") + "\n";
     m += "Observaciones: " + (f.obs || "-") + "\n\n";
@@ -1438,6 +1488,71 @@ class Component extends DCLogic {
     return m;
   }
   setF(k, v) { this.setState({ form: Object.assign({}, this.state.form, { [k]: v }) }); }
+
+  /* Campos que faltan para poder cobrar online.
+     PagoPar exige correo y cédula; para WhatsApp alcanza con menos. */
+  camposFaltantes(paraPagar) {
+    const f = this.state.form, ec = {};
+    if (!f.nombre.trim()) ec.nombre = 1;
+    if (f.telefono.replace(/\D/g, "").length < 7) ec.telefono = 1;
+    if (!f.ciudad.trim()) ec.ciudad = 1;
+    if (f.modalidad === "envio" && !f.direccion.trim()) ec.direccion = 1;
+    if (paraPagar) {
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(f.email.trim())) ec.email = 1;
+      if (f.documento.replace(/\D/g, "").length < 5) ec.documento = 1;
+    }
+    return ec;
+  }
+
+  /* Pide el link de pago al servidor y manda al cliente a PagoPar.
+     Los montos los recalcula la Edge Function: acá no se manda ningún precio. */
+  pagarConPagopar() {
+    if (this.state.pagando) return;
+
+    const ec = this.camposFaltantes(true);
+    if (Object.keys(ec).length) {
+      this.setState({ errCampos: ec, errPedido: "Completá los campos marcados para poder pagar." });
+      return;
+    }
+    if (!this.state.carrito.length) {
+      this.setState({ errPedido: "Tu carrito está vacío." });
+      return;
+    }
+
+    const f = this.state.form;
+    this.setState({ pagando: true, errCampos: {}, errPedido: "" });
+
+    fetch(SUPABASE_URL + "/functions/v1/crear-pago", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        apikey: SUPABASE_ANON,
+        Authorization: "Bearer " + SUPABASE_ANON
+      },
+      body: JSON.stringify({
+        cliente: {
+          nombre: f.nombre, email: f.email, telefono: f.telefono,
+          documento: f.documento, ciudad: f.ciudad, direccion: f.direccion,
+          modalidad: f.modalidad, observaciones: f.obs
+        },
+        items: this.state.carrito.map(i => ({ id: i.id, cantidad: i.cantidad, color: i.color }))
+      })
+    })
+      .then(r => r.json().then(d => ({ ok: r.ok, d })))
+      .then(({ ok, d }) => {
+        if (!ok || !d.link) throw new Error((d && d.error) || "No pudimos generar el pago.");
+        /* El carrito se limpia recién cuando el pago se confirma, no ahora:
+           si el cliente abandona PagoPar, vuelve y encuentra su pedido intacto. */
+        try { sessionStorage.setItem("manastina_pago", JSON.stringify({ numero: d.numero, total: d.total })); } catch (e) {}
+        window.location.href = d.link;
+      })
+      .catch(err => {
+        this.setState({
+          pagando: false,
+          errPedido: (err && err.message) || "No pudimos conectar con PagoPar. Probá de nuevo o escribinos por WhatsApp."
+        });
+      });
+  }
 
   renderVals() {
     const s = this.state;
@@ -1784,21 +1899,31 @@ class Component extends DCLogic {
       abrirCheckout: () => this.setState({ checkout: true, carritoAbierto: false, errPedido: "", errCampos: {} }),
       cerrarCheckout: () => this.setState({ checkout: false }),
       fNombre: s.form.nombre, fTelefono: s.form.telefono, fCiudad: s.form.ciudad, fDireccion: s.form.direccion, fObs: s.form.obs,
+      fEmail: s.form.email, fDocumento: s.form.documento,
       onFNombre: e => this.setF("nombre", e.target.value), onFTelefono: e => this.setF("telefono", e.target.value),
       onFCiudad: e => this.setF("ciudad", e.target.value), onFDireccion: e => this.setF("direccion", e.target.value),
       onFObs: e => this.setF("obs", e.target.value),
+      onFEmail: e => this.setF("email", e.target.value),
+      onFDocumento: e => this.setF("documento", e.target.value.replace(/[^\d]/g, "")),
       elegirEnvio: () => this.setF("modalidad", "envio"), elegirRetiro: () => this.setF("modalidad", "retiro"),
       bordeEnvio: modEnvio ? "#4C0F2E" : "rgba(51,24,33,.25)", fondoEnvio: modEnvio ? "#4C0F2E" : "transparent", textoEnvio: modEnvio ? "#F9F1EA" : "#331821",
       bordeRetiro: !modEnvio ? "#4C0F2E" : "rgba(51,24,33,.25)", fondoRetiro: !modEnvio ? "#4C0F2E" : "transparent", textoRetiro: !modEnvio ? "#F9F1EA" : "#331821",
       bNombre: borde("nombre"), bTelefono: borde("telefono"), bCiudad: borde("ciudad"), bDireccion: borde("direccion"),
+      bEmail: borde("email"), bDocumento: borde("documento"),
       errorPedido: s.errPedido,
+
+      pagoActivo: PAGO_ACTIVO,
+      pagando: s.pagando,
+      textoBotonPago: s.pagando ? "Generando el pago…" : "Pagar con PagoPar",
+      fondoBotonPago: s.pagando ? "#8A6472" : "#4C0F2E",
+      cursorBotonPago: s.pagando ? "wait" : "pointer",
+      avisoEnvio: s.form.modalidad === "retiro"
+        ? "Retirás tu pedido en el local, sin costo."
+        : "El envío se abona al recibirlo.",
+      pagarOnline: () => this.pagarConPagopar(),
       enviarPedido: e => {
         e.preventDefault();
-        const f = s.form, ec = {};
-        if (!f.nombre.trim()) ec.nombre = 1;
-        if (f.telefono.replace(/\D/g, "").length < 7) ec.telefono = 1;
-        if (!f.ciudad.trim()) ec.ciudad = 1;
-        if (f.modalidad === "envio" && !f.direccion.trim()) ec.direccion = 1;
+        const ec = this.camposFaltantes(false);
         if (Object.keys(ec).length) {
           this.setState({ errCampos: ec, errPedido: "Completá los campos marcados para poder enviar el pedido." });
           return;

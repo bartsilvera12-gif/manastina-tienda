@@ -12,10 +12,49 @@ const OUT = 'build';
 fs.rmSync(OUT, { recursive: true, force: true });
 fs.mkdirSync(OUT, { recursive: true });
 
+/* Datos de Supabase para el cobro online. Salen de pagopar/config.env, que no
+   se sube a git. La anon key es pública por diseño: puede ir en el HTML.
+   La clave privada de PagoPar NO pasa por acá — vive solo en el servidor. */
+function leerConfig(archivo) {
+  if (!fs.existsSync(archivo)) return {};
+  const conf = {};
+  for (const linea of fs.readFileSync(archivo, 'utf8').split(/\r?\n/)) {
+    const m = /^([A-Z0-9_]+)=(.*)$/.exec(linea.trim());
+    if (m && !/COMPLETAR/.test(m[2])) conf[m[1]] = m[2].trim();
+  }
+  return conf;
+}
+const conf = leerConfig(path.join('pagopar', 'config.env'));
+const SB_URL = conf.SUPABASE_PROJECT_URL || 'https://api.neura.com.py';
+const SB_ANON = conf.SUPABASE_ANON_KEY || '';
+
+if (!SB_ANON) {
+  console.warn('  aviso: sin SUPABASE_ANON_KEY en pagopar/config.env — el botón de PagoPar queda oculto');
+}
+
+function inyectarSupabase(txt, esHtmlSuelto) {
+  const decl = esHtmlSuelto ? 'var' : 'const';
+  return txt
+    .replace(
+      new RegExp(decl + ' SUPABASE_URL = "[^"]*";'),
+      decl + ' SUPABASE_URL = "' + SB_URL + '";'
+    )
+    .replace(
+      new RegExp(decl + ' SUPABASE_ANON = "[^"]*";'),
+      decl + ' SUPABASE_ANON = "' + SB_ANON + '";'
+    );
+}
+
 // 1) la página pasa a llamarse index.html y apunta al dominio real
 let html = fs.readFileSync('Manastina Tienda.dc.html', 'utf8');
 html = html.replace(/const SITIO = "[^"]*";/, 'const SITIO = "' + SITIO + '";');
+html = inyectarSupabase(html, false);
 fs.writeFileSync(path.join(OUT, 'index.html'), html);
+
+// 1b) página de retorno de PagoPar
+let pago = fs.readFileSync('pago.html', 'utf8');
+pago = inyectarSupabase(pago, true);
+fs.writeFileSync(path.join(OUT, 'pago.html'), pago);
 
 // 2) scripts y datos
 for (const f of ['support.js', 'image-slot.js', 'datos-manastina.js']) {
