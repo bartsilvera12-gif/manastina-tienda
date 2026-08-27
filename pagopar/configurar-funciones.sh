@@ -116,8 +116,13 @@ sleep 4
 # --- 5. Comprobar ------------------------------------------------------------
 azul "5. Comprobando"
 
-VISTO=$(docker compose exec -T functions sh -c \
-  'echo ${MANASTINA_PAGOPAR_PUBLIC_KEY:-}' 2>/dev/null | tr -d '\r' | head -c 4)
+# El `|| true` evita que un fallo del exec corte el script por el pipefail.
+leer_del_contenedor() {
+  { docker compose exec -T functions sh -c "echo \${$1:-}" 2>/dev/null || true; } \
+    | tr -d '\r' | head -1
+}
+
+VISTO=$(leer_del_contenedor MANASTINA_PAGOPAR_PUBLIC_KEY)
 
 if [ -n "$VISTO" ]; then
   ok "El contenedor ve las variables de Manastina"
@@ -126,8 +131,33 @@ else
   echo "     Revisá que la ruta $ENV_CLIENTE sea correcta y volvé a correr."
 fi
 
-# --- 6. El control de acceso -------------------------------------------------
-azul "6. Control de acceso del webhook"
+# --- 6. La URL de retorno ----------------------------------------------------
+azul "6. URL de retorno"
+
+# Docker Compose reemplaza ${...} también dentro de los archivos de entorno.
+# La URL de retorno lleva un marcador que NO es para Docker: lo sustituye
+# PagoPar por el código del pedido. Por eso va escapado con doble signo.
+RETORNO=$(leer_del_contenedor MANASTINA_PAGOPAR_RETURN_URL)
+echo "     ${RETORNO:-(vacía)}"
+
+case "$RETORNO" in
+  *'{hash}'*)
+    ok "El marcador de PagoPar llegó entero" ;;
+  *hash=)
+    error "El marcador se perdió: PagoPar no va a poder marcar el pedido."
+    echo "     Corregí esa línea en $RUTA_ABS poniéndole doble signo:"
+    echo
+    echo "       MANASTINA_PAGOPAR_RETURN_URL=https://manastina.com/pago.html?hash=\$\${hash}"
+    echo
+    echo "     Y volvé a correr este script." ;;
+  "")
+    aviso "No pude leer la URL de retorno." ;;
+  *)
+    aviso "La URL de retorno tiene una forma inesperada; revisala." ;;
+esac
+
+# --- 7. El control de acceso -------------------------------------------------
+azul "7. Control de acceso del webhook"
 
 VERIFICA=$(grep -E '^FUNCTIONS_VERIFY_JWT=' "$ENV_FILE" 2>/dev/null \
   | cut -d= -f2- | tr -d '"' | tr -d "'" || true)
