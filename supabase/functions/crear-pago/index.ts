@@ -22,6 +22,7 @@ import {
   validarSuma,
 } from "../_shared/pagopar.ts";
 import { ciudadPorClave, esZonaACoordinar } from "../_shared/ciudades.ts";
+import { cors } from "../_shared/cors.ts";
 
 /** Ciudad del local. Se usa cuando el cliente retira y no eligio ninguna. */
 const CIUDAD_LOCAL = "capiata";
@@ -71,22 +72,8 @@ const ENVIO_TARIFAS: Record<string, number> = (() => {
 /** Envío gratis a partir de este monto de compra. 0 = nunca. */
 const ENVIO_GRATIS_DESDE = Number(env("ENVIO_GRATIS_DESDE", "0")) || 0;
 
-// Orígenes que pueden llamar a esta función.
-const ORIGENES_OK = new Set([
-  SITIO_URL,
-  SITIO_URL.replace("https://", "https://www."),
-  "http://localhost:4700",
-  "http://127.0.0.1:4700",
-]);
-
 function cabecerasCors(origen: string | null) {
-  const permitido = origen && ORIGENES_OK.has(origen) ? origen : SITIO_URL;
-  return {
-    "Access-Control-Allow-Origin": permitido,
-    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-    "Access-Control-Allow-Methods": "POST, OPTIONS",
-    Vary: "Origin",
-  };
+  return cors(origen, SITIO_URL, "POST, OPTIONS");
 }
 
 function json(cuerpo: unknown, status: number, origen: string | null) {

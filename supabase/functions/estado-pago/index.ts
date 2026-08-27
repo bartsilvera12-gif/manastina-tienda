@@ -17,6 +17,7 @@ import {
   limpiarClave,
   primerResultado,
 } from "../_shared/pagopar.ts";
+import { cors } from "../_shared/cors.ts";
 
 const env = (k: string, def = "") =>
   (Deno.env.get("MANASTINA_" + k) ?? Deno.env.get(k) ?? def).trim();
@@ -26,21 +27,8 @@ const PAGOPAR_PRIVATE_KEY = limpiarClave(env("PAGOPAR_PRIVATE_KEY"));
 const SITIO_URL = env("SITIO_URL", "https://manastina.com").replace(/\/+$/, "");
 const SCHEMA = env("SUPABASE_SCHEMA", "manastina");
 
-const ORIGENES_OK = new Set([
-  SITIO_URL,
-  SITIO_URL.replace("https://", "https://www."),
-  "http://localhost:4700",
-  "http://127.0.0.1:4700",
-]);
-
 function cabecerasCors(origen: string | null) {
-  const permitido = origen && ORIGENES_OK.has(origen) ? origen : SITIO_URL;
-  return {
-    "Access-Control-Allow-Origin": permitido,
-    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-    "Access-Control-Allow-Methods": "GET, OPTIONS",
-    Vary: "Origin",
-  };
+  return cors(origen, SITIO_URL, "GET, OPTIONS");
 }
 
 function json(cuerpo: unknown, status: number, origen: string | null) {

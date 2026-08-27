@@ -17,6 +17,7 @@
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.4";
 import { publicarFotosPendientes } from "../_shared/fotos.ts";
+import { cors } from "../_shared/cors.ts";
 
 const env = (k: string, def = "") =>
   (Deno.env.get("MANASTINA_" + k) ?? Deno.env.get(k) ?? def).trim();
@@ -24,24 +25,10 @@ const env = (k: string, def = "") =>
 const SITIO_URL = env("SITIO_URL", "https://manastina.com").replace(/\/+$/, "");
 const SCHEMA = env("SUPABASE_SCHEMA", "manastina");
 
-const ORIGENES_OK = new Set([
-  SITIO_URL,
-  SITIO_URL.replace("https://", "https://www."),
-  "http://localhost:4700",
-  "http://127.0.0.1:4700",
-  "http://127.0.0.1:4703",
-  "http://127.0.0.1:4704",
-  "http://127.0.0.1:4705",
-]);
-
 function cabeceras(origen: string | null) {
-  const permitido = origen && ORIGENES_OK.has(origen) ? origen : SITIO_URL;
   return {
-    "Access-Control-Allow-Origin": permitido,
-    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-    "Access-Control-Allow-Methods": "GET, OPTIONS",
-    Vary: "Origin",
-    // Medio minuto: no golpea la base en cada visita, y un agotado se refleja
+    ...cors(origen, SITIO_URL, "GET, OPTIONS"),
+    // Medio minuto: no golpea la base en cada visita y un agotado se refleja
     // enseguida.
     "Cache-Control": "public, max-age=30",
   };
