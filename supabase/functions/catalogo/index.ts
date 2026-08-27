@@ -48,6 +48,8 @@ type FilaCatalogo = {
   imagen_path: string | null;
   categoria_codigo: string | null;
   categoria_nombre: string | null;
+  nuevo_web: boolean | null;
+  destacado_web: boolean | null;
 };
 
 /** Una fila de v_web_categorias. */
@@ -92,7 +94,8 @@ Deno.serve(async (req) => {
       .from("v_web_catalogo")
       .select(
         "codigo_web, producto_id, nombre, precio, stock, activo, " +
-          "descripcion_web, imagen_web_url, imagen_path, categoria_codigo, categoria_nombre",
+          "descripcion_web, imagen_web_url, imagen_path, categoria_codigo, categoria_nombre, " +
+          "nuevo_web, destacado_web",
       );
 
     if (error) throw error;
@@ -111,6 +114,8 @@ Deno.serve(async (req) => {
       categoria: categoriaWeb(p.categoria_codigo, p.categoria_nombre),
       descripcion: String(p.descripcion_web ?? "").trim(),
       imagen: nuevas.get(String(p.producto_id)) ?? p.imagen_web_url ?? "",
+      nuevo: p.nuevo_web === true,
+      destacado: p.destacado_web === true,
     }));
 
     // --- Categorías ---------------------------------------------------------

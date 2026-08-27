@@ -1620,11 +1620,14 @@ class Component extends DCLogic {
 
     if (base) {
       /* Ya estaba en la web: las fotos y los colores del archivo son mejores
-         que la única foto del ERP, así que se respetan. */
+         que la única foto del ERP, así que se respetan. Lo que sí manda el
+         ERP es qué se destaca en la portada. */
       return Object.assign({}, base, {
         nombre: real.nombre || base.nombre,
         precio: precio,
         stock: stock,
+        nuevo: real.nuevo === true,
+        seleccion: real.destacado === true,
         descripcion: base.descripcion || real.descripcion || "",
         imagenes: (base.imagenes && base.imagenes.length)
           ? base.imagenes
@@ -1642,8 +1645,8 @@ class Component extends DCLogic {
       categoria: real.categoria || "accesorios",
       precio: precio,
       stock: stock,
-      nuevo: true,
-      seleccion: false,
+      nuevo: real.nuevo === true,
+      seleccion: real.destacado === true,
       descripcion: real.descripcion || "",
       colores: [{ nombre: "Único", hex: "#4C0F2E" }],
       imagenes: real.imagen ? [real.imagen] : []
