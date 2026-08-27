@@ -68,7 +68,20 @@ datos.productos.forEach(p => {
   fs.writeFileSync(path.join(dirP, p.id + '.html'), doc);
 });
 
-// 5) configuración de Apache e instructivo
+// 5) catálogo en JSON — lo lee la Edge Function "crear-pago" para validar
+//    los precios del lado del servidor y no confiar en lo que manda el navegador
+const catalogo = datos.productos.map(p => ({
+  id: p.id,
+  nombre: p.nombre,
+  precio: p.precio,
+  stock: p.stock,
+}));
+fs.writeFileSync(
+  path.join(OUT, 'catalogo.json'),
+  JSON.stringify(catalogo, null, 2)
+);
+
+// 6) configuración de Apache e instructivo
 fs.copyFileSync('htaccess.txt', path.join(OUT, '.htaccess'));
 fs.copyFileSync('LEEME-hostinger.txt', path.join(OUT, 'LEEME-hostinger.txt'));
 

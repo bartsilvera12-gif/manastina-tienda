@@ -1,0 +1,358 @@
+// =============================================================================
+// Edge Function: crear-pago
+// =============================================================================
+// La llama el navegador desde manastina.com cuando el cliente aprieta
+// "Pagar con PagoPar". Recibe el carrito y los datos del comprador, y devuelve
+// el link de pago.
+//
+// Regla de oro: NO se confía en ningún monto que mande el navegador. Los
+// precios se releen del catálogo publicado y el total se recalcula acá.
+// =============================================================================
+
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.4";
+import {
+  hashDesdeIniciar,
+  iniciarTransaccion,
+  limpiarClave,
+  linkCheckout,
+  respuestaOk,
+  tokenIniciar,
+  validarComprador,
+  validarItem,
+  validarSuma,
+} from "../_shared/pagopar.ts";
+import { ciudadPorCodigo, esInterior } from "../_shared/ciudades.ts";
+
+// -----------------------------------------------------------------------------
+// Configuración (viene de los secretos de Supabase)
+// -----------------------------------------------------------------------------
+const env = (k: string, def = "") => (Deno.env.get(k) ?? def).trim();
+
+const PAGOPAR_PUBLIC_KEY = limpiarClave(env("PAGOPAR_PUBLIC_KEY"));
+const PAGOPAR_PRIVATE_KEY = limpiarClave(env("PAGOPAR_PRIVATE_KEY"));
+const SITIO_URL = env("SITIO_URL", "https://manastina.com").replace(/\/+$/, "");
+const SCHEMA = env("SUPABASE_SCHEMA", "manastina");
+const EMPRESA_ID = env("MANASTINA_EMPRESA_ID");
+
+const FORMA_PAGO = Number(env("PAGOPAR_FORMA_PAGO", "9")) || 9;
+const ITEM_CATEGORIA = env("PAGOPAR_ITEM_CATEGORIA", "909");
+const ITEM_CIUDAD = env("PAGOPAR_ITEM_CIUDAD", "5");
+const DIAS_VENCIMIENTO = Number(env("PAGOPAR_DIAS_VENCIMIENTO", "3")) || 3;
+const RETURN_URL = env("PAGOPAR_RETURN_URL");
+const WEBHOOK_URL = env("PAGOPAR_WEBHOOK_URL");
+
+const VENDEDOR_TELEFONO = env("PAGOPAR_VENDEDOR_TELEFONO");
+const VENDEDOR_DIRECCION = env("PAGOPAR_VENDEDOR_DIRECCION");
+const VENDEDOR_REFERENCIA = env("PAGOPAR_VENDEDOR_DIRECCION_REFERENCIA");
+const VENDEDOR_COORDENADAS = env("PAGOPAR_VENDEDOR_DIRECCION_COORDENADAS");
+
+const ENVIO_MODO = env("ENVIO_MODO", "fijo");
+const ENVIO_MONTO = Number(env("ENVIO_MONTO", "0")) || 0;
+const ENVIO_MONTO_INTERIOR = Number(env("ENVIO_MONTO_INTERIOR", "0")) || 0;
+const ENVIO_GRATIS_DESDE = Number(env("ENVIO_GRATIS_DESDE", "0")) || 0;
+
+// Orígenes que pueden llamar a esta función.
+const ORIGENES_OK = new Set([
+  SITIO_URL,
+  SITIO_URL.replace("https://", "https://www."),
+  "http://localhost:4700",
+  "http://127.0.0.1:4700",
+]);
+
+function cabecerasCors(origen: string | null) {
+  const permitido = origen && ORIGENES_OK.has(origen) ? origen : SITIO_URL;
+  return {
+    "Access-Control-Allow-Origin": permitido,
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    Vary: "Origin",
+  };
+}
+
+function json(cuerpo: unknown, status: number, origen: string | null) {
+  return new Response(JSON.stringify(cuerpo), {
+    status,
+    headers: { ...cabecerasCors(origen), "Content-Type": "application/json" },
+  });
+}
+
+// -----------------------------------------------------------------------------
+// Catálogo: se relee del sitio publicado para validar precios del lado servidor.
+// Se cachea en memoria un rato para no pedirlo en cada compra.
+// -----------------------------------------------------------------------------
+type ProductoCatalogo = { id: string; nombre: string; precio: number; stock: number };
+
+let catalogoCache: { datos: Map<string, ProductoCatalogo>; vence: number } | null = null;
+
+async function traerCatalogo(): Promise<Map<string, ProductoCatalogo>> {
+  const ahora = Date.now();
+  if (catalogoCache && catalogoCache.vence > ahora) return catalogoCache.datos;
+
+  const res = await fetch(`${SITIO_URL}/catalogo.json`, { headers: { Accept: "application/json" } });
+  if (!res.ok) throw new Error(`No se pudo leer el catálogo (HTTP ${res.status})`);
+  const lista = (await res.json()) as ProductoCatalogo[];
+  if (!Array.isArray(lista) || lista.length === 0) {
+    throw new Error("El catálogo publicado está vacío");
+  }
+
+  const mapa = new Map<string, ProductoCatalogo>();
+  for (const p of lista) {
+    if (p && p.id) mapa.set(String(p.id), p);
+  }
+  catalogoCache = { datos: mapa, vence: ahora + 5 * 60 * 1000 };
+  return mapa;
+}
+
+// -----------------------------------------------------------------------------
+// Validaciones de entrada
+// -----------------------------------------------------------------------------
+const soloDigitos = (s: unknown) => String(s ?? "").replace(/\D/g, "");
+const texto = (s: unknown, max = 200) => String(s ?? "").trim().slice(0, max);
+
+function emailValido(s: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(s);
+}
+
+function calcularEnvio(modalidad: string, ciudadCodigo: string, subtotal: number): number {
+  if (modalidad === "retiro") return 0;
+  if (ENVIO_GRATIS_DESDE > 0 && subtotal >= ENVIO_GRATIS_DESDE) return 0;
+  if (ENVIO_MODO === "gratis") return 0;
+  if (ENVIO_MODO === "ciudad") {
+    return esInterior(ciudadCodigo) ? ENVIO_MONTO_INTERIOR : ENVIO_MONTO;
+  }
+  return ENVIO_MONTO;
+}
+
+/** `id_pedido_comercio` tiene que ser entero; es el mismo valor que firma el token. */
+function nuevoIdPedidoComercio(): number {
+  return Math.floor(100_000_000 + Math.random() * 900_000_000);
+}
+
+// -----------------------------------------------------------------------------
+Deno.serve(async (req) => {
+  const origen = req.headers.get("Origin");
+
+  if (req.method === "OPTIONS") {
+    return new Response("ok", { headers: cabecerasCors(origen) });
+  }
+  if (req.method !== "POST") {
+    return json({ error: "Método no permitido" }, 405, origen);
+  }
+  if (!PAGOPAR_PUBLIC_KEY || !PAGOPAR_PRIVATE_KEY) {
+    console.error("[crear-pago] faltan las claves de PagoPar en los secretos");
+    return json({ error: "El cobro online no está configurado todavía." }, 503, origen);
+  }
+
+  try {
+    const cuerpo = await req.json();
+
+    // --- Comprador ---------------------------------------------------------
+    const c = cuerpo?.cliente ?? {};
+    const nombre = texto(c.nombre);
+    const email = texto(c.email).toLowerCase();
+    const telefono = soloDigitos(c.telefono).slice(0, 20);
+    const documento = soloDigitos(c.documento).slice(0, 20);
+    const ciudadCodigo = texto(c.ciudad, 4);
+    const direccion = texto(c.direccion);
+    const referencia = texto(c.referencia);
+    const modalidad = c.modalidad === "retiro" ? "retiro" : "envio";
+    const observaciones = texto(c.observaciones, 500);
+
+    const faltantes: string[] = [];
+    if (nombre.length < 3) faltantes.push("nombre");
+    if (!emailValido(email)) faltantes.push("email");
+    if (telefono.length < 6) faltantes.push("teléfono");
+    if (documento.length < 5) faltantes.push("cédula");
+    const ciudad = ciudadPorCodigo(ciudadCodigo);
+    if (!ciudad) faltantes.push("ciudad");
+    if (modalidad === "envio" && direccion.length < 5) faltantes.push("dirección");
+    if (faltantes.length) {
+      return json({ error: `Faltan datos: ${faltantes.join(", ")}.` }, 400, origen);
+    }
+
+    // --- Carrito, con precios releídos del catálogo -------------------------
+    const entrada = Array.isArray(cuerpo?.items) ? cuerpo.items : [];
+    if (entrada.length === 0) return json({ error: "El carrito está vacío." }, 400, origen);
+    if (entrada.length > 50) return json({ error: "Demasiados ítems." }, 400, origen);
+
+    const catalogo = await traerCatalogo();
+    const lineas: {
+      producto_codigo: string;
+      nombre: string;
+      color: string;
+      cantidad: number;
+      precio_unitario: number;
+      total_linea: number;
+    }[] = [];
+
+    for (const it of entrada) {
+      const codigo = texto(it?.id, 40);
+      const producto = catalogo.get(codigo);
+      if (!producto) {
+        return json({ error: `El producto "${codigo}" ya no está disponible.` }, 409, origen);
+      }
+      const cantidad = Math.floor(Number(it?.cantidad) || 0);
+      if (cantidad < 1 || cantidad > 99) {
+        return json({ error: `Cantidad inválida para ${producto.nombre}.` }, 400, origen);
+      }
+      // El precio SIEMPRE sale del catálogo, nunca del navegador.
+      const precio = Math.round(Number(producto.precio) || 0);
+      if (precio <= 0) {
+        return json({ error: `El producto ${producto.nombre} no tiene precio.` }, 409, origen);
+      }
+      lineas.push({
+        producto_codigo: codigo,
+        nombre: producto.nombre,
+        color: texto(it?.color, 60),
+        cantidad,
+        precio_unitario: precio,
+        total_linea: precio * cantidad,
+      });
+    }
+
+    const subtotal = lineas.reduce((a, l) => a + l.total_linea, 0);
+    const envio = calcularEnvio(modalidad, ciudadCodigo, subtotal);
+    const total = subtotal + envio;
+    if (total <= 0) return json({ error: "Total inválido." }, 400, origen);
+
+    // --- Guardar el pedido antes de llamar a PagoPar ------------------------
+    const sb = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+      { db: { schema: SCHEMA } },
+    );
+
+    const idPedidoComercio = nuevoIdPedidoComercio();
+
+    const { data: pedido, error: errPedido } = await sb
+      .from("web_pedidos")
+      .insert({
+        id_pedido_comercio: idPedidoComercio,
+        empresa_id: EMPRESA_ID || null,
+        cliente_nombre: nombre,
+        cliente_email: email,
+        cliente_telefono: telefono,
+        cliente_documento: documento,
+        ciudad_codigo: ciudadCodigo,
+        ciudad_nombre: ciudad!.nombre,
+        direccion,
+        direccion_referencia: referencia,
+        modalidad,
+        observaciones,
+        subtotal,
+        envio,
+        total,
+        estado_pago: "pendiente",
+      })
+      .select("id")
+      .single();
+
+    if (errPedido) throw errPedido;
+
+    const { error: errItems } = await sb
+      .from("web_pedido_items")
+      .insert(lineas.map((l) => ({ pedido_id: pedido.id, ...l })));
+    if (errItems) throw errItems;
+
+    // --- Payload de PagoPar -------------------------------------------------
+    const comprador = {
+      ruc: "",
+      email,
+      ciudad: ciudadCodigo,
+      nombre,
+      telefono,
+      direccion,
+      documento,
+      coordenadas: "",
+      razon_social: "",
+      tipo_documento: "CI",
+      direccion_referencia: referencia,
+    };
+    validarComprador(comprador);
+
+    // Una sola línea agregada: PagoPar solo necesita cobrar el total.
+    // El detalle real queda en web_pedido_items.
+    const resumen = lineas.length === 1
+      ? lineas[0].nombre
+      : `${lineas.length} artículos`;
+
+    const item = {
+      ciudad: ITEM_CIUDAD,
+      nombre: `Pedido MANASTINA #${idPedidoComercio}`,
+      cantidad: 1,
+      categoria: ITEM_CATEGORIA,
+      public_key: PAGOPAR_PUBLIC_KEY,
+      url_imagen: `${SITIO_URL}/assets/logo-isotipo-borgona.png`,
+      descripcion: `${resumen}${envio > 0 ? " + envío" : ""}`.slice(0, 200),
+      id_producto: idPedidoComercio,
+      precio_total: total,
+      vendedor_telefono: VENDEDOR_TELEFONO,
+      vendedor_direccion: VENDEDOR_DIRECCION,
+      vendedor_direccion_referencia: VENDEDOR_REFERENCIA,
+      vendedor_direccion_coordenadas: VENDEDOR_COORDENADAS,
+    };
+    validarItem(item);
+    validarSuma([item], total);
+
+    const vence = new Date(Date.now() + DIAS_VENCIMIENTO * 86_400_000);
+
+    const payload: Record<string, unknown> = {
+      token: await tokenIniciar(PAGOPAR_PRIVATE_KEY, idPedidoComercio, total),
+      comprador,
+      public_key: PAGOPAR_PUBLIC_KEY,
+      monto_total: total,
+      tipo_pedido: "VENTA-COMERCIO",
+      compras_items: [item],
+      fecha_maxima_pago: vence.toISOString().slice(0, 19).replace("T", " "),
+      id_pedido_comercio: idPedidoComercio,
+      descripcion_resumen: `MANASTINA #${idPedidoComercio}`,
+      forma_pago: FORMA_PAGO,
+    };
+    if (RETURN_URL) payload.url_respuesta = RETURN_URL;
+    if (WEBHOOK_URL) payload.url_notificacion = WEBHOOK_URL;
+
+    // --- Llamada a PagoPar --------------------------------------------------
+    const pp = await iniciarTransaccion(payload);
+
+    if (!respuestaOk(pp.respuesta)) {
+      console.error("[crear-pago] PagoPar rechazó la transacción", JSON.stringify(pp).slice(0, 800));
+      await sb.from("web_pedidos")
+        .update({ estado_pago: "rechazado", pagopar_respuesta: pp })
+        .eq("id", pedido.id);
+      return json(
+        { error: "PagoPar rechazó el pedido.", detalle: pp?.mensaje ?? null },
+        502,
+        origen,
+      );
+    }
+
+    const hash = hashDesdeIniciar(pp);
+    if (!hash) {
+      console.error("[crear-pago] PagoPar no devolvió hash", JSON.stringify(pp).slice(0, 800));
+      return json({ error: "PagoPar no devolvió el link de pago." }, 502, origen);
+    }
+
+    const link = linkCheckout(hash);
+
+    await sb.from("web_pedidos")
+      .update({ pagopar_hash: hash, pagopar_link: link, pagopar_respuesta: pp })
+      .eq("id", pedido.id);
+
+    console.info("[crear-pago] pedido creado", {
+      pedido_id: pedido.id,
+      id_pedido_comercio: idPedidoComercio,
+      total,
+      hash_prefijo: hash.slice(0, 8),
+    });
+
+    return json(
+      { link, pedido_id: pedido.id, numero: idPedidoComercio, subtotal, envio, total },
+      200,
+      origen,
+    );
+  } catch (e) {
+    console.error("[crear-pago]", e);
+    const msg = e instanceof Error ? e.message : "Error inesperado";
+    return json({ error: "No se pudo generar el pago.", detalle: msg }, 500, origen);
+  }
+});
