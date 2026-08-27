@@ -1,0 +1,30 @@
+# =============================================================================
+# MANASTINA · Configuración de las Edge Functions
+# =============================================================================
+# Lo importante acá es `verify_jwt` de cada función: define quién puede
+# llamarlas. Se deja declarado en el archivo en vez de pasarlo por bandera al
+# desplegar, para que no dependa de que alguien se acuerde del flag.
+# =============================================================================
+
+project_id = "manastina-tienda"
+
+[edge_runtime]
+enabled = true
+policy = "per_worker"
+deno_version = 2
+
+# Las llama el navegador con la anon key.
+[functions.catalogo]
+verify_jwt = true
+
+[functions.crear-pago]
+verify_jwt = true
+
+[functions.estado-pago]
+verify_jwt = true
+
+# La llama PagoPar, que no tiene la anon key de Supabase y no puede mandarla.
+# La autenticación real es el token SHA1 firmado con la clave privada, que se
+# valida dentro de la función: sin ese token no se toca ningún pedido.
+[functions.pagopar-webhook]
+verify_jwt = false
