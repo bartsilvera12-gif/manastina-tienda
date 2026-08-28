@@ -1423,7 +1423,7 @@ class Component extends DCLogic {
     carrito: [], carritoAbierto: false, menuAbierto: false, buscarAbierto: false, coleccionesAbierto: false,
     consulta: "", cat: "todas", marca: "todas", precioMax: null, color: "todos", soloDisponibles: false, orden: "nuevos",
     filtrosAbiertos: false, visibles: 8, catActiva: 0, expandir: 0, nuevoActivo: 0, arrastre: 0, arrastrando: false,
-    coleccion: null, colFiltro: null, portada: null,
+    coleccion: null, colFiltro: null, portada: null, marcaPend: null,
     pColor: null, pCant: 1, pImg: 1, pError: "", zoom: false,
     checkout: false, pagando: false, ciudadesAbiertas: false,
     form: { nombre: "", email: "", documento: "", telefono: "", ciudad: "", direccion: "", modalidad: "envio", envioPago: "ahora", obs: "" },
@@ -1441,8 +1441,7 @@ class Component extends DCLogic {
     };
     cargar();
     try {
-      const idURL = new URLSearchParams(window.location.search).get("p");
-      if (idURL) this.setState({ ruta: { n: "producto", id: idURL }, pCant: 1, pImg: 1 });
+      this.abrirDesdeURL();
     } catch (e) {}
     try {
       const g = localStorage.getItem("manastina_carrito");
@@ -1494,6 +1493,18 @@ class Component extends DCLogic {
     clearInterval(this._menuTimer);
   }
   componentDidUpdate() {
+    /* La barra del navegador acompaña lo que se está viendo, así el link se
+       copia y se pasa. Solo se reescribe si cambió, para no llenar el
+       historial con la misma dirección. */
+    try {
+      const quiere = this.direccionDeLoQueSeVe();
+      if (quiere !== window.location.pathname + window.location.search) {
+        window.history.replaceState(null, "", quiere);
+      }
+    } catch (e) {}
+
+    this.resolverMarcaPendiente();
+
     const bloquea = this.state.menuAbierto || this.state.carritoAbierto || this.state.checkout || this.state.filtrosAbiertos || this.state.zoom || this.state.lightbox != null;
     document.body.style.overflow = bloquea ? "hidden" : "";
     const v = this._video && this._video.current;
@@ -1508,6 +1519,81 @@ class Component extends DCLogic {
     document.querySelectorAll("video.lb-video").forEach(lv => { lv.controls = true; });
   }
 
+  /* Abre lo que pida la dirección. Sirve para entrar directo a la tienda, a
+     una marca, a una categoría o a una colección desde un link compartido.
+
+       ?p=c04            una pieza
+       ?tienda=1         el catálogo entero
+       ?marca=guess      el catálogo filtrado por marca
+       ?cat=carteras     por categoría
+       ?coleccion=x      por colección
+       ?ver=nuevos       novedades  (o ?ver=destacados)
+       ?q=cartera negra  con una búsqueda puesta
+
+     Se pueden combinar: ?marca=guess&cat=carteras */
+  abrirDesdeURL() {
+    let q;
+    try { q = new URLSearchParams(window.location.search); } catch (e) { return; }
+
+    const id = q.get("p");
+    if (id) { this.setState({ ruta: { n: "producto", id }, pCant: 1, pImg: 1 }); return; }
+
+    const pagina = q.get("pagina");
+    if (pagina === "nosotros" || pagina === "contacto") {
+      this.setState({ ruta: { n: pagina } });
+      return;
+    }
+
+    const marca = q.get("marca"), cat = q.get("cat");
+    const col = q.get("coleccion"), ver = q.get("ver"), busca = q.get("q");
+    if (!q.get("tienda") && !marca && !cat && !col && !ver && !busca) return;
+
+    const extra = { ruta: { n: "tienda" }, visibles: 8 };
+    /* La marca viaja como clave y en el estado vive por nombre. Las marcas
+       pueden venir del ERP y llegar después, así que queda pendiente hasta
+       que haya con qué resolverla. */
+    if (marca) extra.marcaPend = marca;
+    if (cat) extra.cat = cat;
+    if (col) extra.colFiltro = col;
+    if (ver === "nuevos" || ver === "destacados") extra.portada = ver;
+    if (busca) extra.consulta = busca;
+    this.setState(extra);
+    if (marca) this.resolverMarcaPendiente();
+  }
+
+  /* Pasa la clave de la dirección al nombre real de la marca. Se vuelve a
+     intentar cuando llegan las del ERP: puede ser una que el archivo del
+     sitio no tenía. */
+  resolverMarcaPendiente() {
+    const pend = this.state.marcaPend;
+    if (!pend) return;
+    const lista = (this.state.datos && this.state.datos.marcas) || [];
+    const hallada = lista.find(m => clave(m) === pend);
+    if (hallada) this.setState({ marca: hallada, marcaPend: null });
+  }
+
+  /* La dirección que corresponde a lo que se está viendo. Es lo que se copia
+     de la barra del navegador para pasarle a alguien. */
+  direccionDeLoQueSeVe() {
+    const s = this.state, base = window.location.pathname;
+    const partes = [];
+
+    if (s.ruta.n === "producto") return base + "?p=" + encodeURIComponent(s.ruta.id);
+    if (s.ruta.n === "nosotros" || s.ruta.n === "contacto") return base + "?pagina=" + s.ruta.n;
+    if (s.ruta.n !== "tienda") return base;
+
+    if (s.colFiltro) partes.push("coleccion=" + encodeURIComponent(s.colFiltro));
+    if (s.portada) partes.push("ver=" + s.portada);
+    if (s.marca !== "todas") partes.push("marca=" + encodeURIComponent(clave(s.marca)));
+    else if (s.marcaPend) partes.push("marca=" + encodeURIComponent(s.marcaPend));
+    if (s.cat !== "todas") partes.push("cat=" + encodeURIComponent(s.cat));
+    if (s.consulta.trim()) partes.push("q=" + encodeURIComponent(s.consulta.trim()));
+    /* Sin ningún filtro hace falta algo que diga que es la tienda, si no el
+       link vuelve a la portada. */
+    if (!partes.length) partes.push("tienda=1");
+    return base + "?" + partes.join("&");
+  }
+
   guardar(carrito) {
     this.setState({ carrito });
     try { localStorage.setItem("manastina_carrito", JSON.stringify(carrito)); } catch (e) {}
@@ -1518,10 +1604,8 @@ class Component extends DCLogic {
     this._t = setTimeout(() => this.setState({ aviso: "" }), 2600);
   }
   ir(ruta, extra) {
-    try {
-      const base = window.location.pathname;
-      window.history.replaceState(null, "", ruta && ruta.n === "producto" ? base + "?p=" + ruta.id : base);
-    } catch (e) {}
+    /* La dirección la escribe componentDidUpdate a partir del estado nuevo:
+       acá todavía no está aplicado y saldría la anterior. */
     this.setState(Object.assign({ ruta, menuAbierto: false, buscarAbierto: false, coleccionesAbierto: false, filtrosAbiertos: false, pError: "", colFiltro: null, portada: null }, extra || {}));
     setTimeout(() => window.scrollTo({ top: 0, behavior: "auto" }), 0);
   }
