@@ -17,6 +17,29 @@
 const BUCKET_PRIVADO = "productos-imagenes";
 export const BUCKET_PUBLICO = "tienda-web";
 
+/** Lo que acepta el bucket público: fotos de producto y clips de la galería. */
+const TIPOS_PERMITIDOS = [
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "video/mp4",
+  "video/webm",
+  "video/quicktime",
+];
+/** 25 MB, el tope del video que deja subir el ERP. */
+const LIMITE_BYTES = 25 * 1024 * 1024;
+
+/** El tipo que hay que declarar al subir, según la extensión del archivo. */
+const TIPO_POR_EXT: Record<string, string> = {
+  jpg: "image/jpeg",
+  jpeg: "image/jpeg",
+  png: "image/png",
+  webp: "image/webp",
+  mp4: "video/mp4",
+  webm: "video/webm",
+  mov: "video/quicktime",
+};
+
 let bucketListo = false;
 
 /** Crea el bucket público si no existe. Idempotente. */
@@ -33,13 +56,32 @@ async function asegurarBucket(sb: any): Promise<void> {
   }
   const { error } = await sb.storage.createBucket(BUCKET_PUBLICO, {
     public: true,
-    fileSizeLimit: 5 * 1024 * 1024,
-    allowedMimeTypes: ["image/jpeg", "image/png", "image/webp"],
+    fileSizeLimit: LIMITE_BYTES,
+    allowedMimeTypes: TIPOS_PERMITIDOS,
   });
   if (error && !/already exists|duplicate/i.test(error.message)) {
     throw new Error(`No se pudo crear el bucket público: ${error.message}`);
   }
   bucketListo = true;
+}
+
+/**
+ * Amplía el bucket a video. Hace falta para los buckets ya creados, que se
+ * hicieron aceptando solo imágenes de 5 MB. Se intenta una sola vez.
+ */
+let bucketAmpliado = false;
+async function ampliarBucket(sb: any): Promise<void> {
+  if (bucketAmpliado) return;
+  bucketAmpliado = true;
+  try {
+    await sb.storage.updateBucket(BUCKET_PUBLICO, {
+      public: true,
+      fileSizeLimit: LIMITE_BYTES,
+      allowedMimeTypes: TIPOS_PERMITIDOS,
+    });
+  } catch (e) {
+    console.warn("[fotos] no se pudo ampliar el bucket:", e instanceof Error ? e.message : e);
+  }
 }
 
 /**
@@ -71,7 +113,8 @@ export async function publicarFoto(
       return null;
     }
 
-    const tipo = ext === "png" ? "image/png" : ext === "webp" ? "image/webp" : "image/jpeg";
+    const tipo = TIPO_POR_EXT[ext] ?? "image/jpeg";
+    if (tipo.startsWith("video/")) await ampliarBucket(sb);
 
     const { error: errSubir } = await sb.storage
       .from(BUCKET_PUBLICO)
@@ -100,6 +143,7 @@ export async function publicarFotosPendientes(
   productos: { producto_id: string; imagen_path?: string | null; imagen_web_url?: string | null }[],
   tabla = "productos",
   prefijo = "productos",
+  columna = "imagen_web_url",
 ): Promise<Map<string, string>> {
   const urls = new Map<string, string>();
 
@@ -115,7 +159,7 @@ export async function publicarFotosPendientes(
     urls.set(p.producto_id, url);
     const { error } = await sb
       .from(tabla)
-      .update({ imagen_web_url: url })
+      .update({ [columna]: url })
       .eq("id", p.producto_id);
 
     if (error) console.warn("[fotos] no se pudo guardar la URL", error.message);

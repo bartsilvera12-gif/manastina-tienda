@@ -518,7 +518,12 @@ input,select,textarea{font-family:inherit;color:#331821}
       <div ref="{{ refGalTrack }}" class="gal-track" style="display:flex;align-items:flex-start;gap:clamp(14px,1.8vw,30px);will-change:transform">
         <sc-for list="{{ galeria }}" as="g" hint-placeholder-count="5">
           <figure onClick="{{ g.abrir }}" style="flex:0 0 auto;width:{{ g.w }}px;height:{{ g.h }}px;margin:{{ g.dy }}px 0 0;position:relative;overflow:hidden;background:#EFE3DA;box-shadow:0 22px 44px -26px rgba(51,24,33,.45);cursor:pointer">
-            <img src="{{ g.thumb }}" alt="{{ g.title }}" loading="lazy" style="width:100%;height:100%;object-fit:cover;transition:transform .9s cubic-bezier(.2,.7,.2,1)" style-hover="transform:scale(1.06)">
+            <sc-if value="{{ g.thumbEsFoto }}">
+              <img src="{{ g.thumb }}" alt="{{ g.title }}" loading="lazy" style="width:100%;height:100%;object-fit:cover;transition:transform .9s cubic-bezier(.2,.7,.2,1)" style-hover="transform:scale(1.06)">
+            </sc-if>
+            <sc-if value="{{ g.thumbEsVideo }}">
+              <video class="gal-video" src="{{ g.thumb }}" autoplay muted loop playsinline preload="metadata" aria-label="{{ g.title }}" style="width:100%;height:100%;object-fit:cover"></video>
+            </sc-if>
             <sc-if value="{{ g.esVideo }}">
               <span aria-hidden="true" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2;width:54px;height:54px;border-radius:50%;background:rgba(51,24,33,.55);color:#F9F1EA;display:flex;align-items:center;justify-content:center;font-size:18px;padding-left:3px">▶</span>
             </sc-if>
@@ -1370,6 +1375,14 @@ const nombreCiudad = c => CIUDADES[String(c || "").trim()] || "";
 const tarifaEnvio = c => { const t = TARIFAS_ENVIO[String(c || "").trim()]; return typeof t === "number" ? t : null; };
 const fmt = n => "Gs. " + Number(n).toLocaleString("es-PY").replace(/,/g, ".");
 
+/* Si el archivo es un video. Sirve para no meter un mp4 dentro de un <img>,
+   que quedaria roto: eso pasa cuando a un video de la galeria todavia no le
+   cargaron su portada. */
+const esVideoArchivo = u => {
+  const limpio = String(u || "").toLowerCase().split("?")[0];
+  return limpio.endsWith(".mp4") || limpio.endsWith(".webm") || limpio.endsWith(".mov");
+};
+
 /* La colección de la portada mientras el ERP no diga otra cosa. Si todavía no
    cargaron ninguna, la web sigue mostrando exactamente lo que mostraba antes. */
 const COL_NOMBRE = "Nueva colección";
@@ -1681,13 +1694,26 @@ class Component extends DCLogic {
 
         /* Las marcas también: los nombres, el orden y los logos. Las que ya
            tenían logo en el sitio lo conservan hasta que suban el suyo. */
+        /* La galería de la portada: fotos y videos, en el orden del ERP. */
+        const galeria = (d.galeria || [])
+          .filter(g => g && g.url)
+          .map(g => ({
+            url: g.url,
+            thumb: g.miniatura || g.url,
+            esVideo: g.tipo === "video",
+            esFoto: g.tipo !== "video",
+            title: g.titulo || "",
+            desc: g.descripcion || ""
+          }));
+
         const mks = (d.marcas || []).filter(m => m.productos > 0);
         const marcas = mks.length ? mks.map(m => m.nombre) : datos.marcas;
         const logosMarca = Object.assign({}, LOGOS_LOCALES);
         mks.forEach(m => { if (m.logo) logosMarca[m.id] = m.logo; });
 
         this.setState({
-          datos: Object.assign({}, datos, { productos, categorias, marcas, logosMarca }),
+          datos: Object.assign({}, datos, { productos, categorias, marcas, logosMarca },
+            galeria.length ? { galeria } : {}),
           coleccion: col
         });
         this.limpiarCarritoSinStock(porId);
@@ -1888,7 +1914,9 @@ class Component extends DCLogic {
     const total = carrito.reduce((a, i) => a + i.precio * i.cantidad, 0);
     const cantidadCarrito = carrito.reduce((a, i) => a + i.cantidad, 0);
     const claro = true;
-    const galBase = [
+    const galBase = (s.datos && s.datos.galeria && s.datos.galeria.length)
+      ? s.datos.galeria
+      : [
       { url: "assets/hero-1.png", thumb: "assets/hero-1.png", esVideo: false, esFoto: true, title: "Campaña", desc: "Estructura firme, terminación serena." },
       { url: "assets/gal-vid-1.mp4", thumb: "assets/gal-vid-1.jpg", esVideo: true, esFoto: false, title: "En movimiento", desc: "Detalle de la pieza." },
       { url: "assets/sobre-tienda.jpg", thumb: "assets/sobre-tienda.jpg", esVideo: false, esFoto: true, title: "Nuestro local", desc: "Te esperamos en Capiatá." },
@@ -1899,7 +1927,7 @@ class Component extends DCLogic {
       { url: "https://images.unsplash.com/photo-1594223274512-ad4803739b7c?q=80&w=900&auto=format&fit=crop", thumb: "https://images.unsplash.com/photo-1594223274512-ad4803739b7c?q=80&w=700&auto=format&fit=crop", esVideo: false, esFoto: true, title: "Bandoleras", desc: "Para cada ocasión." },
       { url: "assets/gal-vid-4.mp4", thumb: "assets/gal-vid-4.jpg", esVideo: true, esFoto: false, title: "Detalle", desc: "Terminaciones." },
       { url: "https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?q=80&w=900&auto=format&fit=crop", thumb: "https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?q=80&w=700&auto=format&fit=crop", esVideo: false, esFoto: true, title: "Accesorios", desc: "Selección Manastina." }
-    ];
+      ];
     const galItems = galBase.map((g, i) => Object.assign({}, g, (i % 2 === 0)
       ? { w: 330, h: 470, dy: 0 }
       : { w: 232, h: 330, dy: 84 }));
@@ -2088,7 +2116,13 @@ class Component extends DCLogic {
       rielSiguiente: () => { const el = this._riel && this._riel.current; if (el) el.scrollBy({ left: el.clientWidth * (esMobile ? 0.9 : 0.82), behavior: "smooth" }); },
       seleccion: prods.filter(p => p.seleccion).slice(0, 4).map(p => this.prep(p)),
       instagram: [1, 2, 3, 4, 5, 6],
-      galeria: galItems.map((g, i) => Object.assign({}, g, { abrir: () => this.setState({ lightbox: i }) })),
+      galeria: galItems.map((g, i) => Object.assign({}, g, {
+        /* Si el video no tiene portada cargada, la tira lo muestra a él.
+           Un <img> apuntando a un mp4 quedaría roto. */
+        thumbEsVideo: esVideoArchivo(g.thumb),
+        thumbEsFoto: !esVideoArchivo(g.thumb),
+        abrir: () => this.setState({ lightbox: i })
+      })),
       lightboxAbierto: lbAbierto,
       lightboxUrl: lbItem ? lbItem.url : "",
       lightboxEsVideo: !!(lbItem && lbItem.esVideo),

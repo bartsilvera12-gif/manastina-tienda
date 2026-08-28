@@ -73,6 +73,19 @@ type FilaGaleria = {
   orden: number | null;
 };
 
+/** Una fila de v_web_galeria. */
+type FilaGaleriaWeb = {
+  galeria_id: string;
+  tipo: string | null;
+  titulo: string | null;
+  descripcion: string | null;
+  imagen_path: string | null;
+  imagen_web_url: string | null;
+  miniatura_path: string | null;
+  miniatura_web_url: string | null;
+  orden: number | null;
+};
+
 /** Una fila de v_web_marcas. */
 type FilaMarca = {
   marca_id: string;
@@ -299,8 +312,80 @@ Deno.serve(async (req) => {
       };
     }
 
+    // --- Galería de la portada ----------------------------------------------
+    // La tira de fotos y videos del final. Los que vienen del sitio ya traen su
+    // dirección pública cargada; los subidos desde el ERP se copian acá.
+    let galeriaPortada: {
+      tipo: string;
+      titulo: string;
+      descripcion: string;
+      url: string;
+      miniatura: string;
+    }[] = [];
+
+    const { data: gal, error: errGal } = await sb
+      .from("v_web_galeria")
+      .select(
+        "galeria_id, tipo, titulo, descripcion, imagen_path, imagen_web_url, " +
+          "miniatura_path, miniatura_web_url, orden",
+      )
+      .order("orden");
+
+    if (errGal) {
+      console.warn("[catalogo] sin galería del ERP:", errGal.message);
+    } else if (gal?.length) {
+      const filasGal = gal as unknown as FilaGaleriaWeb[];
+
+      const nuevasGal = await publicarFotosPendientes(
+        sb,
+        filasGal.map((g) => ({
+          producto_id: g.galeria_id,
+          imagen_path: g.imagen_path,
+          imagen_web_url: g.imagen_web_url,
+        })),
+        "galeria_web",
+        "galeria",
+      );
+
+      // Las portadas de los videos viven en otra columna, así que van aparte.
+      const nuevasMin = await publicarFotosPendientes(
+        sb,
+        filasGal.map((g) => ({
+          producto_id: g.galeria_id,
+          imagen_path: g.miniatura_path,
+          imagen_web_url: g.miniatura_web_url,
+        })),
+        "galeria_web",
+        "galeria-portadas",
+        "miniatura_web_url",
+      );
+
+      galeriaPortada = filasGal
+        .map((g) => {
+          const url = nuevasGal.get(String(g.galeria_id)) ?? g.imagen_web_url ?? "";
+          const min = nuevasMin.get(String(g.galeria_id)) ?? g.miniatura_web_url ?? "";
+          return {
+            tipo: String(g.tipo ?? "foto"),
+            titulo: String(g.titulo ?? "").trim(),
+            descripcion: String(g.descripcion ?? "").trim(),
+            url,
+            // Una foto es su propia miniatura; un video sin portada cargada
+            // también, y el sitio le pone el marcador de reproducir encima.
+            miniatura: min || url,
+          };
+        })
+        .filter((g) => g.url);
+    }
+
     return new Response(
-      JSON.stringify({ productos, categorias, marcas, coleccion, actualizado: new Date().toISOString() }),
+      JSON.stringify({
+        productos,
+        categorias,
+        marcas,
+        coleccion,
+        galeria: galeriaPortada,
+        actualizado: new Date().toISOString(),
+      }),
       { headers: { ...cabeceras(origen), "Content-Type": "application/json" } },
     );
   } catch (e) {
