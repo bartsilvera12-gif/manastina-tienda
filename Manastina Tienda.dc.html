@@ -670,8 +670,8 @@ input,select,textarea{font-family:inherit;color:#331821}
       </sc-if>
       <sc-if value="{{ verColeccion }}">
         <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:22px;padding:13px 18px;border:1px solid rgba(51,24,33,.16);background:rgba(255,252,249,.72)">
-          <span style="font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#9F507D;font-weight:600">Colección</span>
-          <span style="font-family:'Cormorant Garamond',Georgia,serif;font-size:22px;font-weight:600;line-height:1">{{ coleccionNombre }}</span>
+          <span style="font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#9F507D;font-weight:600">{{ etiquetaFiltro }}</span>
+          <span style="font-family:'Cormorant Garamond',Georgia,serif;font-size:22px;font-weight:600;line-height:1">{{ nombreFiltro }}</span>
           <button onClick="{{ salirColeccion }}" style="margin-left:auto;background:none;border:0;border-bottom:1px solid #331821;padding:0 0 4px;min-height:44px;cursor:pointer;font-size:10px;letter-spacing:.16em;text-transform:uppercase;font-weight:600">Ver toda la tienda</button>
         </div>
       </sc-if>
@@ -1410,7 +1410,7 @@ class Component extends DCLogic {
     carrito: [], carritoAbierto: false, menuAbierto: false, buscarAbierto: false, coleccionesAbierto: false,
     consulta: "", cat: "todas", marca: "todas", precioMax: null, color: "todos", soloDisponibles: false, orden: "nuevos",
     filtrosAbiertos: false, visibles: 8, catActiva: 0, expandir: 0, nuevoActivo: 0, arrastre: 0, arrastrando: false,
-    coleccion: null, colFiltro: null,
+    coleccion: null, colFiltro: null, portada: null,
     pColor: null, pCant: 1, pImg: 1, pError: "", zoom: false,
     checkout: false, pagando: false, ciudadesAbiertas: false,
     form: { nombre: "", email: "", documento: "", telefono: "", ciudad: "", direccion: "", modalidad: "envio", envioPago: "ahora", obs: "" },
@@ -1509,7 +1509,7 @@ class Component extends DCLogic {
       const base = window.location.pathname;
       window.history.replaceState(null, "", ruta && ruta.n === "producto" ? base + "?p=" + ruta.id : base);
     } catch (e) {}
-    this.setState(Object.assign({ ruta, menuAbierto: false, buscarAbierto: false, coleccionesAbierto: false, filtrosAbiertos: false, pError: "", colFiltro: null }, extra || {}));
+    this.setState(Object.assign({ ruta, menuAbierto: false, buscarAbierto: false, coleccionesAbierto: false, filtrosAbiertos: false, pError: "", colFiltro: null, portada: null }, extra || {}));
     setTimeout(() => window.scrollTo({ top: 0, behavior: "auto" }), 0);
   }
   /* Todo lo cargado, incluidos los productos ocultos. Solo se usa para
@@ -1563,12 +1563,29 @@ class Component extends DCLogic {
     const lista = c.productos || [];
     return lista.length ? lista : null;
   }
+  /* Qué destaca cada pieza en la portada. Los dos bloques —novedades y
+     selección— se marcan desde el ERP, así que acá solo se pregunta. */
+  esDePortada(p, cual) {
+    if (cual === "nuevos") return p.nuevo === true;
+    if (cual === "destacados") return p.seleccion === true;
+    return true;
+  }
+  /* El filtro de portada solo se aplica si hay algo que mostrar. Si todavía
+     no marcaron ninguna pieza, es preferible el catálogo entero antes que
+     una tienda vacía. */
+  filtroPortada() {
+    const cual = this.state.portada;
+    if (!cual) return null;
+    return this.productos().some(p => this.esDePortada(p, cual)) ? cual : null;
+  }
   filtrados() {
     const s = this.state, q = s.consulta.trim().toLowerCase();
     const techo = this.precioTecho();
     const deColeccion = this.codigosColeccion();
+    const dePortada = this.filtroPortada();
     let out = this.productos().filter(p => {
       if (deColeccion && deColeccion.indexOf(p.id) < 0) return false;
+      if (dePortada && !this.esDePortada(p, dePortada)) return false;
       if (s.cat !== "todas" && p.categoria !== s.cat) return false;
       if (s.marca !== "todas" && p.marca !== s.marca) return false;
       if (p.precio > techo) return false;
@@ -1900,6 +1917,7 @@ class Component extends DCLogic {
     const colNombre = (s.coleccion && s.coleccion.nombre) || COL_NOMBRE;
     const colFrase = partirFrase((s.coleccion && s.coleccion.frase) || COL_FRASE);
     const colTieneProductos = !!(s.coleccion && s.coleccion.productos && s.coleccion.productos.length);
+    const nombrePortada = this.filtroPortada() === "nuevos" ? "Nuevos ingresos" : "Selección Manastina";
     const q = s.consulta.trim().toLowerCase();
     const busq = q ? prods.filter(p => (p.nombre + " " + this.nombreCat(p.categoria) + " " + p.descripcion).toLowerCase().includes(q)).slice(0, 8).map(p => this.prep(p)) : [];
 
@@ -2106,8 +2124,10 @@ class Component extends DCLogic {
         consulta: "", orden: "nuevos", visibles: 8,
         colFiltro: colTieneProductos ? s.coleccion.id : null
       }),
-      salirColeccion: () => this.setState({ colFiltro: null, visibles: 8 }),
-      verColeccion: !!this.codigosColeccion(),
+      salirColeccion: () => this.setState({ colFiltro: null, portada: null, visibles: 8 }),
+      verColeccion: !!this.codigosColeccion() || !!this.filtroPortada(),
+      etiquetaFiltro: this.codigosColeccion() ? "Colección" : "Portada",
+      nombreFiltro: this.codigosColeccion() ? colNombre : nombrePortada,
       coleccionNombre: colNombre,
       coleccionFrase1: colFrase[0],
       coleccionFrase2: colFrase[1],
@@ -2118,8 +2138,14 @@ class Component extends DCLogic {
       irContacto: () => this.ir({ n: "contacto" }),
       irCarteras: () => this.ir({ n: "tienda" }, { cat: "carteras", visibles: 8 }),
       irBolsos: () => this.ir({ n: "tienda" }, { cat: "bolsos", visibles: 8 }),
-      irNuevos: () => this.ir({ n: "tienda" }, { cat: "todas", orden: "nuevos", soloDisponibles: false, visibles: 8 }),
-      irSeleccion: () => this.ir({ n: "tienda" }, { cat: "todas", visibles: 8 }),
+      irNuevos: () => this.ir({ n: "tienda" }, {
+        cat: "todas", marca: "todas", color: "todos", precioMax: null, consulta: "",
+        orden: "nuevos", soloDisponibles: false, visibles: 8, portada: "nuevos"
+      }),
+      irSeleccion: () => this.ir({ n: "tienda" }, {
+        cat: "todas", marca: "todas", color: "todos", precioMax: null, consulta: "",
+        orden: "nuevos", soloDisponibles: false, visibles: 8, portada: "destacados"
+      }),
       abrirColecciones: () => this.setState({ coleccionesAbierto: !s.coleccionesAbierto }),
       coleccionesAbierto: s.coleccionesAbierto,
       abrirMenu: () => this.setState({ menuAbierto: true, menuSlide: 0 }), cerrarMenu: () => this.setState({ menuAbierto: false }),
@@ -2146,7 +2172,9 @@ class Component extends DCLogic {
       resultadosBusqueda: busq,
       textoResultadosBusqueda: q ? (busq.length + " resultado" + (busq.length === 1 ? "" : "s")) : "Escribí para buscar entre nuestras piezas",
 
-      tituloCatalogo: this.codigosColeccion() ? colNombre : (s.marca !== "todas" ? s.marca : (s.cat === "todas" ? "Tienda" : this.nombreCat(s.cat))),
+      tituloCatalogo: this.codigosColeccion() ? colNombre
+        : (this.filtroPortada() ? nombrePortada
+        : (s.marca !== "todas" ? s.marca : (s.cat === "todas" ? "Tienda" : this.nombreCat(s.cat)))),
       textoResultados: lista.length + (lista.length === 1 ? " pieza" : " piezas"),
       totalResultados: lista.length,
       productosVisibles: lista.slice(0, s.visibles).map(p => this.prep(p)),
@@ -2167,7 +2195,7 @@ class Component extends DCLogic {
       onPrecio: e => this.setState({ precioMax: Number(e.target.value), visibles: 8 }),
       soloDisponibles: s.soloDisponibles, onDisponibles: e => this.setState({ soloDisponibles: e.target.checked, visibles: 8 }),
       orden: s.orden, onOrden: e => this.setState({ orden: e.target.value }),
-      limpiarFiltros: () => this.setState({ cat: "todas", marca: "todas", precioMax: null, color: "todos", soloDisponibles: false, orden: "nuevos", consulta: "", visibles: 8, colFiltro: null }),
+      limpiarFiltros: () => this.setState({ cat: "todas", marca: "todas", precioMax: null, color: "todos", soloDisponibles: false, orden: "nuevos", consulta: "", visibles: 8, colFiltro: null, portada: null }),
       abrirFiltros: () => this.setState({ filtrosAbiertos: true }), cerrarFiltros: () => this.setState({ filtrosAbiertos: false }),
       filtrosAbiertos: s.filtrosAbiertos,
 
