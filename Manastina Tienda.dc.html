@@ -1872,7 +1872,10 @@ class Component extends DCLogic {
 
     carrito.forEach(i => {
       const real = porId[i.id];
-      if (!real) { ajustado.push(i); return; }
+      /* Ya no está en el catálogo: se quedó sin stock o lo despublicaron.
+         Antes se dejaba en el carrito y el cliente llegaba a pagar algo que
+         el servidor iba a rechazar. */
+      if (!real) { cambio = true; return; }
       if (real.stock <= 0) { cambio = true; return; }
       if (i.cantidad > real.stock) {
         cambio = true;
