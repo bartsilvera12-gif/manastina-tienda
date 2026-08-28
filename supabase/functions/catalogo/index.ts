@@ -64,6 +64,15 @@ type FilaColeccion = {
   productos: string[] | null;
 };
 
+/** Una fila de v_web_producto_imagenes. */
+type FilaGaleria = {
+  imagen_id: string;
+  producto_id: string;
+  imagen_path: string | null;
+  imagen_web_url: string | null;
+  orden: number | null;
+};
+
 /** Una fila de v_web_marcas. */
 type FilaMarca = {
   marca_id: string;
@@ -128,6 +137,43 @@ Deno.serve(async (req) => {
     // vez por producto: la próxima visita ya las encuentra hechas.
     const nuevas = await publicarFotosPendientes(sb, filas);
 
+    // --- Fotos adicionales ---------------------------------------------------
+    // La portada de cada producto es `imagen`; acá vienen las que siguen, las
+    // que el cliente pasa en la ficha. Si la vista todavía no existe, cada
+    // producto queda con su portada sola.
+    const galeria = new Map<string, string[]>();
+
+    const { data: fotos, error: errFotos } = await sb
+      .from("v_web_producto_imagenes")
+      .select("imagen_id, producto_id, imagen_path, imagen_web_url, orden")
+      .order("producto_id")
+      .order("orden");
+
+    if (errFotos) {
+      console.warn("[catalogo] sin galería del ERP:", errFotos.message);
+    } else if (fotos?.length) {
+      const filasFoto = fotos as unknown as FilaGaleria[];
+
+      const nuevasFoto = await publicarFotosPendientes(
+        sb,
+        filasFoto.map((f) => ({
+          producto_id: f.imagen_id,
+          imagen_path: f.imagen_path,
+          imagen_web_url: f.imagen_web_url,
+        })),
+        "producto_imagenes",
+        "galeria",
+      );
+
+      for (const f of filasFoto) {
+        const url = nuevasFoto.get(String(f.imagen_id)) ?? f.imagen_web_url ?? "";
+        if (!url) continue;
+        const lista = galeria.get(String(f.producto_id)) ?? [];
+        lista.push(url);
+        galeria.set(String(f.producto_id), lista);
+      }
+    }
+
     const productos = filas.map((p) => ({
       id: String(p.codigo_web),
       nombre: String(p.nombre ?? ""),
@@ -139,6 +185,7 @@ Deno.serve(async (req) => {
       nuevo: p.nuevo_web === true,
       destacado: p.destacado_web === true,
       marca: String(p.marca_nombre ?? "").trim(),
+      imagenes: galeria.get(String(p.producto_id)) ?? [],
     }));
 
     // --- Categorías ---------------------------------------------------------

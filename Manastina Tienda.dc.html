@@ -1695,6 +1695,13 @@ class Component extends DCLogic {
       .catch(() => {});
   }
 
+  /* Las fotos que manda el ERP: la portada primero y después la galería.
+     Devuelve lista vacía si el producto todavía no tiene ninguna. */
+  fotosDelErp(real) {
+    const extra = (real && real.imagenes) || [];
+    return [(real && real.imagen) || ""].concat(extra).filter(Boolean);
+  }
+
   /* Combina lo que sabe el ERP con lo que hay cargado en el archivo.
      `base` puede no existir: es un producto nuevo, cargado solo en el ERP. */
   fusionarProducto(base, real) {
@@ -1715,9 +1722,14 @@ class Component extends DCLogic {
         nuevo: real.nuevo === true,
         seleccion: real.destacado === true,
         descripcion: base.descripcion || real.descripcion || "",
-        imagenes: (base.imagenes && base.imagenes.length)
-          ? base.imagenes
-          : (real.imagen ? [real.imagen] : [])
+        /* Si le cargaron galería en el ERP, esas son las buenas: son las
+           que acaban de elegir. Si solo tiene la portada, se respetan las
+           del archivo, que traen los ángulos ya armados. */
+        imagenes: (real.imagenes && real.imagenes.length)
+          ? this.fotosDelErp(real)
+          : ((base.imagenes && base.imagenes.length)
+              ? base.imagenes
+              : this.fotosDelErp(real))
       });
     }
 
@@ -1735,7 +1747,7 @@ class Component extends DCLogic {
       seleccion: real.destacado === true,
       descripcion: real.descripcion || "",
       colores: [{ nombre: "Único", hex: "#4C0F2E" }],
-      imagenes: real.imagen ? [real.imagen] : []
+      imagenes: this.fotosDelErp(real)
     };
   }
 
