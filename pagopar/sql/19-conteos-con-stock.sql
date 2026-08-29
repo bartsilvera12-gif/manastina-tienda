@@ -14,9 +14,8 @@
 -- vuelve sola también.
 -- =============================================================================
 
-drop view if exists manastina.v_web_marcas;
-
-create view manastina.v_web_marcas as
+-- Se reemplaza en su lugar: mismas columnas, solo cambia como cuenta.
+create or replace view manastina.v_web_marcas as
 select
   m.id                              as marca_id,
   m.slug                            as clave,
@@ -43,9 +42,7 @@ comment on view manastina.v_web_marcas is
   'Marcas activas de la tienda, en su orden, con cuantas piezas disponibles tiene cada una.';
 
 
-drop view if exists manastina.v_web_categorias;
-
-create view manastina.v_web_categorias as
+create or replace view manastina.v_web_categorias as
 select
   lower(coalesce(nullif(c.codigo, ''), replace(lower(c.nombre), ' ', '-')))  as clave,
   c.id                                                                      as categoria_id,
