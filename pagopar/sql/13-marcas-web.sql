@@ -143,12 +143,13 @@ comment on view manastina.v_web_marcas is
 -- -----------------------------------------------------------------------------
 -- El catálogo, ahora con la marca de cada pieza
 -- -----------------------------------------------------------------------------
--- `v_web_colecciones` se apoya en `v_web_catalogo`, así que hay que bajarla
--- antes y volver a levantarla igual que estaba.
-drop view if exists manastina.v_web_colecciones;
-drop view if exists manastina.v_web_catalogo;
-
-create view manastina.v_web_catalogo as
+-- No se baja la vista: se reemplaza en su lugar. Bajarla obliga a bajar antes
+-- todo lo que se apoya en ella —`v_web_colecciones`, `v_web_producto_imagenes`—
+-- y ese fue el error «cannot drop view ... because other objects depend on it».
+-- `create or replace` permite AGREGAR columnas al final dejando las anteriores
+-- igual, que es justo lo que hace falta acá: se suma `marca_nombre`. Lo que
+-- cuelga de la vista ni se entera, y pasa a ver la marca sin tocarlo.
+create or replace view manastina.v_web_catalogo as
 select
   case
     when p.sku like 'MAN-%' then lower(replace(p.sku, 'MAN-', ''))
@@ -182,29 +183,8 @@ comment on view manastina.v_web_catalogo is
   'Productos publicados en la tienda web. Manda el chip visible_web de manastina.productos.';
 
 
-create view manastina.v_web_colecciones as
-select
-  c.id                                        as coleccion_id,
-  c.slug                                      as clave,
-  c.nombre,
-  c.frase,
-  c.imagen_web_url,
-  c.imagen_path,
-  c.orden,
-  c.empresa_id,
-  coalesce(p.codigos, array[]::text[])        as productos
-from manastina.colecciones_web c
-left join lateral (
-  select array_agg(v.codigo_web order by cp.orden, v.nombre) as codigos
-    from manastina.colecciones_web_productos cp
-    join manastina.v_web_catalogo v on v.producto_id = cp.producto_id
-   where cp.coleccion_id = c.id
-) p on true
-where c.activa
-order by c.orden, c.nombre;
-
-comment on view manastina.v_web_colecciones is
-  'La coleccion que se muestra en la portada, con los codigos de sus productos publicados.';
+-- `v_web_colecciones` queda como estaba: lee de `v_web_catalogo`, así que se
+-- entera sola de la marca nueva.
 
 
 -- -----------------------------------------------------------------------------
@@ -212,7 +192,6 @@ comment on view manastina.v_web_colecciones is
 -- -----------------------------------------------------------------------------
 grant usage on schema manastina to service_role;
 grant select on manastina.v_web_catalogo    to service_role;
-grant select on manastina.v_web_colecciones to service_role;
 grant select on manastina.v_web_marcas      to service_role;
 grant select, insert, update, delete on manastina.marcas to service_role;
 
