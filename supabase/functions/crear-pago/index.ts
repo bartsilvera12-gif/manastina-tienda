@@ -292,6 +292,7 @@ Deno.serve(async (req) => {
     const lineas: {
       producto_codigo: string;
       producto_id: string | null;
+      variante_id: string | null;
       nombre: string;
       color: string;
       cantidad: number;
@@ -349,12 +350,42 @@ Deno.serve(async (req) => {
       lineas.push({
         producto_codigo: codigo,
         producto_id: producto.producto_id ?? null,
+        variante_id: null, // Se resuelve mas abajo, cuando ya tenemos todas las lineas.
         nombre: producto.nombre,
         color: texto(it?.color, 60),
         cantidad,
         precio_unitario: precio,
         total_linea: precio * cantidad,
       });
+    }
+
+    /* Resuelve el nombre del color a variante_id consultando
+       producto_variantes por (producto_id, lower(nombre)). Con esto la venta
+       que Karen registre a partir de este pedido web arranca con la variante
+       correcta, sin tener que elegirla a mano. Un color que ya no existe en
+       la variante (por rename o borrado) queda con variante_id=NULL y no
+       rompe nada. */
+    const idsProducto = [...new Set(lineas.map((l) => l.producto_id).filter((x): x is string => !!x))];
+    if (idsProducto.length > 0) {
+      const { data: varRows, error: errVar } = await sb
+        .from("producto_variantes")
+        .select("id, producto_id, nombre, activo")
+        .in("producto_id", idsProducto);
+      if (errVar) {
+        console.warn("[crear-pago] no se pudieron leer variantes:", errVar.message);
+      } else if (varRows?.length) {
+        const idx = new Map<string, string>();
+        for (const v of varRows) {
+          if (v.activo === false) continue;
+          idx.set(`${v.producto_id}|${String(v.nombre).trim().toLowerCase()}`, String(v.id));
+        }
+        for (const l of lineas) {
+          if (!l.producto_id || !l.color) continue;
+          const key = `${l.producto_id}|${l.color.trim().toLowerCase()}`;
+          const vid = idx.get(key);
+          if (vid) l.variante_id = vid;
+        }
+      }
     }
 
     const subtotal = lineas.reduce((a, l) => a + l.total_linea, 0);
