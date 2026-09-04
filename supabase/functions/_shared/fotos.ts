@@ -17,6 +17,29 @@
 const BUCKET_PRIVADO = "productos-imagenes";
 export const BUCKET_PUBLICO = "tienda-web";
 
+/**
+ * En Supabase self-hosted, SUPABASE_URL apunta al host interno de Docker
+ * (`http://kong:8000`) que el navegador de un visitante nunca puede
+ * resolver. Cuando `getPublicUrl` devuelve una URL basada en ese host, hay
+ * que reescribirla al hostname público antes de guardarla en la base o
+ * devolverla al front. Se toma de `SUPABASE_PUBLIC_URL` si esta seteada, y
+ * como fallback se pisa `http://kong:8000` con la URL publica de Manastina
+ * (que ya sirve el mismo Kong). Si la URL ya viene con host publico o es
+ * absoluta a otro dominio, se devuelve tal cual.
+ */
+const URL_PUBLICA_SUPABASE = (
+  Deno.env.get("SUPABASE_PUBLIC_URL") ||
+  Deno.env.get("SUPABASE_EXTERNAL_URL") ||
+  "https://api.neura.com.py"
+).replace(/\/+$/, "");
+
+export function normalizarUrlPublica(url: string | null): string | null {
+  if (!url) return null;
+  return url
+    .replace(/^http:\/\/kong:8000/i, URL_PUBLICA_SUPABASE)
+    .replace(/^http:\/\/localhost:\d+/i, URL_PUBLICA_SUPABASE);
+}
+
 /** Lo que acepta el bucket público: fotos de producto y clips de la galería. */
 const TIPOS_PERMITIDOS = [
   "image/jpeg",
@@ -126,7 +149,7 @@ export async function publicarFoto(
     }
 
     const { data: pub } = sb.storage.from(BUCKET_PUBLICO).getPublicUrl(destino);
-    return pub?.publicUrl ?? null;
+    return normalizarUrlPublica(pub?.publicUrl ?? null);
   } catch (e) {
     console.warn("[fotos] excepción", e instanceof Error ? e.message : e);
     return null;

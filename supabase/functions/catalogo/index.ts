@@ -16,7 +16,7 @@
 // =============================================================================
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.4";
-import { publicarFotosPendientes } from "../_shared/fotos.ts";
+import { publicarFotosPendientes, normalizarUrlPublica } from "../_shared/fotos.ts";
 import { cors } from "../_shared/cors.ts";
 
 const env = (k: string, def = "") =>
@@ -204,7 +204,7 @@ Deno.serve(async (req) => {
       );
 
       for (const f of filasFoto) {
-        const url = nuevasFoto.get(String(f.imagen_id)) ?? f.imagen_web_url ?? "";
+        const url = normalizarUrlPublica(nuevasFoto.get(String(f.imagen_id)) ?? f.imagen_web_url) ?? "";
         if (!url) continue;
         urlPorImagen.set(String(f.imagen_id), url);
         // Solo las fotos sin variante van al pool compartido del producto.
@@ -268,7 +268,7 @@ Deno.serve(async (req) => {
       for (const v of filasVar) {
         const fotos: string[] = [];
         for (const im of (v.imagenes ?? [])) {
-          const url = urlPorImagen.get(String(im.imagen_id)) ?? im.imagen_web_url ?? "";
+          const url = normalizarUrlPublica(urlPorImagen.get(String(im.imagen_id)) ?? im.imagen_web_url) ?? "";
           if (url) fotos.push(url);
         }
         const lista = variantesPorProducto.get(String(v.producto_id)) ?? [];
@@ -296,7 +296,7 @@ Deno.serve(async (req) => {
         stock: p.activo === false ? 0 : Math.max(0, stockAgregado),
         categoria: categoriaWeb(p.categoria_codigo, p.categoria_nombre),
         descripcion: String(p.descripcion_web ?? "").trim(),
-        imagen: nuevas.get(String(p.producto_id)) ?? p.imagen_web_url ?? "",
+        imagen: normalizarUrlPublica(nuevas.get(String(p.producto_id)) ?? p.imagen_web_url) ?? "",
         nuevo: p.nuevo_web === true,
         destacado: p.destacado_web === true,
         marca: String(p.marca_nombre ?? "").trim(),
@@ -341,7 +341,7 @@ Deno.serve(async (req) => {
         id: String(c.clave),
         nombre: String(c.nombre ?? ""),
         descripcion: String(c.descripcion ?? "").trim(),
-        imagen: nuevasCat.get(String(c.categoria_id)) ?? c.imagen_web_url ?? "",
+        imagen: normalizarUrlPublica(nuevasCat.get(String(c.categoria_id)) ?? c.imagen_web_url) ?? "",
         productos: Number(c.productos ?? 0),
       }));
     }
@@ -411,7 +411,7 @@ Deno.serve(async (req) => {
         id: String(c.clave),
         nombre: String(c.nombre ?? ""),
         frase: String(c.frase ?? "").trim(),
-        imagen: nuevasCol.get(String(c.coleccion_id)) ?? c.imagen_web_url ?? "",
+        imagen: normalizarUrlPublica(nuevasCol.get(String(c.coleccion_id)) ?? c.imagen_web_url) ?? "",
         productos: (c.productos ?? []).map((x) => String(x)),
       };
     }
