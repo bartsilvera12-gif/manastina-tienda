@@ -27,17 +27,26 @@ export const BUCKET_PUBLICO = "tienda-web";
  * (que ya sirve el mismo Kong). Si la URL ya viene con host publico o es
  * absoluta a otro dominio, se devuelve tal cual.
  */
-const URL_PUBLICA_SUPABASE = (
-  Deno.env.get("SUPABASE_PUBLIC_URL") ||
-  Deno.env.get("SUPABASE_EXTERNAL_URL") ||
-  "https://api.neura.com.py"
-).replace(/\/+$/, "");
+/* Host publico de Manastina, hardcodeado. En Supabase self-hosted probamos
+   con `SUPABASE_PUBLIC_URL` / `SUPABASE_URL` y siempre venia mal (`kong:8000`
+   dentro del docker, `localhost:8000` cuando el compose lo overridea). El
+   host publico real no cambia: la tienda vive en api.neura.com.py. Si algun
+   dia se muda, se reemplaza esta constante y se redeploya. */
+const URL_PUBLICA_SUPABASE = "https://api.neura.com.py";
+
+const HOSTS_INTERNOS = [
+  /^http:\/\/kong:\d+/i,
+  /^http:\/\/localhost:\d+/i,
+  /^http:\/\/127\.0\.0\.1:\d+/i,
+  /^http:\/\/supabase-kong:\d+/i,
+];
 
 export function normalizarUrlPublica(url: string | null): string | null {
   if (!url) return null;
-  return url
-    .replace(/^http:\/\/kong:8000/i, URL_PUBLICA_SUPABASE)
-    .replace(/^http:\/\/localhost:\d+/i, URL_PUBLICA_SUPABASE);
+  for (const rx of HOSTS_INTERNOS) {
+    if (rx.test(url)) return url.replace(rx, URL_PUBLICA_SUPABASE);
+  }
+  return url;
 }
 
 /** Lo que acepta el bucket público: fotos de producto y clips de la galería. */
