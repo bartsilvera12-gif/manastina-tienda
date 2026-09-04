@@ -820,7 +820,7 @@ input,select,textarea{font-family:inherit;color:#331821}
         <p style="margin:0 0 12px;font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;color:#9F507D;font-weight:600">Color: {{ colorElegidoNombre }}</p>
         <div style="display:flex;flex-wrap:wrap;gap:10px">
           <sc-for list="{{ prodColores }}" as="c" hint-placeholder-count="3">
-            <button onClick="{{ c.elegir }}" style="min-height:44px;display:flex;align-items:center;gap:9px;padding:11px 15px;border:1px solid {{ c.borde }};background:transparent;border-radius:2px;cursor:pointer;font-size:12px"><span style="width:14px;height:14px;border-radius:50%;background:{{ c.hex }};border:1px solid rgba(51,24,33,.25);display:block"></span>{{ c.nombre }}</button>
+            <button onClick="{{ c.elegir }}" disabled="{{ c.deshabilitado }}" title="{{ c.tip }}" style="min-height:44px;display:flex;align-items:center;gap:9px;padding:11px 15px;border:1px solid {{ c.borde }};background:transparent;border-radius:2px;cursor:{{ c.cursor }};font-size:12px;opacity:{{ c.opacidad }};text-decoration:{{ c.tachado }}"><span style="width:14px;height:14px;border-radius:50%;background:{{ c.hex }};border:1px solid rgba(51,24,33,.25);display:block"></span>{{ c.nombre }}<span style="font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:#9F507D">{{ c.badge }}</span></button>
           </sc-for>
         </div>
       </div>
@@ -1625,29 +1625,62 @@ class Component extends DCLogic {
   cats() { return (this.state.datos && this.state.datos.categorias) || []; }
   nombreCat(id) { const c = this.cats().find(x => x.id === id); return c ? c.nombre : ""; }
 
+  /* Devuelve la variante elegida del producto. Si el color no está entre las
+     variantes (por ejemplo, si el catálogo cambió mientras el color estaba
+     guardado en el carrito), cae en la primera para no romper. */
+  variante(p, colorNombre) {
+    const cols = (p && p.colores) || [];
+    return cols.find(c => c.nombre === colorNombre) || cols[0] || null;
+  }
+  /* Stock del color elegido si el producto tiene variantes; si no, el stock
+     general del producto. Uno y otro son intercambiables porque cuando hay
+     variantes p.stock ya es la suma. */
+  stockDeColor(p, colorNombre) {
+    const v = this.variante(p, colorNombre);
+    if (v && typeof v.stock === "number") return Math.max(0, v.stock);
+    return p ? Math.max(0, p.stock) : 0;
+  }
+  /* Fotos que se muestran en la ficha para un color. Si la variante trae las
+     suyas, esas mandan; si no, se usan las del producto (comportamiento
+     viejo, y también el fallback para colores nuevos sin fotos cargadas). */
+  fotosDeColor(p, colorNombre) {
+    const v = this.variante(p, colorNombre);
+    if (v && v.imagenes && v.imagenes.length) return v.imagenes;
+    return (p && p.imagenes) || [];
+  }
+
   agregar(p, colorNombre, cant) {
+    const stock = this.stockDeColor(p, colorNombre);
     const carrito = this.state.carrito.slice();
     const clave = p.id + "|" + colorNombre;
     const i = carrito.findIndex(x => x.clave === clave);
-    if (i >= 0) carrito[i] = Object.assign({}, carrito[i], { cantidad: Math.min(p.stock, carrito[i].cantidad + cant) });
-    else carrito.push({ clave, id: p.id, nombre: p.nombre, color: colorNombre, precio: p.precio, stock: p.stock, cantidad: Math.min(p.stock, cant) });
+    if (i >= 0) carrito[i] = Object.assign({}, carrito[i], { stock, cantidad: Math.min(stock, carrito[i].cantidad + cant) });
+    else carrito.push({ clave, id: p.id, nombre: p.nombre, color: colorNombre, precio: p.precio, stock, cantidad: Math.min(stock, cant) });
     this.guardar(carrito);
     this.avisar(p.nombre + " agregada al carrito");
   }
   prep(p) {
+    /* La tarjeta del catálogo prefiere la foto de la primera variante con
+       stock, así lo que se ve al abrir la ficha coincide con lo que se ve en
+       la grilla. Si ninguna tiene stock, cae en la primera a secas. */
+    const cols = p.colores || [];
+    const primeraConStock = cols.find(c => (c.stock == null ? p.stock > 0 : c.stock > 0)) || cols[0];
+    const fotosVar = (primeraConStock && primeraConStock.imagenes && primeraConStock.imagenes.length)
+      ? primeraConStock.imagenes
+      : (p.imagenes || []);
     return Object.assign({}, p, {
       precioFmt: fmt(p.precio),
-      foto: (p.imagenes && p.imagenes[0]) ? p.imagenes[0] : "",
-      tieneFoto: !!(p.imagenes && p.imagenes[0]),
-      sinFoto: !(p.imagenes && p.imagenes[0]),
+      foto: fotosVar[0] || "",
+      tieneFoto: !!fotosVar[0],
+      sinFoto: !fotosVar[0],
       catNombre: this.nombreCat(p.categoria),
       agotado: p.stock <= 0,
       estado: p.stock <= 0 ? "Agotado" : (p.stock <= 3 ? "Últimas unidades" : "Disponible"),
-      abrir: () => this.ir({ n: "producto", id: p.id }, { pColor: p.colores.length === 1 ? p.colores[0].nombre : null, pCant: 1, pImg: 1 }),
+      abrir: () => this.ir({ n: "producto", id: p.id }, { pColor: cols.length === 1 ? cols[0].nombre : null, pCant: 1, pImg: 1 }),
       agregar: () => {
         if (p.stock <= 0) { this.avisar("Sin stock por ahora"); return; }
-        if (p.colores.length > 1) { this.ir({ n: "producto", id: p.id }, { pColor: null, pCant: 1, pImg: 1 }); this.avisar("Elegí un color para continuar"); return; }
-        this.agregar(p, p.colores[0].nombre, 1);
+        if (cols.length > 1) { this.ir({ n: "producto", id: p.id }, { pColor: null, pCant: 1, pImg: 1 }); this.avisar("Elegí un color para continuar"); return; }
+        this.agregar(p, cols[0].nombre, 1);
         this.setState({ carritoAbierto: true });
       }
     });
@@ -1818,12 +1851,38 @@ class Component extends DCLogic {
     const precio = typeof real.precio === "number" && real.precio > 0
       ? real.precio
       : (base ? base.precio : 0);
-    const stock = typeof real.stock === "number" ? real.stock : (base ? base.stock : 0);
+
+    /* Variantes del ERP: si vinieron, mandan enteras. Cada una trae su hex,
+       su stock y sus fotos ya publicadas. */
+    const varErp = Array.isArray(real.colores) ? real.colores.filter(c => c && c.nombre) : [];
+    const conVariantes = varErp.length > 0;
+
+    /* Con variantes cargadas, el stock del producto es la suma de las suyas.
+       Sin variantes, se respeta lo que trae el ERP a nivel producto. */
+    const stock = conVariantes
+      ? varErp.reduce((s, c) => s + Math.max(0, Number(c.stock || 0)), 0)
+      : (typeof real.stock === "number" ? real.stock : (base ? base.stock : 0));
 
     if (base) {
-      /* Ya estaba en la web: las fotos y los colores del archivo son mejores
-         que la única foto del ERP, así que se respetan. Lo que sí manda el
-         ERP es qué se destaca en la portada. */
+      /* Ya estaba en la web. Fotos y colores del archivo estático se
+         respetan como fallback, pero si el ERP mandó variantes esas
+         reemplazan a los colores/imagenes del archivo. */
+      const colores = conVariantes
+        ? varErp.map(c => ({
+            nombre: String(c.nombre),
+            hex: c.hex || "#1A1114",
+            stock: Math.max(0, Number(c.stock || 0)),
+            imagenes: (c.imagenes && c.imagenes.length) ? c.imagenes : []
+          }))
+        : base.colores;
+      /* Fotos compartidas del producto: si hay variantes, van las que el ERP
+         mandó "sin variante" (real.imagenes); si no, se sigue con la lógica
+         vieja (archivo si tiene, ERP si no). */
+      const imagenes = conVariantes
+        ? ((real.imagenes && real.imagenes.length) ? this.fotosDelErp(real) : [])
+        : ((real.imagenes && real.imagenes.length)
+            ? this.fotosDelErp(real)
+            : ((base.imagenes && base.imagenes.length) ? base.imagenes : this.fotosDelErp(real)));
       return Object.assign({}, base, {
         nombre: real.nombre || base.nombre,
         marca: real.marca || base.marca || "",
@@ -1832,20 +1891,14 @@ class Component extends DCLogic {
         nuevo: real.nuevo === true,
         seleccion: real.destacado === true,
         descripcion: base.descripcion || real.descripcion || "",
-        /* Si le cargaron galería en el ERP, esas son las buenas: son las
-           que acaban de elegir. Si solo tiene la portada, se respetan las
-           del archivo, que traen los ángulos ya armados. */
-        imagenes: (real.imagenes && real.imagenes.length)
-          ? this.fotosDelErp(real)
-          : ((base.imagenes && base.imagenes.length)
-              ? base.imagenes
-              : this.fotosDelErp(real))
+        colores: colores,
+        imagenes: imagenes
       });
     }
 
-    /* Producto nuevo: sale con lo que tenga el ERP. Sin colores cargados
-       todavía, así que se le pone una variante única para que el carrito
-       y el mensaje de WhatsApp sigan funcionando igual. */
+    /* Producto nuevo: sale con lo que tenga el ERP. Si trae variantes, se
+       usan; si no, cae en una única "Único" para que el carrito y el mensaje
+       de WhatsApp sigan funcionando igual. */
     return {
       id: real.id,
       nombre: real.nombre,
@@ -1856,7 +1909,14 @@ class Component extends DCLogic {
       nuevo: real.nuevo === true,
       seleccion: real.destacado === true,
       descripcion: real.descripcion || "",
-      colores: [{ nombre: "Único", hex: "#4C0F2E" }],
+      colores: conVariantes
+        ? varErp.map(c => ({
+            nombre: String(c.nombre),
+            hex: c.hex || "#1A1114",
+            stock: Math.max(0, Number(c.stock || 0)),
+            imagenes: (c.imagenes && c.imagenes.length) ? c.imagenes : []
+          }))
+        : [{ nombre: "Único", hex: "#4C0F2E", stock: stock, imagenes: [] }],
       imagenes: this.fotosDelErp(real)
     };
   }
@@ -2071,7 +2131,19 @@ class Component extends DCLogic {
     /* Con una sola variante no tiene sentido obligar a elegirla. Importa sobre
        todo al entrar por link directo (?p=...), donde pColor llega sin definir. */
     const colorSel = s.pColor || (colores.length === 1 ? colores[0].nombre : null);
-    const prodFotos = (prod && prod.imagenes) ? prod.imagenes : [];
+    /* Fotos que arma la ficha: si hay un color elegido, primero las suyas y
+       después las compartidas del producto (planos generales, etiqueta, etc.).
+       Sin color elegido —producto con varias variantes recién entrado— caemos
+       en las fotos de la primera variante para no dejar la ficha en blanco. */
+    const varElegida = prod ? this.variante(prod, colorSel) : null;
+    const fotosColor = (varElegida && varElegida.imagenes && varElegida.imagenes.length)
+      ? varElegida.imagenes
+      : (prod && colores[0] && colores[0].imagenes && colores[0].imagenes.length ? colores[0].imagenes : []);
+    const fotosComunes = (prod && prod.imagenes) ? prod.imagenes : [];
+    const prodFotos = fotosColor.length
+      ? fotosColor.concat(fotosComunes.filter(u => fotosColor.indexOf(u) < 0))
+      : fotosComunes;
+    const stockColor = prod ? (colorSel ? this.stockDeColor(prod, colorSel) : prod.stock) : 0;
     const relacionados = prod ? prods.filter(p => p.categoria === prod.categoria && p.id !== prod.id).slice(0, 4).map(p => this.prep(p)) : [];
 
     const catOpts = [{ id: "todas", nombre: "Todas las piezas" }].concat(this.cats()).map(c => {
@@ -2093,7 +2165,11 @@ class Component extends DCLogic {
 
     const itemsCarrito = carrito.map(i => {
       const pr = prods.find(x => x.id === i.id);
-      const foto = (pr && pr.imagenes && pr.imagenes[0]) ? pr.imagenes[0] : "";
+      /* La miniatura del carrito muestra la foto del color elegido: si el
+         cliente agregó "Cartera Rosa Amora Negro", que se vea en negro y no
+         una foto del cognac. */
+      const fotosPr = pr ? this.fotosDeColor(pr, i.color) : [];
+      const foto = fotosPr[0] || (pr && pr.imagenes && pr.imagenes[0]) || "";
       return {
       nombre: i.nombre, color: i.color, cantidad: i.cantidad, stock: i.stock,
       foto, tieneFoto: !!foto, sinFoto: !foto,
@@ -2337,10 +2413,31 @@ class Component extends DCLogic {
       prodMaterial: prod && prod.material ? prod.material : "", prodMedidas: prod && prod.medidas ? prod.medidas : "",
       prodTieneMaterial: !!(prod && prod.material), prodTieneMedidas: !!(prod && prod.medidas),
       prodIncluye: prod && prod.incluye ? prod.incluye : "", prodTieneIncluye: !!(prod && prod.incluye),
-      prodEstado: prod ? (prod.stock <= 0 ? "Agotado" : (prod.stock <= 3 ? "Últimas unidades" : "Disponible")) : "",
-      prodEstadoColor: prod && prod.stock <= 0 ? "#9F507D" : "#4C0F2E",
-      textoStock: prod ? (prod.stock > 0 ? prod.stock + " unidades disponibles" : "Sin stock por ahora") : "",
-      prodColores: colores.map(c => ({ nombre: c.nombre, hex: c.hex, borde: colorSel === c.nombre ? "#4C0F2E" : "rgba(51,24,33,.25)", elegir: () => this.setState({ pColor: c.nombre, pError: "" }) })),
+      prodEstado: prod ? (stockColor <= 0 ? "Agotado" : (stockColor <= 3 ? "Últimas unidades" : "Disponible")) : "",
+      prodEstadoColor: prod && stockColor <= 0 ? "#9F507D" : "#4C0F2E",
+      textoStock: prod ? (stockColor > 0 ? stockColor + " unidades disponibles" : "Sin stock por ahora") : "",
+      prodColores: colores.map(c => {
+        /* Cuando la variante no trae stock (viene del archivo estático viejo),
+           usamos el del producto. Así el swatch no queda deshabilitado por
+           mostrar 0 cuando en realidad hay unidades. */
+        const st = typeof c.stock === "number" ? c.stock : (prod ? prod.stock : 0);
+        const agot = st <= 0;
+        return {
+          nombre: c.nombre,
+          hex: c.hex,
+          borde: colorSel === c.nombre ? "#4C0F2E" : (agot ? "rgba(51,24,33,.15)" : "rgba(51,24,33,.25)"),
+          opacidad: agot ? "0.45" : "1",
+          tachado: agot ? "line-through" : "none",
+          cursor: agot ? "not-allowed" : "pointer",
+          deshabilitado: agot ? "disabled" : "",
+          badge: agot ? "Agotado" : "",
+          tip: agot ? "Sin stock" : c.nombre,
+          /* Al cambiar el color reseteamos pImg=1 para que el carrusel arranque
+             en la primera foto de la variante nueva; si el usuario estaba en la
+             tercera, la variante nueva podría no tenerla y quedaría vacío. */
+          elegir: () => { if (agot) return; this.setState({ pColor: c.nombre, pImg: 1, pError: "" }); }
+        };
+      }),
       colorElegidoNombre: colorSel || "elegí una opción",
       cantidad: s.pCant, imagenActual: s.pImg,
       prodFotoActual: prodFotos.length ? (prodFotos[Math.min(s.pImg, prodFotos.length) - 1] || prodFotos[0]) : "",
@@ -2352,14 +2449,15 @@ class Component extends DCLogic {
       prodDesplazamiento: (-(Math.min(s.pImg, Math.max(1, prodFotos.length)) - 1) * 100) + "%",
       prodTieneFoto: prodFotos.length > 0, prodSinFoto: prodFotos.length === 0,
       miniaturas: prodFotos.map((url, i) => ({ n: i + 1, url, borde: s.pImg === i + 1 ? "#4C0F2E" : "rgba(51,24,33,.18)", elegir: () => this.setState({ pImg: i + 1 }) })),
-      masCantidad: () => { if (prod && s.pCant >= prod.stock) { this.setState({ pError: "No hay más unidades disponibles de esta pieza." }); return; } this.setState({ pCant: s.pCant + 1 }); },
+      masCantidad: () => { if (prod && s.pCant >= stockColor) { this.setState({ pError: "No hay más unidades disponibles de este color." }); return; } this.setState({ pCant: s.pCant + 1 }); },
       menosCantidad: () => this.setState({ pCant: Math.max(1, s.pCant - 1) }),
       errorProducto: s.pError,
       agregarDesdeFicha: () => {
         if (!prod) return;
         if (prod.stock <= 0) { this.setState({ pError: "Esta pieza está agotada. Consultanos por WhatsApp para reponerla." }); return; }
         if (!colorSel) { this.setState({ pError: "Elegí un color antes de agregar la pieza al carrito." }); return; }
-        this.agregar(prod, colorSel, s.pCant);
+        if (stockColor <= 0) { this.setState({ pError: "El color " + colorSel + " está agotado. Elegí otro o consultanos por WhatsApp." }); return; }
+        this.agregar(prod, colorSel, Math.min(s.pCant, stockColor));
         this.setState({ pError: "", carritoAbierto: true });
       },
       waProducto: prod ? "https://wa.me/" + WA + "?text=" + encodeURIComponent("Hola, Manastina. Quiero consultar por " + prod.nombre + " (" + fmt(prod.precio) + ").") : "https://wa.me/" + WA,

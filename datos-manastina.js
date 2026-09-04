@@ -27,19 +27,26 @@ window.MANASTINA_DATOS = {
     { id: "accesorios", nombre: "Billeteras y accesorios" },
     { id: "sets", nombre: "Sets" }
   ],
+  /* La tienda se llena desde el ERP (Edge Function `catalogo`). Este arreglo
+     queda vacío a propósito: si le dejamos productos viejos, se ven durante
+     el primer parpadeo al recargar la página, antes de que llegue la
+     respuesta del ERP. Si en algún momento el ERP no responde, la tienda se
+     ve sin productos — mejor eso que "vestigios" de un catálogo viejo. */
   productos: [
-    { id: "c01", marca: "Chrisbella", nombre: "Set Chrisbella con documentera", categoria: "sets", precio: 295000, nuevo: true, seleccion: false, stock: 5,
-      descripcion: "Set combinado de dos piezas a juego, en tono camel.",
+    /*
+    { id: "c01", marca: "Chrisbella", nombre: "Set Chrisbella con documentera", categoria: "sets", precio: 295000, nuevo: true, seleccion: false, stock: 10,
+      descripcion: "Set combinado de dos piezas a juego. Disponible en camel y negro.",
       incluye: "Cartera + documentera",
-      colores: [{ nombre: "Camel", hex: "#B98B5E" }], imagenes: ["assets/catalogo/set-chrisbella-con-documentera-1.jpeg", "assets/catalogo/set-chrisbella-con-documentera-2.jpeg"] },
+      colores: [
+        { nombre: "Camel", hex: "#B98B5E", stock: 5, imagenes: ["assets/catalogo/set-chrisbella-con-documentera-1.jpeg", "assets/catalogo/set-chrisbella-con-documentera-2.jpeg"] },
+        { nombre: "Negro", hex: "#1A1114", stock: 5, imagenes: ["assets/catalogo/set-chrisbella-negro-con-documentera-1.jpeg", "assets/catalogo/set-chrisbella-negro-con-documentera-2.jpeg"] }
+      ],
+      imagenes: ["assets/catalogo/set-chrisbella-con-documentera-1.jpeg", "assets/catalogo/set-chrisbella-con-documentera-2.jpeg", "assets/catalogo/set-chrisbella-negro-con-documentera-1.jpeg", "assets/catalogo/set-chrisbella-negro-con-documentera-2.jpeg"] },
     { id: "c02", marca: "Chrisbella", nombre: "Set Chrisbella con neceser y porta tablet", categoria: "sets", precio: 315000, nuevo: true, seleccion: true, stock: 5,
       descripcion: "Set de tres piezas con neceser y porta tablet, para el día completo.",
       incluye: "Cartera + neceser + porta tablet",
-      colores: [{ nombre: "Negro", hex: "#1A1114" }], imagenes: ["assets/catalogo/set-chrisbella-con-neceser-y-porta-tablet-1.jpeg", "assets/catalogo/set-chrisbella-con-neceser-y-porta-tablet-2.jpeg"] },
-    { id: "c03", marca: "Chrisbella", nombre: "Set Chrisbella negro con documentera", categoria: "sets", precio: 295000, nuevo: false, seleccion: false, stock: 5,
-      descripcion: "Set combinado de dos piezas a juego, en negro.",
-      incluye: "Cartera + documentera",
-      colores: [{ nombre: "Negro", hex: "#1A1114" }], imagenes: ["assets/catalogo/set-chrisbella-negro-con-documentera-1.jpeg", "assets/catalogo/set-chrisbella-negro-con-documentera-2.jpeg"] },
+      colores: [{ nombre: "Negro", hex: "#1A1114", stock: 5, imagenes: ["assets/catalogo/set-chrisbella-con-neceser-y-porta-tablet-1.jpeg", "assets/catalogo/set-chrisbella-con-neceser-y-porta-tablet-2.jpeg"] }],
+      imagenes: ["assets/catalogo/set-chrisbella-con-neceser-y-porta-tablet-1.jpeg", "assets/catalogo/set-chrisbella-con-neceser-y-porta-tablet-2.jpeg"] },
     { id: "c04", marca: "David Jones", nombre: "Bandolera David Jones", categoria: "bandoleras", precio: 240000, nuevo: false, seleccion: false, stock: 5,
       descripcion: "Bandolera compacta con correa regulable y cierre superior.",
       colores: [{ nombre: "Negro", hex: "#1A1114" }], imagenes: ["assets/catalogo/bandolera-david-jones-1.jpeg"] },
@@ -52,12 +59,14 @@ window.MANASTINA_DATOS = {
     { id: "c07", marca: "David Jones", nombre: "Cartera tote David Jones Paris", categoria: "carteras", precio: 240000, nuevo: false, seleccion: false, stock: 5,
       descripcion: "Tote amplio de uso diario, con pañuelo decorativo.",
       colores: [{ nombre: "Negro", hex: "#1A1114" }], imagenes: ["assets/catalogo/cartera-tote-david-jones-paris-1.jpeg"] },
-    { id: "c08", marca: "Guess", nombre: "Billetera larga Guess negro", categoria: "accesorios", precio: 280000, nuevo: false, seleccion: false, stock: 5,
-      descripcion: "Billetera larga con múltiples espacios para tarjetas y cierre con broche.",
-      colores: [{ nombre: "Negro", hex: "#1A1114" }], imagenes: ["assets/catalogo/billetera-larga-guess-negro-1.jpeg"] },
-    { id: "c09", marca: "Guess", nombre: "Billetera larga Guess", categoria: "accesorios", precio: 280000, nuevo: false, seleccion: false, stock: 5,
+    { id: "c09", marca: "Guess", nombre: "Billetera larga Guess", categoria: "accesorios", precio: 280000, nuevo: false, seleccion: false, stock: 15,
       descripcion: "Billetera larga con logo metálico y amplia capacidad de tarjetas.",
-      colores: [{ nombre: "Borgoña", hex: "#4C0F2E" }, { nombre: "Beige", hex: "#D9C3A5" }], imagenes: ["assets/catalogo/billetera-larga-guess-1.jpeg"] },
+      colores: [
+        { nombre: "Borgoña", hex: "#4C0F2E", stock: 5, imagenes: ["assets/catalogo/billetera-larga-guess-1.jpeg"] },
+        { nombre: "Beige",   hex: "#D9C3A5", stock: 5, imagenes: ["assets/catalogo/billetera-larga-guess-1.jpeg"] },
+        { nombre: "Negro",   hex: "#1A1114", stock: 5, imagenes: ["assets/catalogo/billetera-larga-guess-negro-1.jpeg"] }
+      ],
+      imagenes: ["assets/catalogo/billetera-larga-guess-1.jpeg", "assets/catalogo/billetera-larga-guess-negro-1.jpeg"] },
     { id: "c10", marca: "Guess", nombre: "Claudia Satchel Guess", categoria: "carteras", precio: 620000, nuevo: true, seleccion: false, stock: 5,
       descripcion: "Satchel estructurado con estampa de logo y correa desmontable.",
       colores: [{ nombre: "Gris logo", hex: "#9A9A9A" }], imagenes: ["assets/catalogo/claudia-satchel-guess-1.jpeg", "assets/catalogo/claudia-satchel-guess-2.jpeg", "assets/catalogo/claudia-satchel-guess-3.jpeg"] },
@@ -88,15 +97,14 @@ window.MANASTINA_DATOS = {
     { id: "c19", marca: "Prune", nombre: "Shopper Erin Prune efecto cuero marrón", categoria: "carteras", precio: 590000, nuevo: true, seleccion: false, stock: 5,
       descripcion: "Shopper de gran capacidad en efecto cuero, con asas al hombro.",
       colores: [{ nombre: "Marrón", hex: "#8B4A22" }], imagenes: ["assets/catalogo/shopper-erin-prune-efecto-cuero-marron-1.jpeg", "assets/catalogo/shopper-erin-prune-efecto-cuero-marron-2.jpeg"] },
-    { id: "c20", marca: "Rosa Amora", nombre: "Cartera Rosa Amora", categoria: "carteras", precio: 280000, nuevo: false, seleccion: true, stock: 5,
-      descripcion: "Cartera con manija trenzada y monedero a juego.",
-      colores: [{ nombre: "Cognac", hex: "#A65A2E" }], imagenes: ["assets/catalogo/cartera-rosa-amora-1.jpeg"] },
-    { id: "c21", marca: "Rosa Amora", nombre: "Cartera Rosa Amora marrón", categoria: "carteras", precio: 280000, nuevo: false, seleccion: false, stock: 5,
-      descripcion: "Cartera estructurada con manija trenzada y monedero a juego.",
-      colores: [{ nombre: "Marrón", hex: "#6B3A20" }], imagenes: ["assets/catalogo/cartera-rosa-amora-marron-1.jpeg"] },
-    { id: "c22", marca: "Rosa Amora", nombre: "Cartera Rosa Amora negro", categoria: "carteras", precio: 280000, nuevo: false, seleccion: false, stock: 5,
-      descripcion: "Cartera con textura trenzada, cadena y monedero a juego.",
-      colores: [{ nombre: "Negro", hex: "#1A1114" }], imagenes: ["assets/catalogo/cartera-rosa-amora-negro-1.jpeg"] },
+    { id: "c20", marca: "Rosa Amora", nombre: "Cartera Rosa Amora", categoria: "carteras", precio: 280000, nuevo: false, seleccion: true, stock: 15,
+      descripcion: "Cartera con manija trenzada y monedero a juego. Disponible en tres colores.",
+      colores: [
+        { nombre: "Cognac", hex: "#A65A2E", stock: 5, imagenes: ["assets/catalogo/cartera-rosa-amora-1.jpeg"] },
+        { nombre: "Marrón", hex: "#6B3A20", stock: 5, imagenes: ["assets/catalogo/cartera-rosa-amora-marron-1.jpeg"] },
+        { nombre: "Negro",  hex: "#1A1114", stock: 5, imagenes: ["assets/catalogo/cartera-rosa-amora-negro-1.jpeg"] }
+      ],
+      imagenes: ["assets/catalogo/cartera-rosa-amora-1.jpeg", "assets/catalogo/cartera-rosa-amora-marron-1.jpeg", "assets/catalogo/cartera-rosa-amora-negro-1.jpeg"] },
     { id: "c23", marca: "Rosa Amora", nombre: "Carterita Rosa Amora", categoria: "carteras", precio: 270000, nuevo: true, seleccion: false, stock: 5,
       descripcion: "Carterita con cadena metálica, correa de cuero y monedero a juego.",
       colores: [{ nombre: "Cognac", hex: "#A65A2E" }], imagenes: ["assets/catalogo/carterita-rosa-amora-1.jpeg"] },
@@ -106,5 +114,6 @@ window.MANASTINA_DATOS = {
     { id: "c25", marca: "Timberland", nombre: "Morral Timberland", categoria: "bandoleras", precio: 250000, nuevo: false, seleccion: false, stock: 5,
       descripcion: "Morral compacto de nylon, con bolsillo frontal y correa regulable.",
       colores: [{ nombre: "Negro", hex: "#1A1114" }], imagenes: ["assets/catalogo/morral-timberland-1.jpeg"] }
+    */
   ]
 };

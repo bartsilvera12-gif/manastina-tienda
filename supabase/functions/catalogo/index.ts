@@ -68,9 +68,30 @@ type FilaColeccion = {
 type FilaGaleria = {
   imagen_id: string;
   producto_id: string;
+  variante_id: string | null;
   imagen_path: string | null;
   imagen_web_url: string | null;
   orden: number | null;
+};
+
+/** Una foto embebida en la lista de una variante. */
+type FotoVariante = {
+  imagen_id: string;
+  imagen_path: string | null;
+  imagen_web_url: string | null;
+  orden: number | null;
+};
+
+/** Una fila de v_web_producto_variantes. */
+type FilaVariante = {
+  variante_id: string;
+  producto_id: string;
+  codigo_web: string | null;
+  nombre: string | null;
+  hex: string | null;
+  stock: number | null;
+  orden: number | null;
+  imagenes: FotoVariante[] | null;
 };
 
 /** Una fila de v_web_galeria. */
@@ -156,9 +177,13 @@ Deno.serve(async (req) => {
     // producto queda con su portada sola.
     const galeria = new Map<string, string[]>();
 
+    // Cache de URLs públicas por imagen_id, para poder usarlas también dentro
+    // de las variantes sin volver a publicarlas.
+    const urlPorImagen = new Map<string, string>();
+
     const { data: fotos, error: errFotos } = await sb
       .from("v_web_producto_imagenes")
-      .select("imagen_id, producto_id, imagen_path, imagen_web_url, orden")
+      .select("imagen_id, producto_id, variante_id, imagen_path, imagen_web_url, orden")
       .order("producto_id")
       .order("orden");
 
@@ -181,25 +206,104 @@ Deno.serve(async (req) => {
       for (const f of filasFoto) {
         const url = nuevasFoto.get(String(f.imagen_id)) ?? f.imagen_web_url ?? "";
         if (!url) continue;
-        const lista = galeria.get(String(f.producto_id)) ?? [];
-        lista.push(url);
-        galeria.set(String(f.producto_id), lista);
+        urlPorImagen.set(String(f.imagen_id), url);
+        // Solo las fotos sin variante van al pool compartido del producto.
+        // Las que apuntan a una variante viajan dentro de `colores`.
+        if (!f.variante_id) {
+          const lista = galeria.get(String(f.producto_id)) ?? [];
+          lista.push(url);
+          galeria.set(String(f.producto_id), lista);
+        }
       }
     }
 
-    const productos = filas.map((p) => ({
-      id: String(p.codigo_web),
-      nombre: String(p.nombre ?? ""),
-      precio: Number(p.precio ?? 0),
-      stock: p.activo === false ? 0 : Math.max(0, Number(p.stock ?? 0)),
-      categoria: categoriaWeb(p.categoria_codigo, p.categoria_nombre),
-      descripcion: String(p.descripcion_web ?? "").trim(),
-      imagen: nuevas.get(String(p.producto_id)) ?? p.imagen_web_url ?? "",
-      nuevo: p.nuevo_web === true,
-      destacado: p.destacado_web === true,
-      marca: String(p.marca_nombre ?? "").trim(),
-      imagenes: galeria.get(String(p.producto_id)) ?? [],
-    }));
+    // --- Variantes de color -------------------------------------------------
+    // Cada variante trae sus fotos ya enganchadas por variante_id. Si la vista
+    // todavía no existe (migración 20 pendiente), cada producto queda sin
+    // colores y la tienda usa lo del archivo estático.
+    type ColorSalida = {
+      nombre: string;
+      hex: string;
+      stock: number;
+      imagenes: string[];
+    };
+    const variantesPorProducto = new Map<string, ColorSalida[]>();
+
+    const { data: variantes, error: errVar } = await sb
+      .from("v_web_producto_variantes")
+      .select("variante_id, producto_id, codigo_web, nombre, hex, stock, orden, imagenes")
+      .order("producto_id")
+      .order("orden");
+
+    if (errVar) {
+      console.warn("[catalogo] sin variantes del ERP:", errVar.message);
+    } else if (variantes?.length) {
+      const filasVar = variantes as unknown as FilaVariante[];
+
+      // Puede que una variante tenga fotos que la galería no recorrió (por
+      // ejemplo, si el producto está oculto pero la variante no): las
+      // publicamos igual para no dejar huecos.
+      const pendientes: { producto_id: string; imagen_path: string | null; imagen_web_url: string | null }[] = [];
+      for (const v of filasVar) {
+        for (const im of (v.imagenes ?? [])) {
+          if (!urlPorImagen.has(String(im.imagen_id)) && im.imagen_path) {
+            pendientes.push({
+              producto_id: String(im.imagen_id),
+              imagen_path: im.imagen_path,
+              imagen_web_url: im.imagen_web_url,
+            });
+          }
+        }
+      }
+      if (pendientes.length) {
+        const publicadas = await publicarFotosPendientes(
+          sb,
+          pendientes,
+          "producto_imagenes",
+          "galeria",
+        );
+        for (const [id, url] of publicadas) urlPorImagen.set(id, url);
+      }
+
+      for (const v of filasVar) {
+        const fotos: string[] = [];
+        for (const im of (v.imagenes ?? [])) {
+          const url = urlPorImagen.get(String(im.imagen_id)) ?? im.imagen_web_url ?? "";
+          if (url) fotos.push(url);
+        }
+        const lista = variantesPorProducto.get(String(v.producto_id)) ?? [];
+        lista.push({
+          nombre: String(v.nombre ?? "").trim() || "Único",
+          hex: String(v.hex ?? "#1A1114"),
+          stock: Math.max(0, Number(v.stock ?? 0)),
+          imagenes: fotos,
+        });
+        variantesPorProducto.set(String(v.producto_id), lista);
+      }
+    }
+
+    const productos = filas.map((p) => {
+      const colores = variantesPorProducto.get(String(p.producto_id)) ?? [];
+      // Si el producto tiene variantes cargadas, el stock lo mandan ellas.
+      // Sin variantes, se respeta el stock del producto (comportamiento viejo).
+      const stockAgregado = colores.length
+        ? colores.reduce((s, c) => s + c.stock, 0)
+        : Number(p.stock ?? 0);
+      return {
+        id: String(p.codigo_web),
+        nombre: String(p.nombre ?? ""),
+        precio: Number(p.precio ?? 0),
+        stock: p.activo === false ? 0 : Math.max(0, stockAgregado),
+        categoria: categoriaWeb(p.categoria_codigo, p.categoria_nombre),
+        descripcion: String(p.descripcion_web ?? "").trim(),
+        imagen: nuevas.get(String(p.producto_id)) ?? p.imagen_web_url ?? "",
+        nuevo: p.nuevo_web === true,
+        destacado: p.destacado_web === true,
+        marca: String(p.marca_nombre ?? "").trim(),
+        imagenes: galeria.get(String(p.producto_id)) ?? [],
+        colores,
+      };
+    });
 
     // --- Categorías ---------------------------------------------------------
     // Se piden aparte porque son pocas y cambian poco. Si la vista todavía no
