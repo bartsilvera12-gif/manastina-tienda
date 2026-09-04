@@ -113,15 +113,58 @@ const fmt = n => 'Gs. ' + Number(n).toLocaleString('es-PY').replace(/,/g, '.');
 const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;')
                           .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
+/* La tienda se llena desde el ERP (Edge Function `catalogo`). Para que el
+   "Consultar por WhatsApp" muestre el preview con la foto real del producto,
+   WhatsApp necesita scrapear un HTML en manastina.com con og:image apuntando
+   a la foto. Como el HTML de la home usa un og:image generico (el logo), se
+   genera al build una pagina chiquita por producto en /p/<codigo>.html:
+
+   - Trae los productos del ERP con el mismo endpoint que usa la tienda.
+   - Escribe una pagina con og:title/og:image/og:url y un meta-refresh a la
+     ficha del producto (?p=<codigo>). WhatsApp lee los meta, el visitante
+     humano cae en la ficha.
+
+   Si el ERP no responde (offline, sin ANON), se sigue con los productos
+   hardcodeados en datos-manastina.js (que hoy es lista vacia). El build no
+   falla nunca por esto. */
+async function traerProductosDelErp() {
+  if (!SB_ANON) return [];
+  try {
+    const res = await fetch(SB_URL + '/functions/v1/catalogo', {
+      headers: { apikey: SB_ANON, Authorization: 'Bearer ' + SB_ANON },
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const j = await res.json();
+    return Array.isArray(j?.productos) ? j.productos : [];
+  } catch (e) {
+    console.warn('  aviso: no se pudo leer el catalogo del ERP (' + e.message + '), se omiten las paginas /p/');
+    return [];
+  }
+}
+
 const dirP = path.join(OUT, 'p');
 fs.mkdirSync(dirP, { recursive: true });
 
-datos.productos.forEach(p => {
-  const rel = (p.imagenes[0] || 'assets/manastina-logo-completo.png').split(' ').join('%20');
-  const img = SITIO + '/' + rel;
+function escribirFichaProducto(p, opts) {
+  opts = opts || {};
+  /* La foto principal puede venir como URL absoluta (ERP) o como path
+     relativo (datos-manastina.js). En ambos casos WhatsApp necesita URL
+     absoluta con https, asi que se completa cuando hace falta. */
+  /* El endpoint /catalogo del ERP devuelve la portada en `imagen` (string) y
+     la galeria completa en `imagenes` (array, puede estar vacio). Los
+     productos hardcodeados en datos-manastina.js solo tienen `imagenes`. Se
+     prueba en ese orden para siempre agarrar la mejor. */
+  const primeraFoto = (p.imagenes && p.imagenes[0])
+    || p.imagen
+    || opts.fotoFallback
+    || 'assets/manastina-logo-completo.png';
+  const img = /^https?:\/\//i.test(primeraFoto)
+    ? primeraFoto
+    : SITIO + '/' + primeraFoto.split(' ').join('%20');
   const titulo = p.nombre + ' · ' + fmt(p.precio);
-  const desc = (p.marca ? p.marca + ' · ' : '') + (cats[p.categoria] || '') + '. ' + p.descripcion;
-  const destino = SITIO + '/?p=' + p.id;
+  const nombreCat = opts.nombreCategoria || cats[p.categoria] || '';
+  const desc = (p.marca ? p.marca + ' · ' : '') + nombreCat + '. ' + (p.descripcion || '');
+  const destino = SITIO + '/?p=' + encodeURIComponent(p.id);
   const doc = [
     '<!DOCTYPE html>', '<html lang="es">', '<head>', '<meta charset="utf-8">',
     '<title>' + esc(titulo) + ' — MANASTINA</title>',
@@ -143,25 +186,54 @@ datos.productos.forEach(p => {
     '<p><a href="' + destino + '">Ver en la tienda</a></p>',
     '</body>', '</html>'
   ].join('\n');
-  fs.writeFileSync(path.join(dirP, p.id + '.html'), doc);
-});
+  const nombreArchivo = String(p.id).replace(/[^a-zA-Z0-9._-]/g, '_') + '.html';
+  fs.writeFileSync(path.join(dirP, nombreArchivo), doc);
+}
 
-// 5) catálogo en JSON — lo lee la Edge Function "crear-pago" para validar
-//    los precios del lado del servidor y no confiar en lo que manda el navegador
-const catalogo = datos.productos.map(p => ({
-  id: p.id,
-  nombre: p.nombre,
-  precio: p.precio,
-  stock: p.stock,
-}));
-fs.writeFileSync(
-  path.join(OUT, 'catalogo.json'),
-  JSON.stringify(catalogo, null, 2)
-);
+datos.productos.forEach(p => escribirFichaProducto(p));
+
+/* Async top-level: se resuelve la promesa antes de terminar el build. */
+(async () => {
+  const delErp = await traerProductosDelErp();
+  /* Mapa de nombre de categoria por clave, tal como devuelve el endpoint
+     /catalogo, para que la descripcion salga con el nombre y no la clave. */
+  const catsErp = {};
+  try {
+    const res = SB_ANON ? await fetch(SB_URL + '/functions/v1/catalogo', {
+      headers: { apikey: SB_ANON, Authorization: 'Bearer ' + SB_ANON },
+    }) : null;
+    if (res && res.ok) {
+      const j = await res.json();
+      (j.categorias || []).forEach(c => { catsErp[c.id] = c.nombre; });
+    }
+  } catch { /* ya se avisa arriba */ }
+
+  const idsYaEscritos = new Set(datos.productos.map(p => String(p.id)));
+  let escritos = 0;
+  for (const p of delErp) {
+    if (!p || !p.id) continue;
+    if (idsYaEscritos.has(String(p.id))) continue;
+    escribirFichaProducto(p, { nombreCategoria: catsErp[p.categoria] });
+    escritos++;
+  }
+
+  // 5) catálogo en JSON — lo lee la Edge Function "crear-pago" para validar
+  //    los precios del lado del servidor y no confiar en lo que manda el navegador
+  const catalogo = datos.productos.concat(delErp).map(p => ({
+    id: p.id,
+    nombre: p.nombre,
+    precio: p.precio,
+    stock: p.stock,
+  }));
+  fs.writeFileSync(
+    path.join(OUT, 'catalogo.json'),
+    JSON.stringify(catalogo, null, 2)
+  );
+
+  const total = fs.readdirSync(OUT).length;
+  console.log('build listo en ' + OUT + '/  ·  ' + datos.productos.length + ' productos locales + ' + escritos + ' productos del ERP  ·  ' + total + ' entradas en la raíz');
+})();
 
 // 6) configuración de Apache e instructivo
 fs.copyFileSync('htaccess.txt', path.join(OUT, '.htaccess'));
 fs.copyFileSync('LEEME-hostinger.txt', path.join(OUT, 'LEEME-hostinger.txt'));
-
-const total = fs.readdirSync(OUT).length;
-console.log('build listo en ' + OUT + '/  ·  ' + datos.productos.length + ' productos  ·  ' + total + ' entradas en la raíz');

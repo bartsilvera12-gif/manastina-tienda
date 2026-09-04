@@ -2467,15 +2467,15 @@ class Component extends DCLogic {
       },
       waProducto: (() => {
         if (!prod) return "https://wa.me/" + WA;
-        /* Se agrega el link de la foto principal al final del mensaje: WhatsApp
-           lo detecta como URL y muestra la vista previa con la imagen del
-           producto, sin necesidad de que el cliente adjunte nada. La foto
-           elegida es la primera del color seleccionado (o la primera del
-           producto si aun no se eligio color). */
-        var fotoColor = colorSel && prod.colores ? (prod.colores.find(function(c){return c.nombre===colorSel;}) || {}).imagenes : null;
-        var foto = (fotoColor && fotoColor[0]) || (prod.imagenes && prod.imagenes[0]) || "";
-        var texto = "Hola, Manastina. Quiero consultar por " + prod.nombre + " (" + fmt(prod.precio) + ")."
-          + (foto ? "\n" + foto : "");
+        /* Se agrega el link a la ficha del producto en manastina.com. Esa
+           pagina (generada por build.js en /p/<id>.html) trae og:image
+           apuntando a la foto real, asi que WhatsApp muestra el preview con
+           imagen, titulo y "manastina.com" — sin exponer el hostname del
+           bucket. La ficha hace un location.replace() a ?p=<id>, con lo cual
+           el visitante humano cae en la ficha real del producto. */
+        var idSeguro = encodeURIComponent(String(prod.id).replace(/[^a-zA-Z0-9._-]/g, "_"));
+        var ficha = SITIO + "/p/" + idSeguro + ".html";
+        var texto = "Hola, Manastina. Quiero consultar por " + prod.nombre + " (" + fmt(prod.precio) + ").\n" + ficha;
         return "https://wa.me/" + WA + "?text=" + encodeURIComponent(texto);
       })(),
       relacionados,
