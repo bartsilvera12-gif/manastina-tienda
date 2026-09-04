@@ -2131,18 +2131,23 @@ class Component extends DCLogic {
     /* Con una sola variante no tiene sentido obligar a elegirla. Importa sobre
        todo al entrar por link directo (?p=...), donde pColor llega sin definir. */
     const colorSel = s.pColor || (colores.length === 1 ? colores[0].nombre : null);
-    /* Fotos que arma la ficha: si hay un color elegido, primero las suyas y
-       después las compartidas del producto (planos generales, etiqueta, etc.).
-       Sin color elegido —producto con varias variantes recién entrado— caemos
-       en las fotos de la primera variante para no dejar la ficha en blanco. */
+    /* Fotos que arma la ficha:
+       - Si hay un color elegido y esa variante tiene fotos propias, se
+         muestran solo esas. La portada del producto no se mezcla: puede ser
+         de otro color y confundir (ej: producto con portada crema y
+         cliente eligiendo negro).
+       - Si el color elegido todavía no tiene fotos cargadas, cae en la
+         portada + galería compartida como fallback.
+       - Sin color elegido —producto con varias variantes recién entrado—
+         se muestra la portada compartida. */
     const varElegida = prod ? this.variante(prod, colorSel) : null;
-    const fotosColor = (varElegida && varElegida.imagenes && varElegida.imagenes.length)
+    const fotosVarElegida = (varElegida && varElegida.imagenes && varElegida.imagenes.length)
       ? varElegida.imagenes
-      : (prod && colores[0] && colores[0].imagenes && colores[0].imagenes.length ? colores[0].imagenes : []);
+      : [];
     const fotosComunes = (prod && prod.imagenes) ? prod.imagenes : [];
-    const prodFotos = fotosColor.length
-      ? fotosColor.concat(fotosComunes.filter(u => fotosColor.indexOf(u) < 0))
-      : fotosComunes;
+    const prodFotos = colorSel && fotosVarElegida.length
+      ? fotosVarElegida
+      : (fotosComunes.length ? fotosComunes : fotosVarElegida);
     const stockColor = prod ? (colorSel ? this.stockDeColor(prod, colorSel) : prod.stock) : 0;
     const relacionados = prod ? prods.filter(p => p.categoria === prod.categoria && p.id !== prod.id).slice(0, 4).map(p => this.prep(p)) : [];
 
