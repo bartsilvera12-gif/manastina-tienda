@@ -437,7 +437,7 @@ input,select,textarea{font-family:inherit;color:#331821}
             <div style="display:flex;align-items:center;gap:10px;margin-top:11px">
               <div style="display:flex;gap:6px">
                 <sc-for list="{{ p.colores }}" as="col" hint-placeholder-count="2">
-                  <span title="{{ col.nombre }}" style="width:11px;height:11px;border-radius:50%;border:1px solid rgba(51,24,33,.28);background:{{ col.hex }};display:block"></span>
+                  <span title="{{ col.nombre }}" style="width:14px;height:14px;border-radius:50%;border:1px solid rgba(51,24,33,.28);background:{{ col.hex }};display:block"></span>
                 </sc-for>
               </div>
               <span style="font-size:10px;letter-spacing:.1em;color:#7A5460">{{ p.estado }}</span>
@@ -708,7 +708,7 @@ input,select,textarea{font-family:inherit;color:#331821}
             <div style="display:flex;align-items:center;gap:10px;margin-top:12px">
               <div style="display:flex;gap:6px">
                 <sc-for list="{{ p.colores }}" as="col" hint-placeholder-count="2">
-                  <span title="{{ col.nombre }}" style="width:11px;height:11px;border-radius:50%;border:1px solid rgba(51,24,33,.28);background:{{ col.hex }};display:block"></span>
+                  <span title="{{ col.nombre }}" style="width:14px;height:14px;border-radius:50%;border:1px solid rgba(51,24,33,.28);background:{{ col.hex }};display:block"></span>
                 </sc-for>
               </div>
               <span style="font-size:10px;letter-spacing:.1em;color:#7A5460">{{ p.estado }}</span>
@@ -870,6 +870,11 @@ input,select,textarea{font-family:inherit;color:#331821}
             </div>
             <p style="margin:14px 0 0;font-family:'Cormorant Garamond',Georgia,serif;font-size:21px;font-weight:600">{{ p.nombre }}</p>
             <p style="margin:5px 0 0;font-size:12.5px">{{ p.precioFmt }}</p>
+            <div style="display:flex;gap:6px;margin-top:9px">
+              <sc-for list="{{ p.colores }}" as="col" hint-placeholder-count="2">
+                <span title="{{ col.nombre }}" style="width:14px;height:14px;border-radius:50%;border:1px solid rgba(51,24,33,.28);background:{{ col.hex }};display:block"></span>
+              </sc-for>
+            </div>
           </button>
         </article>
       </sc-for>
