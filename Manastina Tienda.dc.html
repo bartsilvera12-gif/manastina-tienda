@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8">
@@ -9,10 +9,10 @@
 <x-dc>
 <helmet>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>MANASTINA — Carteras, bolsos y accesorios en Paraguay</title>
-<meta name="description" content="MANASTINA, Llena de Gracia. Carteras, bolsos, bandoleras, mochilas y accesorios femeninos seleccionados. Envíos a todo Paraguay y pedidos por WhatsApp.">
-<meta property="og:title" content="MANASTINA — Llena de Gracia">
-<meta property="og:description" content="Carteras, bolsos y accesorios seleccionados. Envíos a todo Paraguay.">
+<title>MANASTINA â€” Carteras, bolsos y accesorios en Paraguay</title>
+<meta name="description" content="MANASTINA, Llena de Gracia. Carteras, bolsos, bandoleras, mochilas y accesorios femeninos seleccionados. EnvÃ­os a todo Paraguay y pedidos por WhatsApp.">
+<meta property="og:title" content="MANASTINA â€” Llena de Gracia">
+<meta property="og:description" content="Carteras, bolsos y accesorios seleccionados. EnvÃ­os a todo Paraguay.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="assets/manastina-logo-completo.png">
 <link rel="icon" href="assets/manastina-logo-completo.png">
@@ -155,7 +155,7 @@ input,select,textarea{font-family:inherit;color:#331821}
   <sc-if value="{{ esDesktop }}" hint-placeholder-val="{{ true }}">
     <div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:24px;padding:14px clamp(20px,4vw,56px)">
       <nav style="display:flex;align-items:center;gap:14px">
-        <button onClick="{{ abrirMenu }}" aria-label="Abrir menú" style="background:none;border:0;width:44px;height:44px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;cursor:pointer;padding:0">
+        <button onClick="{{ abrirMenu }}" aria-label="Abrir menÃº" style="background:none;border:0;width:44px;height:44px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;cursor:pointer;padding:0">
           <span style="display:block;width:26px;height:1.5px;background:currentColor;transition:transform .28s ease,opacity .2s ease"></span>
           <span style="display:block;width:26px;height:1.5px;background:currentColor;transition:transform .28s ease,opacity .2s ease"></span>
         </button>
@@ -186,7 +186,7 @@ input,select,textarea{font-family:inherit;color:#331821}
       <div style="border-top:1px solid rgba(51,24,33,.14);background:#F9F1EA;color:#331821;padding:38px clamp(20px,4vw,56px) 44px;animation:aparecer .35s ease both">
         <div style="display:flex;flex-wrap:wrap;gap:56px">
           <div style="min-width:210px">
-            <p style="margin:0 0 18px;font-size:9.5px;letter-spacing:.26em;text-transform:uppercase;color:#9F507D;font-weight:600">Categorías</p>
+            <p style="margin:0 0 18px;font-size:9.5px;letter-spacing:.26em;text-transform:uppercase;color:#9F507D;font-weight:600">CategorÃ­as</p>
             <div style="display:flex;flex-direction:column;gap:12px">
               <sc-for list="{{ categorias }}" as="c" hint-placeholder-count="5">
                 <button onClick="{{ c.ir }}" style="background:none;border:0;padding:0;text-align:left;cursor:pointer;font-family:'Cormorant Garamond',Georgia,serif;font-size:24px;font-weight:600;transition:color .3s ease" style-hover="color:#9F507D">{{ c.nombre }}</button>
@@ -194,14 +194,14 @@ input,select,textarea{font-family:inherit;color:#331821}
             </div>
           </div>
           <div style="min-width:200px">
-            <p style="margin:0 0 18px;font-size:9.5px;letter-spacing:.26em;text-transform:uppercase;color:#9F507D;font-weight:600">Selección</p>
+            <p style="margin:0 0 18px;font-size:9.5px;letter-spacing:.26em;text-transform:uppercase;color:#9F507D;font-weight:600">SelecciÃ³n</p>
             <div style="display:flex;flex-direction:column;gap:12px;font-size:13px">
               <button onClick="{{ irNuevos }}" style="background:none;border:0;padding:0;text-align:left;cursor:pointer;font-size:13px">Nuevos ingresos</button>
-              <button onClick="{{ irSeleccion }}" style="background:none;border:0;padding:0;text-align:left;cursor:pointer;font-size:13px">Selección Manastina</button>
+              <button onClick="{{ irSeleccion }}" style="background:none;border:0;padding:0;text-align:left;cursor:pointer;font-size:13px">SelecciÃ³n Manastina</button>
               <button onClick="{{ irNosotros }}" style="background:none;border:0;padding:0;text-align:left;cursor:pointer;font-size:13px">Conocer Manastina</button>
             </div>
           </div>
-          <p style="flex:1;min-width:240px;max-width:340px;margin:0;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:22px;line-height:1.45;color:#4C0F2E">Piezas seleccionadas para acompañar cada ocasión, sin perder tu propio estilo.</p>
+          <p style="flex:1;min-width:240px;max-width:340px;margin:0;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:22px;line-height:1.45;color:#4C0F2E">Piezas seleccionadas para acompaÃ±ar cada ocasiÃ³n, sin perder tu propio estilo.</p>
         </div>
       </div>
     </sc-if>
@@ -209,7 +209,7 @@ input,select,textarea{font-family:inherit;color:#331821}
 
   <sc-if value="{{ esMobile }}">
     <div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:10px 14px">
-      <button onClick="{{ abrirMenu }}" aria-label="Abrir menú" style="background:none;border:0;width:44px;height:44px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;cursor:pointer;padding:0">
+      <button onClick="{{ abrirMenu }}" aria-label="Abrir menÃº" style="background:none;border:0;width:44px;height:44px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;cursor:pointer;padding:0">
         <span style="display:block;width:26px;height:1.5px;background:currentColor;transition:transform .28s ease,opacity .2s ease"></span>
         <span style="display:block;width:26px;height:1.5px;background:currentColor;transition:transform .28s ease,opacity .2s ease"></span>
       </button>
@@ -241,7 +241,7 @@ input,select,textarea{font-family:inherit;color:#331821}
       <button onClick="{{ irHome }}" aria-label="MANASTINA, ir al inicio" style="background:none;border:0;padding:0;cursor:pointer">
         <img src="assets/manastina-wordmark-borgona.png" alt="MANASTINA, Llena de Gracia" style="width:clamp(112px,9vw,140px);height:auto;display:block">
       </button>
-      <button onClick="{{ cerrarMenu }}" aria-label="Cerrar menú" style="background:none;border:0;width:44px;height:44px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;cursor:pointer;padding:0">
+      <button onClick="{{ cerrarMenu }}" aria-label="Cerrar menÃº" style="background:none;border:0;width:44px;height:44px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;cursor:pointer;padding:0">
         <span style="display:block;width:26px;height:1.5px;background:currentColor;transform:translateY(4.25px) rotate(45deg);transition:transform .28s ease"></span>
         <span style="display:block;width:26px;height:1.5px;background:currentColor;transform:translateY(-4.25px) rotate(-45deg);transition:transform .28s ease"></span>
       </button>
@@ -251,11 +251,11 @@ input,select,textarea{font-family:inherit;color:#331821}
         <form onSubmit="{{ buscarDesdeMenu }}" style="display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(51,24,33,.28);padding-bottom:10px;max-width:360px">
           <svg width="14" height="14" viewBox="0 0 17 17" fill="none" stroke="#9F507D" stroke-width="1.1" aria-hidden="true" style="flex:0 0 auto"><circle cx="7" cy="7" r="5.6"></circle><line x1="11.2" y1="11.2" x2="16" y2="16"></line></svg>
           <label for="buscar-menu" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Buscar productos</label>
-          <input id="buscar-menu" type="search" value="{{ consulta }}" onChange="{{ onConsulta }}" placeholder="Buscar carteras, bandoleras…" style="flex:1;min-height:40px;border:0;background:transparent;font-size:12.5px;outline:none;padding:0">
+          <input id="buscar-menu" type="search" value="{{ consulta }}" onChange="{{ onConsulta }}" placeholder="Buscar carteras, bandolerasâ€¦" style="flex:1;min-height:40px;border:0;background:transparent;font-size:12.5px;outline:none;padding:0">
         </form>
 
         <nav style="display:flex;flex-direction:column;align-items:flex-start;gap:clamp(2px,.4vw,6px);margin-top:clamp(20px,2.4vw,32px)">
-          <p style="margin:0 0 10px;font-size:9.5px;letter-spacing:.26em;text-transform:uppercase;color:#9F507D;font-weight:600">Categorías</p>
+          <p style="margin:0 0 10px;font-size:9.5px;letter-spacing:.26em;text-transform:uppercase;color:#9F507D;font-weight:600">CategorÃ­as</p>
           <sc-for list="{{ categorias }}" as="c" hint-placeholder-count="5">
             <button onClick="{{ c.ir }}" style="background:none;border:0;padding:3px 0;min-height:38px;cursor:pointer;text-align:left;font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(17px,1.7vw,24px);line-height:1.22;font-weight:600;color:#331821;transition:color .35s ease" style-hover="color:#9F507D">{{ c.nombre }}</button>
           </sc-for>
@@ -300,15 +300,15 @@ input,select,textarea{font-family:inherit;color:#331821}
   <div style="position:fixed;top:0;left:0;right:0;z-index:96;background:#F9F1EA;padding:44px clamp(20px,6vw,80px) 40px;animation:subir .4s ease both;max-height:80vh;overflow-y:auto">
     <div style="display:flex;align-items:flex-end;gap:20px;border-bottom:1px solid rgba(51,24,33,.3);padding-bottom:14px">
       <label for="buscar-desktop" style="font-size:9.5px;letter-spacing:.26em;text-transform:uppercase;color:#9F507D;font-weight:600;padding-bottom:8px">Buscar</label>
-      <input id="buscar-desktop" type="search" value="{{ consulta }}" onChange="{{ onConsulta }}" placeholder="Nombre, categoría o palabra clave" style="flex:1;border:0;background:transparent;font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(24px,3.4vw,40px);outline:none;padding:0">
-      <button onClick="{{ cerrarBuscar }}" aria-label="Cerrar búsqueda" style="background:none;border:0;cursor:pointer;font-size:24px;font-weight:300;line-height:1;padding-bottom:6px">×</button>
+      <input id="buscar-desktop" type="search" value="{{ consulta }}" onChange="{{ onConsulta }}" placeholder="Nombre, categorÃ­a o palabra clave" style="flex:1;border:0;background:transparent;font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(24px,3.4vw,40px);outline:none;padding:0">
+      <button onClick="{{ cerrarBuscar }}" aria-label="Cerrar bÃºsqueda" style="background:none;border:0;cursor:pointer;font-size:24px;font-weight:300;line-height:1;padding-bottom:6px">Ã—</button>
     </div>
     <p style="margin:18px 0 0;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#9F507D">{{ textoResultadosBusqueda }}</p>
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:26px;margin-top:26px">
       <sc-for list="{{ resultadosBusqueda }}" as="p" hint-placeholder-count="4">
         <button onClick="{{ p.abrir }}" style="background:none;border:0;padding:0;text-align:left;cursor:pointer;display:block">
           <div style="position:relative;aspect-ratio:4/5;overflow:hidden;background:repeating-linear-gradient(135deg,#EFE3DA 0 12px,#EADCD1 12px 24px);display:flex;align-items:center;justify-content:center">
-            <sc-if value="{{ p.tieneFoto }}"><img src="{{ p.foto }}" alt="{{ p.nombre }}" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></sc-if><sc-if value="{{ p.sinFoto }}"><span style="font-family:ui-monospace,Menlo,monospace;font-size:9px;letter-spacing:.1em;color:#9F507D;text-transform:uppercase">Fotografía pendiente</span></sc-if>
+            <sc-if value="{{ p.tieneFoto }}"><img src="{{ p.foto }}" alt="{{ p.nombre }}" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></sc-if><sc-if value="{{ p.sinFoto }}"><span style="font-family:ui-monospace,Menlo,monospace;font-size:9px;letter-spacing:.1em;color:#9F507D;text-transform:uppercase">FotografÃ­a pendiente</span></sc-if>
           </div>
           <p style="margin:12px 0 4px;font-family:'Cormorant Garamond',Georgia,serif;font-size:20px;font-weight:600">{{ p.nombre }}</p>
           <p style="margin:0;font-size:12px;letter-spacing:.06em">{{ p.precioFmt }}</p>
@@ -323,18 +323,18 @@ input,select,textarea{font-family:inherit;color:#331821}
 <!-- ===================== HOME ===================== -->
 <sc-if value="{{ esHome }}" hint-placeholder-val="{{ true }}">
 <div>
-  <!-- HERO — tríptico que colapsa al centro con el scroll -->
-  <section ref="{{ refHero }}" aria-label="Campaña MANASTINA" style="position:relative;height:{{ altoHeroWrap }};margin-top:-{{ altoHeader }}">
+  <!-- HERO â€” trÃ­ptico que colapsa al centro con el scroll -->
+  <section ref="{{ refHero }}" aria-label="CampaÃ±a MANASTINA" style="position:relative;height:{{ altoHeroWrap }};margin-top:-{{ altoHeader }}">
     <div style="position:sticky;top:0;height:100svh;overflow:hidden;display:flex;align-items:center;padding:calc({{ altoHeader }} + clamp(6px,1vw,14px)) clamp(10px,1.4vw,24px) clamp(12px,1.6vw,24px);animation:aparecer .7s ease both">
       <div style="display:flex;align-items:stretch;gap:{{ heroGap }};width:100%;height:100%">
 
       <article style="position:relative;display:{{ heroLadoDisplay }};flex:{{ heroFlexLado }};min-width:0;height:100%;overflow:hidden;background:repeating-linear-gradient(135deg,#EFE3DA 0 16px,#EADCD1 16px 32px);opacity:{{ heroLadoOp }};pointer-events:{{ heroLadoPE }};transition:opacity .25s ease">
         <div style="position:absolute;inset:0;animation:zoomLento 2.6s cubic-bezier(.2,.7,.2,1) both">
-          <img src="assets/hero-1.png" alt="Campaña MANASTINA" loading="lazy" style="width:100%;height:100%;object-fit:cover;object-position:center">
+          <img src="assets/hero-1.png" alt="CampaÃ±a MANASTINA" loading="lazy" style="width:100%;height:100%;object-fit:cover;object-position:center">
         </div>
         <div style="position:absolute;left:0;right:0;bottom:0;height:56%;background:linear-gradient(to top,rgba(51,24,33,.82),rgba(51,24,33,.45) 46%,rgba(51,24,33,0))"></div>
         <div style="position:absolute;left:0;right:0;bottom:0;z-index:2;padding:0 clamp(16px,2vw,30px) clamp(24px,3vw,40px);text-align:center">
-          <p style="margin:0 0 14px;font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(19px,1.7vw,26px);line-height:1.35;color:#F9F1EA;text-wrap:pretty">Estructura firme, terminación serena.</p>
+          <p style="margin:0 0 14px;font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(19px,1.7vw,26px);line-height:1.35;color:#F9F1EA;text-wrap:pretty">Estructura firme, terminaciÃ³n serena.</p>
           <button onClick="{{ irCarteras }}" style="display:inline-flex;align-items:flex-start;min-height:44px;background:none;border:0;padding:12px 2px 14px;cursor:pointer;color:#F9F1EA;font-size:11.5px;letter-spacing:.14em;box-shadow:inset 0 -15px 0 -14px rgba(249,241,234,.75);transition:border-color .4s ease" style-hover="box-shadow:inset 0 -15px 0 -14px #F9F1EA">Descubrir</button>
         </div>
       </article>
@@ -348,7 +348,7 @@ input,select,textarea{font-family:inherit;color:#331821}
           <p style="margin:0 0 clamp(14px,1.8vw,24px);font-size:10.5px;letter-spacing:.3em;text-transform:uppercase;color:#D7BCC3;font-weight:600;animation:subir .9s .38s ease both">Llena de Gracia</p>
           <h1 style="margin:0;font-family:'Cormorant Garamond',Georgia,serif;font-weight:700;font-size:clamp(36px,4.8vw,72px);line-height:1.08;color:#F9F1EA;text-wrap:balance;animation:subir 1s .52s ease both">Piezas que proyectan tu seguridad</h1>
           <div style="display:flex;flex-wrap:wrap;gap:clamp(16px,2vw,30px);justify-content:center;margin-top:clamp(24px,3.4vw,44px);animation:subir 1s .7s ease both">
-            <button onClick="{{ irColeccion }}" style="display:inline-flex;align-items:center;min-height:44px;background:none;border:0;padding:12px 2px;cursor:pointer;color:#F9F1EA;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;box-shadow:inset 0 -13px 0 -12px rgba(249,241,234,.75);transition:box-shadow .4s ease" style-hover="box-shadow:inset 0 -13px 0 -12px #F9F1EA">Descubrir colección</button>
+            <button onClick="{{ irColeccion }}" style="display:inline-flex;align-items:center;min-height:44px;background:none;border:0;padding:12px 2px;cursor:pointer;color:#F9F1EA;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;box-shadow:inset 0 -13px 0 -12px rgba(249,241,234,.75);transition:box-shadow .4s ease" style-hover="box-shadow:inset 0 -13px 0 -12px #F9F1EA">Descubrir colecciÃ³n</button>
             <button onClick="{{ irNuevos }}" style="display:inline-flex;align-items:center;min-height:44px;background:none;border:0;padding:12px 2px;cursor:pointer;color:#E4CDD3;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;box-shadow:inset 0 -13px 0 -12px rgba(228,205,211,.6);transition:color .4s ease,box-shadow .4s ease" style-hover="color:#F9F1EA;box-shadow:inset 0 -13px 0 -12px #F9F1EA">Ver novedades</button>
           </div>
         </div>
@@ -369,12 +369,12 @@ input,select,textarea{font-family:inherit;color:#331821}
     </div>
   </section>
 
-  <!-- CATEGORÍAS -->
+  <!-- CATEGORÃAS -->
   <section style="padding:clamp(64px,9vw,130px) clamp(20px,5vw,72px) clamp(40px,5vw,70px)">
     <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:clamp(30px,4vw,56px)">
       <div>
-        <p style="margin:0 0 14px;font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:#9F507D;font-weight:600">Categorías</p>
-        <h2 style="margin:0;font-family:'Cormorant Garamond',Georgia,serif;font-weight:700;font-size:clamp(30px,4.2vw,58px);line-height:1.06">Encontrá tu pieza</h2>
+        <p style="margin:0 0 14px;font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:#9F507D;font-weight:600">CategorÃ­as</p>
+        <h2 style="margin:0;font-family:'Cormorant Garamond',Georgia,serif;font-weight:700;font-size:clamp(30px,4.2vw,58px);line-height:1.06">EncontrÃ¡ tu pieza</h2>
       </div>
       <button onClick="{{ irTienda }}" style="background:none;border:0;border-bottom:1px solid #331821;padding:0 0 6px;cursor:pointer;font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:600">Ver todo</button>
     </div>
@@ -387,9 +387,9 @@ input,select,textarea{font-family:inherit;color:#331821}
           <div class="cat-info" style="position:absolute;left:0;right:0;bottom:0;padding:clamp(15px,1.5vw,26px);color:#F9F1EA">
             <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:10px">
               <span style="font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:{{ c.fuente }};line-height:1.08;text-wrap:balance">{{ c.nombre }}</span>
-              <span aria-hidden="true" class="cat-arrow" style="flex:0 0 auto;font-size:15px;opacity:.9">→</span>
+              <span aria-hidden="true" class="cat-arrow" style="flex:0 0 auto;font-size:15px;opacity:.9">â†’</span>
             </div>
-            <span class="cat-ver" style="display:block;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;font-weight:600;color:#E9C9D2">Ver categoría</span>
+            <span class="cat-ver" style="display:block;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;font-weight:600;color:#E9C9D2">Ver categorÃ­a</span>
           </div>
         </button>
       </sc-for>
@@ -403,7 +403,7 @@ input,select,textarea{font-family:inherit;color:#331821}
       <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:clamp(20px,3vw,48px);flex-wrap:wrap;border-bottom:1px solid rgba(51,24,33,.16);padding-bottom:clamp(16px,2vw,24px)">
         <h2 style="margin:0;max-width:16ch;font-family:'Cormorant Garamond',Georgia,serif;font-weight:700;font-size:clamp(30px,4.2vw,56px);line-height:1.04">Seleccionamos tus favoritos</h2>
         <div style="display:flex;align-items:flex-end;gap:clamp(20px,3vw,40px);flex:1;justify-content:space-between;min-width:260px">
-          <p style="margin:0;max-width:34ch;background:linear-gradient(120deg,#5A1236,#4A0F2D 60%,#3B0E25);color:#F9F1EA;padding:clamp(12px,1.3vw,18px) clamp(16px,1.8vw,24px);border-radius:3px;box-shadow:0 16px 34px -24px rgba(51,24,33,.75);font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:clamp(17px,1.5vw,22px);line-height:1.45;text-wrap:pretty">Piezas recién llegadas, elegidas para acompañar cada ocasión.</p>
+          <p style="margin:0;max-width:34ch;background:linear-gradient(120deg,#5A1236,#4A0F2D 60%,#3B0E25);color:#F9F1EA;padding:clamp(12px,1.3vw,18px) clamp(16px,1.8vw,24px);border-radius:3px;box-shadow:0 16px 34px -24px rgba(51,24,33,.75);font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:clamp(17px,1.5vw,22px);line-height:1.45;text-wrap:pretty">Piezas reciÃ©n llegadas, elegidas para acompaÃ±ar cada ocasiÃ³n.</p>
           <button onClick="{{ irNuevos }}" style="flex:0 0 auto;background:none;border:0;padding:0 0 4px;min-height:44px;cursor:pointer;font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:500;box-shadow:inset 0 -13px 0 -12px #331821;transition:box-shadow .4s ease" style-hover="box-shadow:inset 0 -13px 0 -12px #9F507D">Ver todo</button>
         </div>
       </div>
@@ -415,7 +415,7 @@ input,select,textarea{font-family:inherit;color:#331821}
             <button onClick="{{ p.abrir }}" style="background:none;border:0;padding:0;cursor:pointer;display:block;width:100%;text-align:left;overflow:hidden;color:#331821">
               <div style="position:relative;aspect-ratio:4/5;overflow:hidden;background:repeating-linear-gradient(135deg,#EFE3DA 0 14px,#EADCD1 14px 28px);box-shadow:0 18px 40px -22px rgba(51,24,33,.42);transition:box-shadow .5s ease" style-hover="box-shadow:0 26px 54px -20px rgba(51,24,33,.5)">
                 <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;transition:transform .8s cubic-bezier(.2,.7,.2,1)" style-hover="transform:scale(1.05)">
-                  <sc-if value="{{ p.tieneFoto }}"><img src="{{ p.foto }}" alt="{{ p.nombre }}" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></sc-if><sc-if value="{{ p.sinFoto }}"><span style="font-family:ui-monospace,Menlo,monospace;font-size:9px;letter-spacing:.1em;color:#9F507D;text-transform:uppercase">Fotografía pendiente</span></sc-if>
+                  <sc-if value="{{ p.tieneFoto }}"><img src="{{ p.foto }}" alt="{{ p.nombre }}" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></sc-if><sc-if value="{{ p.sinFoto }}"><span style="font-family:ui-monospace,Menlo,monospace;font-size:9px;letter-spacing:.1em;color:#9F507D;text-transform:uppercase">FotografÃ­a pendiente</span></sc-if>
                 </div>
                 <span style="position:absolute;top:14px;right:14px;background:rgba(76,15,46,.92);color:#F9F1EA;font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;padding:5px 9px;font-weight:600;border-radius:2px">Nuevo</span>
                 <sc-if value="{{ p.agotado }}">
@@ -428,7 +428,7 @@ input,select,textarea{font-family:inherit;color:#331821}
             </button>
             <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-top:16px">
               <div style="min-width:0">
-                <p style="margin:0;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#9F507D;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ p.marca }} · {{ p.catNombre }}</p>
+                <p style="margin:0;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#9F507D;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ p.marca }} Â· {{ p.catNombre }}</p>
                 <button onClick="{{ p.abrir }}" style="background:none;border:0;padding:5px 0 0;cursor:pointer;text-align:left;font-family:'Cormorant Garamond',Georgia,serif;font-size:22px;font-weight:600;line-height:1.12;color:#331821;transition:color .35s ease" style-hover="color:#4C0F2E">{{ p.nombre }}</button>
                 <p style="margin:6px 0 0;font-size:12.5px;letter-spacing:.04em;font-weight:500">{{ p.precioFmt }}</p>
               </div>
@@ -437,7 +437,7 @@ input,select,textarea{font-family:inherit;color:#331821}
             <div style="display:flex;align-items:center;gap:10px;margin-top:11px">
               <div style="display:flex;gap:6px">
                 <sc-for list="{{ p.colores }}" as="col" hint-placeholder-count="2">
-                  <span title="{{ col.nombre }}" style="width:11px;height:11px;border-radius:50%;border:1px solid rgba(51,24,33,.28);background:{{ col.hex }};display:block"></span>
+                  <span title="{{ col.nombre }}" style="width:14px;height:14px;border-radius:50%;border:1px solid rgba(51,24,33,.28);background:{{ col.hex }};display:block"></span>
                 </sc-for>
               </div>
               <span style="font-size:10px;letter-spacing:.1em;color:#7A5460">{{ p.estado }}</span>
@@ -445,15 +445,15 @@ input,select,textarea{font-family:inherit;color:#331821}
           </article>
         </sc-for>
       </div>
-      <button onClick="{{ rielAnterior }}" aria-label="Anteriores" style="position:absolute;top:calc(50% - 60px);left:clamp(2px,1vw,18px);transform:translateY(-50%);z-index:40;width:46px;height:46px;border:1px solid rgba(51,24,33,.28);background:rgba(249,241,234,.92);border-radius:50%;cursor:pointer;font-size:16px;line-height:1;color:#331821;box-shadow:0 6px 18px -8px rgba(51,24,33,.4);transition:background .35s ease,color .35s ease" style-hover="background:#331821;color:#F9F1EA">←</button>
-      <button onClick="{{ rielSiguiente }}" aria-label="Siguientes" style="position:absolute;top:calc(50% - 60px);right:clamp(2px,1vw,18px);transform:translateY(-50%);z-index:40;width:46px;height:46px;border:1px solid rgba(51,24,33,.28);background:rgba(249,241,234,.92);border-radius:50%;cursor:pointer;font-size:16px;line-height:1;color:#331821;box-shadow:0 6px 18px -8px rgba(51,24,33,.4);transition:background .35s ease,color .35s ease" style-hover="background:#331821;color:#F9F1EA">→</button>
+      <button onClick="{{ rielAnterior }}" aria-label="Anteriores" style="position:absolute;top:calc(50% - 60px);left:clamp(2px,1vw,18px);transform:translateY(-50%);z-index:40;width:46px;height:46px;border:1px solid rgba(51,24,33,.28);background:rgba(249,241,234,.92);border-radius:50%;cursor:pointer;font-size:16px;line-height:1;color:#331821;box-shadow:0 6px 18px -8px rgba(51,24,33,.4);transition:background .35s ease,color .35s ease" style-hover="background:#331821;color:#F9F1EA">â†</button>
+      <button onClick="{{ rielSiguiente }}" aria-label="Siguientes" style="position:absolute;top:calc(50% - 60px);right:clamp(2px,1vw,18px);transform:translateY(-50%);z-index:40;width:46px;height:46px;border:1px solid rgba(51,24,33,.28);background:rgba(249,241,234,.92);border-radius:50%;cursor:pointer;font-size:16px;line-height:1;color:#331821;box-shadow:0 6px 18px -8px rgba(51,24,33,.4);transition:background .35s ease,color .35s ease" style-hover="background:#331821;color:#F9F1EA">â†’</button>
     </div>
   </section>
 
-  <!-- COLECCIÓN DESTACADA — media que se expande con el scroll -->
+  <!-- COLECCIÃ“N DESTACADA â€” media que se expande con el scroll -->
   <section ref="{{ refExpandir }}" style="position:relative;height:{{ altoExpandir }};background:#331821;color:#F9F1EA">
     <div style="position:sticky;top:0;height:100svh;overflow:hidden;display:flex;align-items:center;justify-content:center">
-      <img src="https://images.unsplash.com/photo-1509319117193-57bab727e09d?q=80&w=1920&auto=format&fit=crop" alt="Ambiente de campaña MANASTINA" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;opacity:{{ opacidadFondoExpandir }}" loading="lazy">
+      <img src="https://images.unsplash.com/photo-1509319117193-57bab727e09d?q=80&w=1920&auto=format&fit=crop" alt="Ambiente de campaÃ±a MANASTINA" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;opacity:{{ opacidadFondoExpandir }}" loading="lazy">
       <div style="position:absolute;inset:0;background:rgba(51,24,33,.5)"></div>
 
       <div style="position:relative;z-index:2;width:{{ anchoMediaExpandir }};height:{{ altoMediaExpandir }};max-width:94vw;max-height:82svh;overflow:hidden;background:#3E2029">
@@ -472,7 +472,7 @@ input,select,textarea{font-family:inherit;color:#331821}
       <div style="position:absolute;left:0;right:0;bottom:clamp(26px,4vw,52px);z-index:4;display:flex;flex-direction:column;align-items:center;gap:14px;opacity:{{ opacidadCtaExpandir }};pointer-events:{{ eventosCtaExpandir }};transition:opacity .5s ease">
         <button onClick="{{ irColeccion }}" style="min-height:52px;padding:16px 38px;background:#F9F1EA;color:#331821;border:1px solid #F9F1EA;border-radius:2px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;cursor:pointer;transition:background .4s ease,color .4s ease" style-hover="background:transparent;color:#F9F1EA">Descubrir</button>
       </div>
-      <p style="position:absolute;left:0;right:0;bottom:clamp(26px,4vw,52px);z-index:3;margin:0;text-align:center;font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:rgba(249,241,234,.7);opacity:{{ opacidadPistaExpandir }};transition:opacity .5s ease">Seguí bajando</p>
+      <p style="position:absolute;left:0;right:0;bottom:clamp(26px,4vw,52px);z-index:3;margin:0;text-align:center;font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:rgba(249,241,234,.7);opacity:{{ opacidadPistaExpandir }};transition:opacity .5s ease">SeguÃ­ bajando</p>
     </div>
   </section>
 
@@ -480,7 +480,7 @@ input,select,textarea{font-family:inherit;color:#331821}
   <section id="seleccion" style="padding:clamp(64px,8vw,120px) clamp(20px,5vw,72px) clamp(34px,4vw,60px)">
     <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:clamp(20px,3vw,48px);flex-wrap:wrap;margin-bottom:clamp(30px,3.6vw,52px)">
       <div style="max-width:520px">
-        <p style="margin:0 0 12px;font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:#9F507D;font-weight:600">Selección Manastina</p>
+        <p style="margin:0 0 12px;font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:#9F507D;font-weight:600">SelecciÃ³n Manastina</p>
         <h2 style="margin:0;font-family:'Cormorant Garamond',Georgia,serif;font-weight:700;font-size:clamp(30px,4.2vw,56px);line-height:1.04">Las marcas que elegimos</h2>
       </div>
       <div style="position:relative;max-width:34ch;min-height:clamp(52px,5vw,74px);width:100%;align-self:flex-end">
@@ -498,7 +498,7 @@ input,select,textarea{font-family:inherit;color:#331821}
             <span style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(23px,2.1vw,32px);font-weight:600;line-height:1.1;letter-spacing:.01em;color:#331821">{{ m.nombre }}</span>
           </sc-if>
           <span style="position:relative;z-index:1;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:#8A6472;white-space:nowrap">{{ m.conteo }}</span>
-          <span class="marca-ver" style="position:relative;z-index:1;display:block;font-size:8.5px;letter-spacing:.14em;white-space:nowrap;text-transform:uppercase;font-weight:600;color:#4C0F2E">Ver piezas →</span>
+          <span class="marca-ver" style="position:relative;z-index:1;display:block;font-size:8.5px;letter-spacing:.14em;white-space:nowrap;text-transform:uppercase;font-weight:600;color:#4C0F2E">Ver piezas â†’</span>
         </button>
       </sc-for>
     </div>
@@ -507,11 +507,11 @@ input,select,textarea{font-family:inherit;color:#331821}
     </div>
   </section>
 
-  <!-- GALERÍA -->
+  <!-- GALERÃA -->
   <section style="background:#4A0F2D;color:#F9F1EA;padding:clamp(40px,5vw,70px) 0 clamp(50px,6vw,90px)">
     <div style="text-align:center;margin-bottom:clamp(24px,3vw,40px);padding:0 clamp(20px,5vw,72px)">
-      <p style="margin:0 0 12px;font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:#E9C9D2;font-weight:600">Selección Manastina</p>
-      <h2 style="margin:0;font-family:'Cormorant Garamond',Georgia,serif;font-weight:700;font-size:clamp(28px,3.6vw,48px);color:#F9F1EA">Galería</h2>
+      <p style="margin:0 0 12px;font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:#E9C9D2;font-weight:600">SelecciÃ³n Manastina</p>
+      <h2 style="margin:0;font-family:'Cormorant Garamond',Georgia,serif;font-weight:700;font-size:clamp(28px,3.6vw,48px);color:#F9F1EA">GalerÃ­a</h2>
       <p style="margin:12px 0 0;font-size:11px;letter-spacing:.06em;color:#D7BCC3">{{ galAyuda }}</p>
     </div>
     <div ref="{{ refGalCont }}" onMouseMove="{{ galMove }}" class="gal-cont" style="position:relative;overflow:hidden;padding:8px clamp(20px,5vw,72px)">
@@ -525,7 +525,7 @@ input,select,textarea{font-family:inherit;color:#331821}
               <video class="gal-video" src="{{ g.thumb }}" autoplay muted loop playsinline preload="metadata" aria-label="{{ g.title }}" style="width:100%;height:100%;object-fit:cover"></video>
             </sc-if>
             <sc-if value="{{ g.esVideo }}">
-              <span aria-hidden="true" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2;width:54px;height:54px;border-radius:50%;background:rgba(51,24,33,.55);color:#F9F1EA;display:flex;align-items:center;justify-content:center;font-size:18px;padding-left:3px">▶</span>
+              <span aria-hidden="true" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2;width:54px;height:54px;border-radius:50%;background:rgba(51,24,33,.55);color:#F9F1EA;display:flex;align-items:center;justify-content:center;font-size:18px;padding-left:3px">â–¶</span>
             </sc-if>
             <figcaption style="position:absolute;left:0;right:0;bottom:0;z-index:2;padding:clamp(16px,1.6vw,22px);background:linear-gradient(to top,rgba(51,24,33,.72),rgba(51,24,33,0));color:#F9F1EA">
               <p style="margin:0;font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(17px,1.5vw,21px);font-weight:600;line-height:1.1">{{ g.title }}</p>
@@ -534,38 +534,38 @@ input,select,textarea{font-family:inherit;color:#331821}
           </figure>
         </sc-for>
       </div>
-      <button onClick="{{ galAnterior }}" aria-label="Anteriores" class="gal-flecha" style="position:absolute;top:50%;left:clamp(8px,2.4vw,30px);transform:translateY(-50%);z-index:5;width:48px;height:48px;border:1px solid rgba(51,24,33,.28);background:rgba(249,241,234,.92);border-radius:50%;cursor:pointer;font-size:16px;line-height:1;color:#331821;box-shadow:0 6px 18px -8px rgba(51,24,33,.4);transition:background .35s ease,color .35s ease" style-hover="background:#331821;color:#F9F1EA">←</button>
-      <button onClick="{{ galSiguiente }}" aria-label="Siguientes" class="gal-flecha" style="position:absolute;top:50%;right:clamp(8px,2.4vw,30px);transform:translateY(-50%);z-index:5;width:48px;height:48px;border:1px solid rgba(51,24,33,.28);background:rgba(249,241,234,.92);border-radius:50%;cursor:pointer;font-size:16px;line-height:1;color:#331821;box-shadow:0 6px 18px -8px rgba(51,24,33,.4);transition:background .35s ease,color .35s ease" style-hover="background:#331821;color:#F9F1EA">→</button>
+      <button onClick="{{ galAnterior }}" aria-label="Anteriores" class="gal-flecha" style="position:absolute;top:50%;left:clamp(8px,2.4vw,30px);transform:translateY(-50%);z-index:5;width:48px;height:48px;border:1px solid rgba(51,24,33,.28);background:rgba(249,241,234,.92);border-radius:50%;cursor:pointer;font-size:16px;line-height:1;color:#331821;box-shadow:0 6px 18px -8px rgba(51,24,33,.4);transition:background .35s ease,color .35s ease" style-hover="background:#331821;color:#F9F1EA">â†</button>
+      <button onClick="{{ galSiguiente }}" aria-label="Siguientes" class="gal-flecha" style="position:absolute;top:50%;right:clamp(8px,2.4vw,30px);transform:translateY(-50%);z-index:5;width:48px;height:48px;border:1px solid rgba(51,24,33,.28);background:rgba(249,241,234,.92);border-radius:50%;cursor:pointer;font-size:16px;line-height:1;color:#331821;box-shadow:0 6px 18px -8px rgba(51,24,33,.4);transition:background .35s ease,color .35s ease" style-hover="background:#331821;color:#F9F1EA">â†’</button>
     </div>
     <div style="text-align:center;margin-top:clamp(28px,3vw,40px);padding:0 clamp(20px,5vw,72px)">
       <a href="https://www.instagram.com/manastina.py" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:16px 34px;border:1px solid rgba(249,241,234,.7);border-radius:2px;color:#F9F1EA;font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;transition:background .4s ease,color .4s ease,border-color .4s ease" style-hover="background:#F9F1EA;color:#4A0F2D;border-color:#F9F1EA">Seguir en Instagram</a>
     </div>
   </section>
 
-  <!-- BLOQUE EDITORIAL — sobre + visitá el local -->
+  <!-- BLOQUE EDITORIAL â€” sobre + visitÃ¡ el local -->
   <section style="padding:clamp(56px,7vw,110px) clamp(20px,5vw,72px) clamp(40px,5vw,70px)">
     <div style="display:grid;grid-template-columns:{{ columnasEditorial }};gap:clamp(28px,4.5vw,86px);align-items:center">
       <div style="position:relative">
         <div class="sobre-foto" style="position:relative;aspect-ratio:4/5;overflow:hidden;box-shadow:0 40px 70px -40px rgba(51,24,33,.5)">
           <div class="sobre-foto-inner" style="position:absolute;inset:0">
             <div class="sobre-foto-par" style="position:absolute;left:0;right:0;top:-10%;height:120%;background:#E6D6D0;will-change:transform">
-              <img src="assets/sobre-tienda.jpg" alt="Local de MANASTINA en Capiatá" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center">
+              <img src="assets/sobre-tienda.jpg" alt="Local de MANASTINA en CapiatÃ¡" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center">
               <div style="position:absolute;inset:0;background:linear-gradient(150deg,rgba(159,80,125,.12),rgba(51,24,33,.16))"></div>
             </div>
           </div>
           <div aria-hidden="true" style="position:absolute;inset:0;border:1px solid rgba(249,241,234,.35);pointer-events:none"></div>
         </div>
-        <p style="margin:14px 0 0;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:#9F507D;font-weight:600">Nuestro local · Capiatá</p>
+        <p style="margin:14px 0 0;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:#9F507D;font-weight:600">Nuestro local Â· CapiatÃ¡</p>
       </div>
       <div>
         <p class="sobre-over" style="margin:0 0 clamp(16px,2vw,26px);font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:#9F507D;font-weight:600">Sobre Manastina</p>
         <h2 class="sobre-titulo" style="margin:0;max-width:20ch;font-family:'Cormorant Garamond',Georgia,serif;font-weight:700;font-size:clamp(32px,4.4vw,62px);line-height:1.02;text-wrap:pretty"><span class="pal" style="--i:0">Elegancia</span> <span class="pal" style="--i:1">que</span> <span class="pal" style="--i:2">se</span> <span class="pal" style="--i:3">sostiene</span> <span class="pal" style="--i:4">en</span> <span class="pal" style="--i:5">el</span> <span class="pal" style="--i:6">tiempo.</span></h2>
-        <p class="sobre-sub" style="margin:clamp(20px,2.2vw,30px) 0 0;max-width:44ch;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:clamp(17px,1.6vw,23px);line-height:1.55;color:#5B3B46">Seleccionamos piezas con presencia, diseño y versatilidad para acompañarte en cada ocasión. Te esperamos también en nuestro local.</p>
+        <p class="sobre-sub" style="margin:clamp(20px,2.2vw,30px) 0 0;max-width:44ch;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:clamp(17px,1.6vw,23px);line-height:1.55;color:#5B3B46">Seleccionamos piezas con presencia, diseÃ±o y versatilidad para acompaÃ±arte en cada ocasiÃ³n. Te esperamos tambiÃ©n en nuestro local.</p>
         <div style="margin-top:clamp(24px,2.8vw,38px);padding-top:clamp(20px,2.2vw,30px);border-top:1px solid rgba(51,24,33,.16);display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:clamp(18px,2.4vw,36px)">
           <div>
-            <p style="margin:0 0 7px;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:#9F507D;font-weight:600">Visitá el local</p>
+            <p style="margin:0 0 7px;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:#9F507D;font-weight:600">VisitÃ¡ el local</p>
             <p style="margin:0 0 8px;font-size:13.5px;line-height:1.6;color:#5B3B46">{{ ubicacion }}</p>
-            <a href="https://www.google.com/maps/place/MANASTINA+TIENDA+DE+CARTERAS/data=!4m2!3m1!1s0x0:0xf5b2682cede5e43f" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;color:#4C0F2E">Ver en Google Maps <span aria-hidden="true">→</span></a>
+            <a href="https://www.google.com/maps/place/MANASTINA+TIENDA+DE+CARTERAS/data=!4m2!3m1!1s0x0:0xf5b2682cede5e43f" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;color:#4C0F2E">Ver en Google Maps <span aria-hidden="true">â†’</span></a>
           </div>
           <div>
             <p style="margin:0 0 7px;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:#9F507D;font-weight:600">Horarios</p>
@@ -573,7 +573,7 @@ input,select,textarea{font-family:inherit;color:#331821}
           </div>
         </div>
         <div style="margin-top:clamp(20px,2.4vw,32px);position:relative;border-radius:3px;overflow:hidden;border:1px solid rgba(51,24,33,.16);box-shadow:0 20px 40px -28px rgba(51,24,33,.4)">
-          <iframe title="Ubicación de MANASTINA en el mapa" src="https://maps.google.com/maps?q=MANASTINA%20TIENDA%20DE%20CARTERAS&z=16&output=embed" width="100%" height="240" style="border:0;display:block;width:100%" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          <iframe title="UbicaciÃ³n de MANASTINA en el mapa" src="https://maps.google.com/maps?q=MANASTINA%20TIENDA%20DE%20CARTERAS&z=16&output=embed" width="100%" height="240" style="border:0;display:block;width:100%" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
         </div>
         <div class="sobre-cta" style="margin-top:clamp(24px,2.8vw,38px);display:flex;align-items:center;gap:clamp(16px,2vw,26px);flex-wrap:wrap">
           <button onClick="{{ irNosotros }}" style="min-height:50px;padding:15px 32px;background:#4C0F2E;color:#F9F1EA;border:0;border-radius:2px;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;cursor:pointer;transition:background .4s ease" style-hover="background:#331821">Conocer Manastina</button>
@@ -583,25 +583,25 @@ input,select,textarea{font-family:inherit;color:#331821}
     </div>
   </section>
 
-  <!-- CIERRE EDITORIAL — banner de marca sobre bolso -->
+  <!-- CIERRE EDITORIAL â€” banner de marca sobre bolso -->
   <section class="cierre-banner" style="position:relative;min-height:min(66vh,560px);display:flex;align-items:center;justify-content:center;overflow:hidden;color:#F9F1EA">
-    <img src="https://images.unsplash.com/photo-1594223274512-ad4803739b7c?q=80&w=1920&auto=format&fit=crop" alt="Bolso de la selección MANASTINA" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center">
+    <img src="https://images.unsplash.com/photo-1594223274512-ad4803739b7c?q=80&w=1920&auto=format&fit=crop" alt="Bolso de la selecciÃ³n MANASTINA" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center">
     <div aria-hidden="true" style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(51,24,33,.58),rgba(51,24,33,.48) 40%,rgba(51,24,33,.72)),radial-gradient(120% 90% at 50% 40%, rgba(76,15,46,.34), rgba(51,24,33,.58))"></div>
     <div class="cierre-cortina" aria-hidden="true" style="position:absolute;inset:0;z-index:1;background:linear-gradient(160deg,#5A1236,#4C0F2E 52%,#3B0E25);display:flex;align-items:flex-end;justify-content:center;padding-bottom:26px">
-      <span style="font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:#E9C9D2;font-weight:600">Pasá el cursor</span>
+      <span style="font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:#E9C9D2;font-weight:600">PasÃ¡ el cursor</span>
     </div>
     <div style="position:relative;z-index:2;text-align:center;padding:clamp(32px,5vw,64px) clamp(24px,6vw,72px);display:flex;flex-direction:column;align-items:center;gap:clamp(14px,1.9vw,24px);max-width:680px">
       <img src="assets/logo-isotipo-claro.png" alt="MANASTINA" loading="lazy" style="width:clamp(64px,7vw,96px);height:auto;display:block;opacity:.96">
-      <p style="margin:0;font-size:9.5px;letter-spacing:.34em;text-transform:uppercase;color:#E9C9D2;font-weight:600">Manastina · Llena de Gracia</p>
+      <p style="margin:0;font-size:9.5px;letter-spacing:.34em;text-transform:uppercase;color:#E9C9D2;font-weight:600">Manastina Â· Llena de Gracia</p>
       <h2 style="margin:0;font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;font-style:italic;font-size:clamp(28px,4.4vw,54px);line-height:1.08;color:#F9F1EA;text-wrap:balance;text-shadow:0 2px 30px rgba(51,24,33,.4)">No seguimos tendencias.<br>Dictamos el estilo.</h2>
-      <p style="margin:0;max-width:44ch;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:clamp(16px,1.5vw,20px);line-height:1.5;color:#F0DFE2">Curaduría propia de carteras y accesorios con presencia. Piezas elegidas, no tendencias pasajeras.</p>
+      <p style="margin:0;max-width:44ch;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:clamp(16px,1.5vw,20px);line-height:1.5;color:#F0DFE2">CuradurÃ­a propia de carteras y accesorios con presencia. Piezas elegidas, no tendencias pasajeras.</p>
       <button onClick="{{ irNosotros }}" style="margin-top:6px;min-height:50px;padding:14px 34px;background:transparent;border:1px solid rgba(249,241,234,.7);border-radius:2px;color:#F9F1EA;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;font-weight:600;cursor:pointer;transition:background .45s ease,color .45s ease,border-color .45s ease" style-hover="background:#F9F1EA;color:#4C0F2E;border-color:#F9F1EA">Conocer Manastina</button>
     </div>
   </section>
 </div>
 </sc-if>
 
-<!-- ===================== TIENDA / CATÁLOGO ===================== -->
+<!-- ===================== TIENDA / CATÃLOGO ===================== -->
 <sc-if value="{{ esTienda }}">
 <section class="tienda-hero">
   <img class="hero-marca" src="assets/logo-isotipo-claro.png" alt="" aria-hidden="true" loading="lazy">
@@ -625,7 +625,7 @@ input,select,textarea{font-family:inherit;color:#331821}
           <input id="cat-buscar" type="search" value="{{ consulta }}" onChange="{{ onConsulta }}" placeholder="Nombre o palabra clave" style="width:100%;height:44px;padding:0 12px;border:1px solid rgba(51,24,33,.25);background:transparent;border-radius:2px;font-size:13px">
         </div>
         <div>
-          <p style="margin:0 0 12px;font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;color:#9F507D;font-weight:600">Categoría</p>
+          <p style="margin:0 0 12px;font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;color:#9F507D;font-weight:600">CategorÃ­a</p>
           <div style="display:flex;flex-direction:column;gap:9px">
             <sc-for list="{{ opcionesCategoria }}" as="o" hint-placeholder-count="6">
               <button onClick="{{ o.elegir }}" style="background:none;border:0;padding:4px 0;text-align:left;cursor:pointer;font-size:13px;color:{{ o.color }};display:flex;align-items:center;gap:10px"><span style="width:14px;height:1px;background:{{ o.color }};display:block;opacity:{{ o.opacidad }}"></span>{{ o.nombre }}</button>
@@ -683,7 +683,7 @@ input,select,textarea{font-family:inherit;color:#331821}
       <sc-if value="{{ sinResultados }}">
         <div style="padding:clamp(50px,9vw,110px) 20px;text-align:center;border:1px solid rgba(51,24,33,.14)">
           <p style="margin:0;font-family:'Cormorant Garamond',Georgia,serif;font-size:30px;font-weight:600">No encontramos piezas con esos filtros.</p>
-          <p style="margin:14px 0 28px;font-size:13px;color:#6B4753">Probá con otra categoría o ampliá el rango de precio.</p>
+          <p style="margin:14px 0 28px;font-size:13px;color:#6B4753">ProbÃ¡ con otra categorÃ­a o ampliÃ¡ el rango de precio.</p>
           <button onClick="{{ limpiarFiltros }}" style="min-height:50px;padding:15px 32px;background:#4C0F2E;color:#F9F1EA;border:0;border-radius:2px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;cursor:pointer">Limpiar filtros</button>
         </div>
       </sc-if>
@@ -693,7 +693,7 @@ input,select,textarea{font-family:inherit;color:#331821}
             <button onClick="{{ p.abrir }}" style="background:none;border:0;padding:0;cursor:pointer;display:block;width:100%;text-align:left;overflow:hidden">
               <div style="position:relative;aspect-ratio:4/5;overflow:hidden;background:repeating-linear-gradient(135deg,#EFE3DA 0 14px,#EADCD1 14px 28px)">
                 <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;transition:transform .7s cubic-bezier(.2,.7,.2,1)" style-hover="transform:scale(1.04)">
-                  <sc-if value="{{ p.tieneFoto }}"><img src="{{ p.foto }}" alt="{{ p.nombre }}" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></sc-if><sc-if value="{{ p.sinFoto }}"><span style="font-family:ui-monospace,Menlo,monospace;font-size:9px;letter-spacing:.1em;color:#9F507D;text-transform:uppercase">Fotografía pendiente</span></sc-if>
+                  <sc-if value="{{ p.tieneFoto }}"><img src="{{ p.foto }}" alt="{{ p.nombre }}" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></sc-if><sc-if value="{{ p.sinFoto }}"><span style="font-family:ui-monospace,Menlo,monospace;font-size:9px;letter-spacing:.1em;color:#9F507D;text-transform:uppercase">FotografÃ­a pendiente</span></sc-if>
                 </div>
                 <sc-if value="{{ p.agotado }}">
                   <span style="position:absolute;top:12px;left:12px;background:#F9F1EA;font-size:9px;letter-spacing:.16em;text-transform:uppercase;padding:6px 10px;font-weight:600">Agotado</span>
@@ -708,7 +708,7 @@ input,select,textarea{font-family:inherit;color:#331821}
             <div style="display:flex;align-items:center;gap:10px;margin-top:12px">
               <div style="display:flex;gap:6px">
                 <sc-for list="{{ p.colores }}" as="col" hint-placeholder-count="2">
-                  <span title="{{ col.nombre }}" style="width:11px;height:11px;border-radius:50%;border:1px solid rgba(51,24,33,.28);background:{{ col.hex }};display:block"></span>
+                  <span title="{{ col.nombre }}" style="width:14px;height:14px;border-radius:50%;border:1px solid rgba(51,24,33,.28);background:{{ col.hex }};display:block"></span>
                 </sc-for>
               </div>
               <span style="font-size:10px;letter-spacing:.1em;color:#7A5460">{{ p.estado }}</span>
@@ -719,7 +719,7 @@ input,select,textarea{font-family:inherit;color:#331821}
       </div>
       <sc-if value="{{ hayMas }}">
         <div style="text-align:center;margin-top:clamp(36px,4vw,60px)">
-          <button onClick="{{ verMas }}" style="min-height:52px;padding:16px 40px;background:transparent;border:1px solid #331821;border-radius:2px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;cursor:pointer;transition:background .4s ease,color .4s ease" style-hover="background:#331821;color:#F9F1EA">Cargar más</button>
+          <button onClick="{{ verMas }}" style="min-height:52px;padding:16px 40px;background:transparent;border:1px solid #331821;border-radius:2px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;cursor:pointer;transition:background .4s ease,color .4s ease" style-hover="background:#331821;color:#F9F1EA">Cargar mÃ¡s</button>
         </div>
       </sc-if>
     </div>
@@ -733,9 +733,9 @@ input,select,textarea{font-family:inherit;color:#331821}
   <div style="position:fixed;left:0;right:0;bottom:0;z-index:89;background:#F9F1EA;border-radius:6px 6px 0 0;max-height:88svh;overflow-y:auto;animation:entrarAbajo .4s cubic-bezier(.2,.8,.2,1) both;padding:22px 18px calc(24px + env(safe-area-inset-bottom))">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:22px">
       <p style="margin:0;font-family:'Cormorant Garamond',Georgia,serif;font-size:26px;font-weight:600">Filtrar y ordenar</p>
-      <button onClick="{{ cerrarFiltros }}" aria-label="Cerrar filtros" style="background:none;border:0;width:44px;height:44px;cursor:pointer;font-size:22px;font-weight:300">×</button>
+      <button onClick="{{ cerrarFiltros }}" aria-label="Cerrar filtros" style="background:none;border:0;width:44px;height:44px;cursor:pointer;font-size:22px;font-weight:300">Ã—</button>
     </div>
-    <p style="margin:0 0 12px;font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;color:#9F507D;font-weight:600">Categoría</p>
+    <p style="margin:0 0 12px;font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;color:#9F507D;font-weight:600">CategorÃ­a</p>
     <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:26px">
       <sc-for list="{{ opcionesCategoria }}" as="o" hint-placeholder-count="6">
         <button onClick="{{ o.elegir }}" style="min-height:44px;padding:10px 16px;border:1px solid {{ o.borde }};background:{{ o.fondo }};color:{{ o.textoChip }};border-radius:2px;cursor:pointer;font-size:12px">{{ o.nombre }}</button>
@@ -784,7 +784,7 @@ input,select,textarea{font-family:inherit;color:#331821}
   <div style="display:grid;grid-template-columns:{{ columnasFicha }};gap:clamp(28px,4vw,72px);align-items:start">
     <div>
       <div style="position:relative">
-      <button onClick="{{ abrirZoom }}" aria-label="Ver fotografía completa" style="display:block;width:100%;background:#F3E9E1;border:1px solid rgba(51,24,33,.1);padding:0;cursor:zoom-in;overflow:hidden">
+      <button onClick="{{ abrirZoom }}" aria-label="Ver fotografÃ­a completa" style="display:block;width:100%;background:#F3E9E1;border:1px solid rgba(51,24,33,.1);padding:0;cursor:zoom-in;overflow:hidden">
         <div style="position:relative;aspect-ratio:1/1;overflow:hidden;background:repeating-linear-gradient(135deg,#EFE3DA 0 16px,#EADCD1 16px 32px);display:flex;align-items:center;justify-content:center">
           <sc-if value="{{ prodTieneFoto }}">
             <div style="position:absolute;inset:0;display:flex;width:100%;height:100%;transform:translateX({{ prodDesplazamiento }});transition:transform .62s cubic-bezier(.22,.75,.2,1);will-change:transform">
@@ -793,24 +793,24 @@ input,select,textarea{font-family:inherit;color:#331821}
               </sc-for>
             </div>
           </sc-if>
-          <sc-if value="{{ prodSinFoto }}"><span style="font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:.1em;color:#9F507D;text-transform:uppercase">Fotografía pendiente</span></sc-if>
+          <sc-if value="{{ prodSinFoto }}"><span style="font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:.1em;color:#9F507D;text-transform:uppercase">FotografÃ­a pendiente</span></sc-if>
         </div>
       </button>
       <sc-if value="{{ prodVariasFotos }}">
-        <button onClick="{{ fotoAnterior }}" aria-label="Fotografía anterior" style="position:absolute;top:50%;left:14px;transform:translateY(-50%);z-index:3;width:44px;height:44px;border:1px solid rgba(51,24,33,.22);background:rgba(249,241,234,.92);border-radius:50%;cursor:pointer;font-size:15px;line-height:1;color:#331821;box-shadow:0 6px 18px -8px rgba(51,24,33,.45);transition:background .35s ease,color .35s ease" style-hover="background:#331821;color:#F9F1EA">←</button>
-        <button onClick="{{ fotoSiguiente }}" aria-label="Fotografía siguiente" style="position:absolute;top:50%;right:14px;transform:translateY(-50%);z-index:3;width:44px;height:44px;border:1px solid rgba(51,24,33,.22);background:rgba(249,241,234,.92);border-radius:50%;cursor:pointer;font-size:15px;line-height:1;color:#331821;box-shadow:0 6px 18px -8px rgba(51,24,33,.45);transition:background .35s ease,color .35s ease" style-hover="background:#331821;color:#F9F1EA">→</button>
+        <button onClick="{{ fotoAnterior }}" aria-label="FotografÃ­a anterior" style="position:absolute;top:50%;left:14px;transform:translateY(-50%);z-index:3;width:44px;height:44px;border:1px solid rgba(51,24,33,.22);background:rgba(249,241,234,.92);border-radius:50%;cursor:pointer;font-size:15px;line-height:1;color:#331821;box-shadow:0 6px 18px -8px rgba(51,24,33,.45);transition:background .35s ease,color .35s ease" style-hover="background:#331821;color:#F9F1EA">â†</button>
+        <button onClick="{{ fotoSiguiente }}" aria-label="FotografÃ­a siguiente" style="position:absolute;top:50%;right:14px;transform:translateY(-50%);z-index:3;width:44px;height:44px;border:1px solid rgba(51,24,33,.22);background:rgba(249,241,234,.92);border-radius:50%;cursor:pointer;font-size:15px;line-height:1;color:#331821;box-shadow:0 6px 18px -8px rgba(51,24,33,.45);transition:background .35s ease,color .35s ease" style-hover="background:#331821;color:#F9F1EA">â†’</button>
         <span style="position:absolute;bottom:14px;right:14px;z-index:3;background:rgba(51,24,33,.62);color:#F9F1EA;font-size:10px;letter-spacing:.12em;padding:5px 10px;border-radius:2px">{{ prodFotoIndice }}</span>
       </sc-if>
       </div>
       <div style="display:flex;gap:10px;margin-top:12px;overflow-x:auto">
         <sc-for list="{{ miniaturas }}" as="m" hint-placeholder-count="3">
-          <button onClick="{{ m.elegir }}" aria-label="Ver fotografía" style="position:relative;flex:0 0 84px;height:84px;padding:0;overflow:hidden;border:1px solid {{ m.borde }};background:repeating-linear-gradient(135deg,#EFE3DA 0 10px,#EADCD1 10px 20px);cursor:pointer;font-family:ui-monospace,Menlo,monospace;font-size:9px;color:#9F507D"><img src="{{ m.url }}" alt="" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></button>
+          <button onClick="{{ m.elegir }}" aria-label="Ver fotografÃ­a" style="position:relative;flex:0 0 84px;height:84px;padding:0;overflow:hidden;border:1px solid {{ m.borde }};background:repeating-linear-gradient(135deg,#EFE3DA 0 10px,#EADCD1 10px 20px);cursor:pointer;font-family:ui-monospace,Menlo,monospace;font-size:9px;color:#9F507D"><img src="{{ m.url }}" alt="" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></button>
         </sc-for>
       </div>
     </div>
 
     <div style="max-width:480px">
-      <p style="margin:0 0 10px;font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;color:#9F507D;font-weight:600">{{ prodMarca }} · {{ prodCategoria }}</p>
+      <p style="margin:0 0 10px;font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;color:#9F507D;font-weight:600">{{ prodMarca }} Â· {{ prodCategoria }}</p>
       <h1 style="margin:0;font-family:'Cormorant Garamond',Georgia,serif;font-weight:700;font-size:clamp(30px,3.8vw,50px);line-height:1.05">{{ prodNombre }}</h1>
       <p style="margin:14px 0 0;font-size:19px;letter-spacing:.03em;font-weight:500">{{ prodPrecio }}</p>
       <p style="margin:8px 0 0;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:{{ prodEstadoColor }}">{{ prodEstado }}</p>
@@ -827,7 +827,7 @@ input,select,textarea{font-family:inherit;color:#331821}
 
       <div style="margin-top:26px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
         <div style="display:flex;align-items:center;border:1px solid rgba(51,24,33,.28);border-radius:2px">
-          <button onClick="{{ menosCantidad }}" aria-label="Disminuir cantidad" style="width:46px;height:48px;background:none;border:0;cursor:pointer;font-size:17px">−</button>
+          <button onClick="{{ menosCantidad }}" aria-label="Disminuir cantidad" style="width:46px;height:48px;background:none;border:0;cursor:pointer;font-size:17px">âˆ’</button>
           <span aria-live="polite" style="min-width:36px;text-align:center;font-size:14px;font-weight:500">{{ cantidad }}</span>
           <button onClick="{{ masCantidad }}" aria-label="Aumentar cantidad" style="width:46px;height:48px;background:none;border:0;cursor:pointer;font-size:17px">+</button>
         </div>
@@ -835,7 +835,7 @@ input,select,textarea{font-family:inherit;color:#331821}
       </div>
 
       <sc-if value="{{ errorProducto }}">
-        <p role="alert" style="margin:18px 0 0;padding:12px 14px;border:1px solid #9F507D;background:rgba(159,80,125,.07);color:#4C0F2E;font-size:12.5px;border-radius:2px">✕ {{ errorProducto }}</p>
+        <p role="alert" style="margin:18px 0 0;padding:12px 14px;border:1px solid #9F507D;background:rgba(159,80,125,.07);color:#4C0F2E;font-size:12.5px;border-radius:2px">âœ• {{ errorProducto }}</p>
       </sc-if>
 
       <div style="display:flex;flex-direction:column;gap:12px;margin-top:24px">
@@ -853,23 +853,28 @@ input,select,textarea{font-family:inherit;color:#331821}
         <sc-if value="{{ prodTieneMedidas }}">
           <dt style="font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#9F507D;font-weight:600;padding-top:3px">Medidas</dt><dd style="margin:0;color:#5B3B46;line-height:1.7">{{ prodMedidas }}</dd>
         </sc-if>
-        <dt style="font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#9F507D;font-weight:600;padding-top:3px">Envíos</dt><dd style="margin:0;color:#5B3B46;line-height:1.7">Envíos a todo Paraguay. El costo se confirma por WhatsApp según tu ciudad.</dd>
-        <dt style="font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#9F507D;font-weight:600;padding-top:3px">Cambios</dt><dd style="margin:0;color:#5B3B46;line-height:1.7">Cambios dentro de los 7 días, con la pieza sin uso.</dd>
+        <dt style="font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#9F507D;font-weight:600;padding-top:3px">EnvÃ­os</dt><dd style="margin:0;color:#5B3B46;line-height:1.7">EnvÃ­os a todo Paraguay. El costo se confirma por WhatsApp segÃºn tu ciudad.</dd>
+        <dt style="font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#9F507D;font-weight:600;padding-top:3px">Cambios</dt><dd style="margin:0;color:#5B3B46;line-height:1.7">Cambios dentro de los 7 dÃ­as, con la pieza sin uso.</dd>
       </dl>
     </div>
   </div>
 
   <section style="margin-top:clamp(60px,8vw,110px)">
-    <h2 style="margin:0 0 clamp(24px,3vw,40px);font-family:'Cormorant Garamond',Georgia,serif;font-weight:700;font-size:clamp(26px,3vw,40px)">También te puede gustar</h2>
+    <h2 style="margin:0 0 clamp(24px,3vw,40px);font-family:'Cormorant Garamond',Georgia,serif;font-weight:700;font-size:clamp(26px,3vw,40px)">TambiÃ©n te puede gustar</h2>
     <div style="display:grid;grid-template-columns:{{ gridProductos }};gap:clamp(14px,2vw,34px)">
       <sc-for list="{{ relacionados }}" as="p" hint-placeholder-count="4">
         <article>
           <button onClick="{{ p.abrir }}" style="background:none;border:0;padding:0;cursor:pointer;display:block;width:100%;text-align:left;overflow:hidden">
             <div style="position:relative;aspect-ratio:4/5;overflow:hidden;background:repeating-linear-gradient(135deg,#EFE3DA 0 14px,#EADCD1 14px 28px);display:flex;align-items:center;justify-content:center;transition:transform .7s cubic-bezier(.2,.7,.2,1)" style-hover="transform:scale(1.04)">
-              <sc-if value="{{ p.tieneFoto }}"><img src="{{ p.foto }}" alt="{{ p.nombre }}" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></sc-if><sc-if value="{{ p.sinFoto }}"><span style="font-family:ui-monospace,Menlo,monospace;font-size:9px;letter-spacing:.1em;color:#9F507D;text-transform:uppercase">Fotografía pendiente</span></sc-if>
+              <sc-if value="{{ p.tieneFoto }}"><img src="{{ p.foto }}" alt="{{ p.nombre }}" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></sc-if><sc-if value="{{ p.sinFoto }}"><span style="font-family:ui-monospace,Menlo,monospace;font-size:9px;letter-spacing:.1em;color:#9F507D;text-transform:uppercase">FotografÃ­a pendiente</span></sc-if>
             </div>
             <p style="margin:14px 0 0;font-family:'Cormorant Garamond',Georgia,serif;font-size:21px;font-weight:600">{{ p.nombre }}</p>
             <p style="margin:5px 0 0;font-size:12.5px">{{ p.precioFmt }}</p>
+            <div style="display:flex;gap:6px;margin-top:9px">
+              <sc-for list="{{ p.colores }}" as="col" hint-placeholder-count="2">
+                <span title="{{ col.nombre }}" style="width:14px;height:14px;border-radius:50%;border:1px solid rgba(51,24,33,.28);background:{{ col.hex }};display:block"></span>
+              </sc-for>
+            </div>
           </button>
         </article>
       </sc-for>
@@ -892,9 +897,9 @@ input,select,textarea{font-family:inherit;color:#331821}
   <div onClick="{{ cerrarZoom }}" style="position:fixed;inset:0;z-index:98;background:rgba(26,12,17,.9);display:flex;align-items:center;justify-content:center;padding:24px;animation:aparecer .25s ease both;cursor:zoom-out">
     <div style="position:relative;width:min(90vw,720px);aspect-ratio:1/1;overflow:hidden;background:repeating-linear-gradient(135deg,#3E2029 0 18px,#371B24 18px 36px);display:flex;align-items:center;justify-content:center">
       <sc-if value="{{ prodTieneFoto }}"><img src="{{ prodFotoActual }}" alt="{{ prodNombre }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#2A1218"></sc-if>
-      <sc-if value="{{ prodSinFoto }}"><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.1em;color:rgba(215,188,195,.7);text-transform:uppercase">Fotografía pendiente</span></sc-if>
+      <sc-if value="{{ prodSinFoto }}"><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.1em;color:rgba(215,188,195,.7);text-transform:uppercase">FotografÃ­a pendiente</span></sc-if>
     </div>
-    <button onClick="{{ cerrarZoom }}" aria-label="Cerrar" style="position:absolute;top:20px;right:22px;width:44px;height:44px;background:none;border:0;color:#F9F1EA;font-size:26px;font-weight:300;cursor:pointer">×</button>
+    <button onClick="{{ cerrarZoom }}" aria-label="Cerrar" style="position:absolute;top:20px;right:22px;width:44px;height:44px;background:none;border:0;color:#F9F1EA;font-size:26px;font-weight:300;cursor:pointer">Ã—</button>
   </div>
 </sc-if>
 
@@ -904,14 +909,14 @@ input,select,textarea{font-family:inherit;color:#331821}
   <!-- HERO -->
   <section style="position:relative;min-height:min(78vh,660px);display:flex;align-items:center;justify-content:center;overflow:hidden;color:#F9F1EA;text-align:center">
     <div style="position:absolute;inset:0;overflow:hidden">
-      <img src="assets/hero-1.png" alt="Campaña MANASTINA" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;animation:zoomLento 3s cubic-bezier(.2,.7,.2,1) both">
+      <img src="assets/hero-1.png" alt="CampaÃ±a MANASTINA" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;animation:zoomLento 3s cubic-bezier(.2,.7,.2,1) both">
     </div>
     <div aria-hidden="true" style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(51,24,33,.62),rgba(51,24,33,.5) 45%,rgba(51,24,33,.75))"></div>
     <div style="position:relative;z-index:2;padding:clamp(48px,7vw,90px) clamp(24px,6vw,72px);max-width:820px;display:flex;flex-direction:column;align-items:center;gap:clamp(16px,2vw,26px)">
       <img src="assets/logo-isotipo-claro.png" alt="MANASTINA" style="width:clamp(58px,6vw,86px);height:auto;display:block;opacity:.95;animation:subir .9s .1s ease both">
       <p style="margin:0;font-size:10px;letter-spacing:.34em;text-transform:uppercase;color:#E9C9D2;font-weight:600;animation:subir .9s .25s ease both">Nosotros</p>
-      <h1 style="margin:0;font-family:'Cormorant Garamond',Georgia,serif;font-weight:700;font-size:clamp(32px,5vw,66px);line-height:1.05;text-wrap:balance;text-shadow:0 2px 34px rgba(51,24,33,.45);animation:subir 1s .4s ease both">Una presencia femenina segura, elegante y auténtica.</h1>
-      <p style="margin:0;max-width:52ch;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:clamp(17px,1.6vw,23px);line-height:1.55;color:#F0DFE2;animation:subir 1s .58s ease both">Seleccionamos piezas que acompañan a mujeres que conocen su estilo y lo expresan con naturalidad.</p>
+      <h1 style="margin:0;font-family:'Cormorant Garamond',Georgia,serif;font-weight:700;font-size:clamp(32px,5vw,66px);line-height:1.05;text-wrap:balance;text-shadow:0 2px 34px rgba(51,24,33,.45);animation:subir 1s .4s ease both">Una presencia femenina segura, elegante y autÃ©ntica.</h1>
+      <p style="margin:0;max-width:52ch;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:clamp(17px,1.6vw,23px);line-height:1.55;color:#F0DFE2;animation:subir 1s .58s ease both">Seleccionamos piezas que acompaÃ±an a mujeres que conocen su estilo y lo expresan con naturalidad.</p>
     </div>
   </section>
 
@@ -928,8 +933,8 @@ input,select,textarea{font-family:inherit;color:#331821}
         <p class="ns-rev" style="--d:0;margin:0 0 clamp(14px,1.8vw,22px);font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:#9F507D;font-weight:600">Nuestra historia</p>
         <h2 class="ns-title" style="margin:0;max-width:18ch;font-family:'Cormorant Garamond',Georgia,serif;font-weight:700;font-size:clamp(30px,4vw,56px);line-height:1.04"><span class="ns-word" style="--i:0">Llena</span> <span class="ns-word" style="--i:1">de</span> <span class="ns-word" style="--i:2">Gracia</span></h2>
         <span class="ns-linea" style="display:block;width:70px;height:2px;background:#9F507D;margin:clamp(18px,2vw,26px) 0"></span>
-        <p class="ns-rev" style="--d:1;margin:0 0 18px;max-width:46ch;font-size:14.5px;line-height:1.95;color:#5B3B46">La gracia es una forma de estar: serena, firme y sin necesidad de levantar la voz. Ese es el punto de partida de cada selección que hacemos.</p>
-        <p class="ns-rev" style="--d:2;margin:0;max-width:46ch;font-size:14.5px;line-height:1.95;color:#5B3B46">Trabajamos con criterio: preferimos pocas piezas bien elegidas antes que un catálogo interminable.</p>
+        <p class="ns-rev" style="--d:1;margin:0 0 18px;max-width:46ch;font-size:14.5px;line-height:1.95;color:#5B3B46">La gracia es una forma de estar: serena, firme y sin necesidad de levantar la voz. Ese es el punto de partida de cada selecciÃ³n que hacemos.</p>
+        <p class="ns-rev" style="--d:2;margin:0;max-width:46ch;font-size:14.5px;line-height:1.95;color:#5B3B46">Trabajamos con criterio: preferimos pocas piezas bien elegidas antes que un catÃ¡logo interminable.</p>
       </div>
     </div>
   </section>
@@ -946,22 +951,22 @@ input,select,textarea{font-family:inherit;color:#331821}
       <div class="ns-valor ns-rev" style="--d:0;border:1px solid rgba(249,241,234,.18);padding:clamp(22px,2.4vw,32px)">
         <p style="margin:0 0 clamp(20px,2.4vw,34px);font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:.2em;color:#D7BCC3">01</p>
         <h3 style="margin:0 0 10px;font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(22px,2vw,28px);font-weight:600">Elegancia</h3>
-        <p style="margin:0;font-size:12.5px;line-height:1.85;color:rgba(249,241,234,.72)">Diseño sobrio, atemporal y sin adornos innecesarios.</p>
+        <p style="margin:0;font-size:12.5px;line-height:1.85;color:rgba(249,241,234,.72)">DiseÃ±o sobrio, atemporal y sin adornos innecesarios.</p>
       </div>
       <div class="ns-valor ns-rev" style="--d:1;border:1px solid rgba(249,241,234,.18);padding:clamp(22px,2.4vw,32px)">
         <p style="margin:0 0 clamp(20px,2.4vw,34px);font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:.2em;color:#D7BCC3">02</p>
         <h3 style="margin:0 0 10px;font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(22px,2vw,28px);font-weight:600">Seguridad</h3>
-        <p style="margin:0;font-size:12.5px;line-height:1.85;color:rgba(249,241,234,.72)">Piezas que acompañan sin competir con quien las lleva.</p>
+        <p style="margin:0;font-size:12.5px;line-height:1.85;color:rgba(249,241,234,.72)">Piezas que acompaÃ±an sin competir con quien las lleva.</p>
       </div>
       <div class="ns-valor ns-rev" style="--d:2;border:1px solid rgba(249,241,234,.18);padding:clamp(22px,2.4vw,32px)">
         <p style="margin:0 0 clamp(20px,2.4vw,34px);font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:.2em;color:#D7BCC3">03</p>
-        <h3 style="margin:0 0 10px;font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(22px,2vw,28px);font-weight:600">Selección</h3>
+        <h3 style="margin:0 0 10px;font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(22px,2vw,28px);font-weight:600">SelecciÃ³n</h3>
         <p style="margin:0;font-size:12.5px;line-height:1.85;color:rgba(249,241,234,.72)">Criterio antes que cantidad, en cada ingreso.</p>
       </div>
       <div class="ns-valor ns-rev" style="--d:3;border:1px solid rgba(249,241,234,.18);padding:clamp(22px,2.4vw,32px)">
         <p style="margin:0 0 clamp(20px,2.4vw,34px);font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:.2em;color:#D7BCC3">04</p>
-        <h3 style="margin:0 0 10px;font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(22px,2vw,28px);font-weight:600">Atención</h3>
-        <p style="margin:0;font-size:12.5px;line-height:1.85;color:rgba(249,241,234,.72)">Una conversación real antes, durante y después de la compra.</p>
+        <h3 style="margin:0 0 10px;font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(22px,2vw,28px);font-weight:600">AtenciÃ³n</h3>
+        <p style="margin:0;font-size:12.5px;line-height:1.85;color:rgba(249,241,234,.72)">Una conversaciÃ³n real antes, durante y despuÃ©s de la compra.</p>
       </div>
     </div>
   </section>
@@ -970,14 +975,14 @@ input,select,textarea{font-family:inherit;color:#331821}
   <section style="padding:clamp(50px,7vw,100px) clamp(20px,5vw,72px)">
     <div style="display:grid;grid-template-columns:{{ columnasEditorial }};gap:clamp(28px,4.5vw,86px);align-items:center">
       <div class="ns-foto ns-rev" style="--d:0;aspect-ratio:5/6;background:#EFE3DA">
-        <img src="assets/sobre-tienda.jpg" alt="Local de MANASTINA en Capiatá" loading="lazy" style="width:100%;height:100%;object-fit:cover">
+        <img src="assets/sobre-tienda.jpg" alt="Local de MANASTINA en CapiatÃ¡" loading="lazy" style="width:100%;height:100%;object-fit:cover">
       </div>
       <div>
         <p class="ns-rev" style="--d:0;margin:0 0 clamp(14px,1.8vw,22px);font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:#9F507D;font-weight:600">Visitanos</p>
         <h2 class="ns-title" style="margin:0;max-width:16ch;font-family:'Cormorant Garamond',Georgia,serif;font-weight:700;font-size:clamp(28px,3.6vw,50px);line-height:1.05"><span class="ns-word" style="--i:0">Te</span> <span class="ns-word" style="--i:1">esperamos</span> <span class="ns-word" style="--i:2">en</span> <span class="ns-word" style="--i:3">el</span> <span class="ns-word" style="--i:4">local.</span></h2>
         <div class="ns-rev" style="--d:1;margin-top:clamp(22px,2.6vw,34px);padding-top:clamp(18px,2vw,28px);border-top:1px solid rgba(51,24,33,.16);display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:clamp(16px,2.4vw,32px)">
           <div>
-            <p style="margin:0 0 7px;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:#9F507D;font-weight:600">Dirección</p>
+            <p style="margin:0 0 7px;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:#9F507D;font-weight:600">DirecciÃ³n</p>
             <p style="margin:0;font-size:13.5px;line-height:1.6;color:#5B3B46">{{ ubicacion }}</p>
           </div>
           <div>
@@ -1002,7 +1007,7 @@ input,select,textarea{font-family:inherit;color:#331821}
     <img class="hero-marca" src="assets/logo-isotipo-claro.png" alt="" aria-hidden="true" loading="lazy">
     <p style="position:relative;z-index:1;margin:0 0 12px;font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:#E9C9D2;font-weight:600">Contacto</p>
     <h1 style="position:relative;z-index:1;margin:0;font-family:'Cormorant Garamond',Georgia,serif;font-weight:700;font-size:clamp(32px,4.6vw,58px);line-height:1.04;color:#F9F1EA">Escribinos</h1>
-    <p style="position:relative;z-index:1;margin:12px 0 0;max-width:46ch;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:clamp(16px,1.5vw,21px);line-height:1.5;color:#F0DFE2">Respondemos por WhatsApp de lunes a sábado. Contanos qué pieza buscás y te ayudamos a elegirla.</p>
+    <p style="position:relative;z-index:1;margin:12px 0 0;max-width:46ch;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:clamp(16px,1.5vw,21px);line-height:1.5;color:#F0DFE2">Respondemos por WhatsApp de lunes a sÃ¡bado. Contanos quÃ© pieza buscÃ¡s y te ayudamos a elegirla.</p>
   </section>
 
   <div class="tienda-fondo" style="padding:clamp(28px,3.4vw,50px) clamp(20px,5vw,72px) clamp(44px,5vw,72px)">
@@ -1010,43 +1015,43 @@ input,select,textarea{font-family:inherit;color:#331821}
 
       <div style="display:flex;flex-direction:column;gap:12px">
         <a href="{{ waSimple }}" target="_blank" rel="noopener" class="ct-card ns-rev" style="--d:0">
-          <span class="ct-ico" aria-hidden="true">✆</span>
+          <span class="ct-ico" aria-hidden="true">âœ†</span>
           <span>
             <span style="display:block;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:#9F507D;font-weight:600">WhatsApp</span>
             <span style="display:block;font-family:'Cormorant Garamond',Georgia,serif;font-size:22px;font-weight:600;line-height:1.2">+595 972 897875</span>
           </span>
-          <span class="ct-flecha" aria-hidden="true">→</span>
+          <span class="ct-flecha" aria-hidden="true">â†’</span>
         </a>
         <a href="https://www.instagram.com/manastina.py" target="_blank" rel="noopener" class="ct-card ns-rev" style="--d:1">
-          <span class="ct-ico" aria-hidden="true">◎</span>
+          <span class="ct-ico" aria-hidden="true">â—Ž</span>
           <span>
             <span style="display:block;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:#9F507D;font-weight:600">Instagram</span>
             <span style="display:block;font-size:14px">@manastina.py</span>
           </span>
-          <span class="ct-flecha" aria-hidden="true">→</span>
+          <span class="ct-flecha" aria-hidden="true">â†’</span>
         </a>
         <a href="https://www.tiktok.com/@manastina.llena.d" target="_blank" rel="noopener" class="ct-card ns-rev" style="--d:2">
-          <span class="ct-ico" aria-hidden="true">♪</span>
+          <span class="ct-ico" aria-hidden="true">â™ª</span>
           <span>
             <span style="display:block;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:#9F507D;font-weight:600">TikTok</span>
             <span style="display:block;font-size:14px">@manastina.llena.d</span>
           </span>
-          <span class="ct-flecha" aria-hidden="true">→</span>
+          <span class="ct-flecha" aria-hidden="true">â†’</span>
         </a>
         <div class="ct-card ns-rev" style="--d:3;align-items:flex-start">
-          <span class="ct-ico" aria-hidden="true">◷</span>
+          <span class="ct-ico" aria-hidden="true">â—·</span>
           <span>
             <span style="display:block;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:#9F507D;font-weight:600">Horarios</span>
             <span style="display:block;font-size:13px;line-height:1.7;color:#5B3B46">{{ horarios }}</span>
           </span>
         </div>
         <a href="https://www.google.com/maps/place/MANASTINA+TIENDA+DE+CARTERAS/data=!4m2!3m1!1s0x0:0xf5b2682cede5e43f" target="_blank" rel="noopener" class="ct-card ns-rev" style="--d:4;align-items:flex-start">
-          <span class="ct-ico" aria-hidden="true">⌖</span>
+          <span class="ct-ico" aria-hidden="true">âŒ–</span>
           <span>
-            <span style="display:block;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:#9F507D;font-weight:600">Dónde estamos</span>
+            <span style="display:block;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:#9F507D;font-weight:600">DÃ³nde estamos</span>
             <span style="display:block;font-size:13px;line-height:1.7;color:#5B3B46">{{ ubicacion }}</span>
           </span>
-          <span class="ct-flecha" aria-hidden="true">→</span>
+          <span class="ct-flecha" aria-hidden="true">â†’</span>
         </a>
         
       </div>
@@ -1054,13 +1059,13 @@ input,select,textarea{font-family:inherit;color:#331821}
       <div class="ns-rev" style="--d:1;display:flex;flex-direction:column;gap:14px;padding:clamp(18px,2vw,26px);border:1px solid rgba(51,24,33,.14);border-radius:3px;background:rgba(255,252,249,.68);box-shadow:0 22px 44px -34px rgba(51,24,33,.5)">
         <div>
           <p style="margin:0 0 4px;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:#9F507D;font-weight:600">Nuestro local</p>
-          <p style="margin:0;font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(22px,2vw,28px);font-weight:600;line-height:1.15">Vení a conocernos</p>
+          <p style="margin:0;font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(22px,2vw,28px);font-weight:600;line-height:1.15">VenÃ­ a conocernos</p>
           <p style="margin:6px 0 0;font-size:13px;line-height:1.7;color:#5B3B46">{{ ubicacion }}</p>
         </div>
         <div style="border-radius:3px;overflow:hidden;border:1px solid rgba(51,24,33,.14)">
-          <iframe title="Ubicación de MANASTINA en el mapa" src="https://maps.google.com/maps?q=MANASTINA%20TIENDA%20DE%20CARTERAS&z=16&output=embed" width="100%" height="360" style="border:0;display:block;width:100%" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          <iframe title="UbicaciÃ³n de MANASTINA en el mapa" src="https://maps.google.com/maps?q=MANASTINA%20TIENDA%20DE%20CARTERAS&z=16&output=embed" width="100%" height="360" style="border:0;display:block;width:100%" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
         </div>
-        <a href="https://www.google.com/maps/place/MANASTINA+TIENDA+DE+CARTERAS/data=!4m2!3m1!1s0x0:0xf5b2682cede5e43f" target="_blank" rel="noopener" style="align-self:flex-start;min-height:50px;display:inline-flex;align-items:center;padding:15px 30px;background:#4C0F2E;color:#F9F1EA;border-radius:2px;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;transition:background .4s ease" style-hover="background:#331821">Cómo llegar</a>
+        <a href="https://www.google.com/maps/place/MANASTINA+TIENDA+DE+CARTERAS/data=!4m2!3m1!1s0x0:0xf5b2682cede5e43f" target="_blank" rel="noopener" style="align-self:flex-start;min-height:50px;display:inline-flex;align-items:center;padding:15px 30px;background:#4C0F2E;color:#F9F1EA;border-radius:2px;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;transition:background .4s ease" style-hover="background:#331821">CÃ³mo llegar</a>
       </div>
 
     </div>
@@ -1075,7 +1080,7 @@ input,select,textarea{font-family:inherit;color:#331821}
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:clamp(30px,4vw,56px);padding-bottom:clamp(40px,5vw,70px)">
     <div style="max-width:280px">
       <img src="assets/manastina-wordmark-rosa.png" alt="MANASTINA, Llena de Gracia" style="width:210px;max-width:100%;height:auto;display:block;margin-bottom:20px">
-      <p style="margin:0;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:19px;line-height:1.6;color:rgba(249,241,234,.8)">Piezas con presencia, para acompañar cada ocasión.</p>
+      <p style="margin:0;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:19px;line-height:1.6;color:rgba(249,241,234,.8)">Piezas con presencia, para acompaÃ±ar cada ocasiÃ³n.</p>
     </div>
     <div>
       <p style="margin:0 0 18px;font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;color:#D7BCC3;font-weight:600">Tienda</p>
@@ -1089,8 +1094,8 @@ input,select,textarea{font-family:inherit;color:#331821}
     <div>
       <p style="margin:0 0 18px;font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;color:#D7BCC3;font-weight:600">Ayuda</p>
       <div style="display:flex;flex-direction:column;gap:11px;align-items:flex-start">
-        <a href="{{ waSimple }}" target="_blank" rel="noopener" style="color:rgba(249,241,234,.78);font-size:12.5px">Cómo comprar</a>
-        <a href="{{ waSimple }}" target="_blank" rel="noopener" style="color:rgba(249,241,234,.78);font-size:12.5px">Envíos y cambios</a>
+        <a href="{{ waSimple }}" target="_blank" rel="noopener" style="color:rgba(249,241,234,.78);font-size:12.5px">CÃ³mo comprar</a>
+        <a href="{{ waSimple }}" target="_blank" rel="noopener" style="color:rgba(249,241,234,.78);font-size:12.5px">EnvÃ­os y cambios</a>
         <a href="{{ waSimple }}" target="_blank" rel="noopener" style="color:rgba(249,241,234,.78);font-size:12.5px">Preguntas frecuentes</a>
       </div>
     </div>
@@ -1112,11 +1117,11 @@ input,select,textarea{font-family:inherit;color:#331821}
     </div>
   </div>
   <div style="border-top:1px solid rgba(249,241,234,.16);padding:22px 0 calc(26px + env(safe-area-inset-bottom));display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;font-size:10.5px;letter-spacing:.1em;color:rgba(249,241,234,.55)">
-    <span>© 2026 MANASTINA · Llena de Gracia</span>
+    <span>Â© 2026 MANASTINA Â· Llena de Gracia</span>
     <a href="https://neura.com.py" target="_blank" rel="noopener" style="color:rgba(249,241,234,.55);transition:color .35s ease" style-hover="color:#F9F1EA">Desarrollado por <span style="color:rgba(249,241,234,.8);font-weight:600">Neura</span></a>
     <div style="display:flex;gap:22px">
-      <span>Política de privacidad</span>
-      <span>Términos y condiciones</span>
+      <span>PolÃ­tica de privacidad</span>
+      <span>TÃ©rminos y condiciones</span>
     </div>
   </div>
 </footer>
@@ -1127,11 +1132,11 @@ input,select,textarea{font-family:inherit;color:#331821}
   <aside style="position:fixed;top:0;right:0;bottom:0;z-index:98;width:{{ anchoCarrito }};max-width:100vw;background:#F9F1EA;display:flex;flex-direction:column;animation:entrarDer .45s cubic-bezier(.2,.8,.2,1) both;box-shadow:-1px 0 0 rgba(51,24,33,.12)">
     <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 22px;border-top:env(safe-area-inset-top) solid transparent;border-bottom:1px solid rgba(51,24,33,.14)">
       <p style="margin:0;font-family:'Cormorant Garamond',Georgia,serif;font-size:27px;font-weight:600">Tu carrito</p>
-      <button onClick="{{ cerrarCarrito }}" aria-label="Cerrar carrito" style="background:none;border:0;width:44px;height:44px;cursor:pointer;font-size:24px;font-weight:300">×</button>
+      <button onClick="{{ cerrarCarrito }}" aria-label="Cerrar carrito" style="background:none;border:0;width:44px;height:44px;cursor:pointer;font-size:24px;font-weight:300">Ã—</button>
     </div>
     <sc-if value="{{ carritoVacio }}">
       <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:40px 24px;text-align:center">
-        <p style="margin:0;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:24px;color:#6B4753">Todavía no elegiste ninguna pieza.</p>
+        <p style="margin:0;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:24px;color:#6B4753">TodavÃ­a no elegiste ninguna pieza.</p>
         <button onClick="{{ seguirComprando }}" style="min-height:52px;padding:16px 32px;background:#4C0F2E;color:#F9F1EA;border:0;border-radius:2px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;cursor:pointer">Ir a la tienda</button>
       </div>
     </sc-if>
@@ -1147,17 +1152,17 @@ input,select,textarea{font-family:inherit;color:#331821}
                 <p style="margin:0;font-family:'Cormorant Garamond',Georgia,serif;font-size:20px;font-weight:600">{{ i.nombre }}</p>
                 <button onClick="{{ i.quitar }}" aria-label="Eliminar del carrito" style="background:none;border:0;cursor:pointer;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#8A6472;height:44px;padding:0 0 0 8px">Quitar</button>
               </div>
-              <p style="margin:4px 0 0;font-size:11px;letter-spacing:.1em;color:#7A5460">{{ i.color }} · {{ i.precioFmt }}</p>
+              <p style="margin:4px 0 0;font-size:11px;letter-spacing:.1em;color:#7A5460">{{ i.color }} Â· {{ i.precioFmt }}</p>
               <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px">
                 <div style="display:flex;align-items:center;border:1px solid rgba(51,24,33,.25);border-radius:2px">
-                  <button onClick="{{ i.menos }}" aria-label="Disminuir cantidad" style="width:40px;height:40px;background:none;border:0;cursor:pointer;font-size:15px">−</button>
+                  <button onClick="{{ i.menos }}" aria-label="Disminuir cantidad" style="width:40px;height:40px;background:none;border:0;cursor:pointer;font-size:15px">âˆ’</button>
                   <span style="min-width:28px;text-align:center;font-size:13px">{{ i.cantidad }}</span>
                   <button onClick="{{ i.mas }}" aria-label="Aumentar cantidad" style="width:40px;height:40px;background:none;border:0;cursor:pointer;font-size:15px">+</button>
                 </div>
                 <span style="font-size:13.5px;font-weight:600">{{ i.subtotalFmt }}</span>
               </div>
               <sc-if value="{{ i.tope }}">
-                <p style="margin:8px 0 0;font-size:10.5px;color:#9F507D">Máximo disponible: {{ i.stock }} unidades.</p>
+                <p style="margin:8px 0 0;font-size:10.5px;color:#9F507D">MÃ¡ximo disponible: {{ i.stock }} unidades.</p>
               </sc-if>
             </div>
           </div>
@@ -1165,7 +1170,7 @@ input,select,textarea{font-family:inherit;color:#331821}
       </div>
       <div style="border-top:1px solid rgba(51,24,33,.14);padding:20px 22px calc(22px + env(safe-area-inset-bottom))">
         <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px"><span style="color:#6B4753">Subtotal</span><span style="font-weight:600">{{ totalCarritoFmt }}</span></div>
-        <p style="margin:0 0 18px;font-size:11px;color:#8A6472">Costo de envío a coordinar por WhatsApp.</p>
+        <p style="margin:0 0 18px;font-size:11px;color:#8A6472">Costo de envÃ­o a coordinar por WhatsApp.</p>
         <button onClick="{{ abrirCheckout }}" style="width:100%;min-height:56px;background:#4C0F2E;color:#F9F1EA;border:0;border-radius:2px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;cursor:pointer;transition:background .4s ease" style-hover="background:#331821">Finalizar pedido</button>
         <button onClick="{{ seguirComprando }}" style="width:100%;min-height:50px;margin-top:10px;background:none;border:1px solid rgba(51,24,33,.3);border-radius:2px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;cursor:pointer">Continuar comprando</button>
       </div>
@@ -1179,7 +1184,7 @@ input,select,textarea{font-family:inherit;color:#331821}
   <div role="dialog" aria-label="Resumen del pedido" style="position:fixed;z-index:100;top:0;right:0;bottom:0;left:{{ izquierdaModal }};background:#F9F1EA;overflow-y:auto;animation:subir .4s cubic-bezier(.2,.8,.2,1) both;padding:clamp(22px,3vw,40px) clamp(18px,3vw,44px) calc(40px + env(safe-area-inset-bottom))">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:26px">
       <p style="margin:0;font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(26px,3vw,36px);font-weight:700">Resumen del pedido</p>
-      <button onClick="{{ cerrarCheckout }}" aria-label="Cerrar" style="background:none;border:0;width:44px;height:44px;cursor:pointer;font-size:24px;font-weight:300">×</button>
+      <button onClick="{{ cerrarCheckout }}" aria-label="Cerrar" style="background:none;border:0;width:44px;height:44px;cursor:pointer;font-size:24px;font-weight:300">Ã—</button>
     </div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:clamp(24px,3vw,48px);align-items:start">
       <form onSubmit="{{ enviarPedido }}" style="display:flex;flex-direction:column;gap:16px">
@@ -1188,35 +1193,35 @@ input,select,textarea{font-family:inherit;color:#331821}
           <input id="o-nombre" type="text" value="{{ fNombre }}" onChange="{{ onFNombre }}" style="width:100%;height:50px;padding:0 14px;border:1px solid {{ bNombre }};background:transparent;border-radius:2px;font-size:14px">
         </div>
         <div>
-          <label for="o-tel" style="display:block;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#9F507D;font-weight:600;margin-bottom:8px">Número de teléfono</label>
+          <label for="o-tel" style="display:block;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#9F507D;font-weight:600;margin-bottom:8px">NÃºmero de telÃ©fono</label>
           <input id="o-tel" type="tel" value="{{ fTelefono }}" onChange="{{ onFTelefono }}" placeholder="09XX XXXXXX" style="width:100%;height:50px;padding:0 14px;border:1px solid {{ bTelefono }};background:transparent;border-radius:2px;font-size:14px">
         </div>
         <div>
-          <label for="o-email" style="display:block;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#9F507D;font-weight:600;margin-bottom:8px">Correo electrónico</label>
+          <label for="o-email" style="display:block;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#9F507D;font-weight:600;margin-bottom:8px">Correo electrÃ³nico</label>
           <input id="o-email" type="email" autocomplete="email" value="{{ fEmail }}" onChange="{{ onFEmail }}" placeholder="tunombre@correo.com" style="width:100%;height:50px;padding:0 14px;border:1px solid {{ bEmail }};background:transparent;border-radius:2px;font-size:14px">
         </div>
         <div>
-          <label for="o-doc" style="display:block;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#9F507D;font-weight:600;margin-bottom:8px">Cédula de identidad</label>
+          <label for="o-doc" style="display:block;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#9F507D;font-weight:600;margin-bottom:8px">CÃ©dula de identidad</label>
           <input id="o-doc" type="text" inputmode="numeric" value="{{ fDocumento }}" onChange="{{ onFDocumento }}" placeholder="Sin puntos" style="width:100%;height:50px;padding:0 14px;border:1px solid {{ bDocumento }};background:transparent;border-radius:2px;font-size:14px">
           <p style="margin:7px 0 0;font-size:10.5px;color:#8A6472;line-height:1.6">Necesarios para emitir el comprobante del pago.</p>
         </div>
-        <!-- Primero cómo lo recibe: de eso depende todo lo que sigue -->
+        <!-- Primero cÃ³mo lo recibe: de eso depende todo lo que sigue -->
         <div>
-          <p style="margin:0 0 8px;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#9F507D;font-weight:600">Cómo lo recibís</p>
+          <p style="margin:0 0 8px;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#9F507D;font-weight:600">CÃ³mo lo recibÃ­s</p>
           <div style="display:flex;gap:10px">
-            <button type="button" onClick="{{ elegirEnvio }}" style="flex:1;min-height:54px;border:1px solid {{ bordeEnvio }};background:{{ fondoEnvio }};color:{{ textoEnvio }};border-radius:2px;cursor:pointer;font-size:12px;letter-spacing:.08em;line-height:1.35;transition:background .3s ease,border-color .3s ease,color .3s ease">Envío<br><span style="font-size:10.5px;opacity:.75">a tu domicilio</span></button>
+            <button type="button" onClick="{{ elegirEnvio }}" style="flex:1;min-height:54px;border:1px solid {{ bordeEnvio }};background:{{ fondoEnvio }};color:{{ textoEnvio }};border-radius:2px;cursor:pointer;font-size:12px;letter-spacing:.08em;line-height:1.35;transition:background .3s ease,border-color .3s ease,color .3s ease">EnvÃ­o<br><span style="font-size:10.5px;opacity:.75">a tu domicilio</span></button>
             <button type="button" onClick="{{ elegirRetiro }}" style="flex:1;min-height:54px;border:1px solid {{ bordeRetiro }};background:{{ fondoRetiro }};color:{{ textoRetiro }};border-radius:2px;cursor:pointer;font-size:12px;letter-spacing:.08em;line-height:1.35;transition:background .3s ease,border-color .3s ease,color .3s ease">Retiro<br><span style="font-size:10.5px;opacity:.75">en el local</span></button>
           </div>
         </div>
 
-        <!-- Retiro: no hace falta ciudad ni dirección -->
+        <!-- Retiro: no hace falta ciudad ni direcciÃ³n -->
         <sc-if value="{{ esRetiro }}">
           <div style="padding:16px 18px;border:1px solid rgba(51,24,33,.14);border-radius:2px;background:rgba(76,15,46,.03)">
-            <p style="margin:0;font-size:13px;line-height:1.7;color:#5C3A47">Te esperamos en <strong>Capiatá</strong>. Te avisamos por WhatsApp apenas tu pedido esté listo para retirar.</p>
+            <p style="margin:0;font-size:13px;line-height:1.7;color:#5C3A47">Te esperamos en <strong>CapiatÃ¡</strong>. Te avisamos por WhatsApp apenas tu pedido estÃ© listo para retirar.</p>
           </div>
         </sc-if>
 
-        <!-- Envío: ciudad, cuándo paga el envío, y dirección -->
+        <!-- EnvÃ­o: ciudad, cuÃ¡ndo paga el envÃ­o, y direcciÃ³n -->
         <sc-if value="{{ esEnvio }}">
           <div>
             <p style="margin:0 0 8px;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#9F507D;font-weight:600">Ciudad</p>
@@ -1226,7 +1231,7 @@ input,select,textarea{font-family:inherit;color:#331821}
             <div style="position:relative">
               <button type="button" onClick="{{ alternarCiudades }}" aria-haspopup="listbox" aria-expanded="{{ ciudadesAbiertas }}" style="width:100%;min-height:50px;padding:0 16px;border:1px solid {{ bCiudad }};background:transparent;border-radius:2px;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;color:{{ colorCiudadElegida }};transition:border-color .3s ease">
                 <span>{{ ciudadElegidaTexto }}</span>
-                <span aria-hidden="true" style="flex:0 0 auto;font-size:10px;opacity:.55;transform:rotate({{ giroFlechaCiudad }});transition:transform .3s ease">▼</span>
+                <span aria-hidden="true" style="flex:0 0 auto;font-size:10px;opacity:.55;transform:rotate({{ giroFlechaCiudad }});transition:transform .3s ease">â–¼</span>
               </button>
 
               <sc-if value="{{ ciudadesAbiertas }}">
@@ -1243,13 +1248,13 @@ input,select,textarea{font-family:inherit;color:#331821}
             </div>
 
             <sc-if value="{{ ciudadACoordinar }}">
-              <p style="margin:9px 0 0;font-size:11px;color:#8A6472;line-height:1.65">Te pasamos el costo del envío por WhatsApp y se lo abonás al repartidor.</p>
+              <p style="margin:9px 0 0;font-size:11px;color:#8A6472;line-height:1.65">Te pasamos el costo del envÃ­o por WhatsApp y se lo abonÃ¡s al repartidor.</p>
             </sc-if>
           </div>
 
           <sc-if value="{{ mostrarCuandoPagaEnvio }}">
             <div>
-              <p style="margin:0 0 8px;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#9F507D;font-weight:600">El envío lo pagás</p>
+              <p style="margin:0 0 8px;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#9F507D;font-weight:600">El envÃ­o lo pagÃ¡s</p>
               <div style="display:flex;gap:10px">
                 <button type="button" onClick="{{ envioPagaAhora }}" style="flex:1;min-height:54px;border:1px solid {{ bordeEnvioAhora }};background:{{ fondoEnvioAhora }};color:{{ textoEnvioAhora }};border-radius:2px;cursor:pointer;font-size:12px;letter-spacing:.06em;line-height:1.35;transition:background .3s ease,border-color .3s ease,color .3s ease">Ahora<br><span style="font-size:10.5px;opacity:.75">junto con la compra</span></button>
                 <button type="button" onClick="{{ envioPagaAlRecibir }}" style="flex:1;min-height:54px;border:1px solid {{ bordeEnvioRecibir }};background:{{ fondoEnvioRecibir }};color:{{ textoEnvioRecibir }};border-radius:2px;cursor:pointer;font-size:12px;letter-spacing:.06em;line-height:1.35;transition:background .3s ease,border-color .3s ease,color .3s ease">Al recibir<br><span style="font-size:10.5px;opacity:.75">al repartidor</span></button>
@@ -1258,8 +1263,8 @@ input,select,textarea{font-family:inherit;color:#331821}
           </sc-if>
 
           <div>
-            <label for="o-dir" style="display:block;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#9F507D;font-weight:600;margin-bottom:8px">Dirección de entrega</label>
-            <input id="o-dir" type="text" value="{{ fDireccion }}" onChange="{{ onFDireccion }}" placeholder="Calle, número y alguna referencia" style="width:100%;height:50px;padding:0 14px;border:1px solid {{ bDireccion }};background:transparent;border-radius:2px;font-size:14px">
+            <label for="o-dir" style="display:block;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#9F507D;font-weight:600;margin-bottom:8px">DirecciÃ³n de entrega</label>
+            <input id="o-dir" type="text" value="{{ fDireccion }}" onChange="{{ onFDireccion }}" placeholder="Calle, nÃºmero y alguna referencia" style="width:100%;height:50px;padding:0 14px;border:1px solid {{ bDireccion }};background:transparent;border-radius:2px;font-size:14px">
           </div>
         </sc-if>
         <div>
@@ -1267,7 +1272,7 @@ input,select,textarea{font-family:inherit;color:#331821}
           <textarea id="o-obs" rows="3" value="{{ fObs }}" onChange="{{ onFObs }}" style="width:100%;padding:12px 14px;border:1px solid rgba(51,24,33,.25);background:transparent;border-radius:2px;font-size:14px;resize:vertical"></textarea>
         </div>
         <sc-if value="{{ errorPedido }}">
-          <p role="alert" style="margin:0;padding:12px 14px;border:1px solid #9F507D;background:rgba(159,80,125,.07);font-size:12.5px;border-radius:2px">✕ {{ errorPedido }}</p>
+          <p role="alert" style="margin:0;padding:12px 14px;border:1px solid #9F507D;background:rgba(159,80,125,.07);font-size:12.5px;border-radius:2px">âœ• {{ errorPedido }}</p>
         </sc-if>
         <sc-if value="{{ pagoActivo }}">
           <button type="button" onClick="{{ pagarOnline }}" disabled="{{ pagando }}" style="min-height:58px;background:{{ fondoBotonPago }};color:#F9F1EA;border:0;border-radius:2px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;cursor:{{ cursorBotonPago }};transition:background .4s ease" style-hover="background:#331821">{{ textoBotonPago }}</button>
@@ -1279,21 +1284,21 @@ input,select,textarea{font-family:inherit;color:#331821}
           </div>
         </sc-if>
         <button type="submit" style="min-height:58px;background:transparent;color:#4C0F2E;border:1px solid #4C0F2E;border-radius:2px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;cursor:pointer;transition:background .4s ease,color .4s ease" style-hover="background:#4C0F2E;color:#F9F1EA">Coordinar por WhatsApp</button>
-        <p style="margin:0;font-size:11px;color:#8A6472;line-height:1.7">Si preferís, te confirmamos disponibilidad y coordinamos el pago y la entrega por chat.</p>
+        <p style="margin:0;font-size:11px;color:#8A6472;line-height:1.7">Si preferÃ­s, te confirmamos disponibilidad y coordinamos el pago y la entrega por chat.</p>
       </form>
       <div style="border:1px solid rgba(51,24,33,.14);padding:22px">
         <p style="margin:0 0 18px;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:#9F507D;font-weight:600">Tu pedido</p>
         <sc-for list="{{ itemsCarrito }}" as="i" hint-placeholder-count="2">
           <div style="display:flex;justify-content:space-between;gap:14px;padding:12px 0;border-bottom:1px solid rgba(51,24,33,.08)">
             <div>
-              <p style="margin:0;font-size:13.5px;font-weight:500">{{ i.cantidad }} × {{ i.nombre }}</p>
+              <p style="margin:0;font-size:13.5px;font-weight:500">{{ i.cantidad }} Ã— {{ i.nombre }}</p>
               <p style="margin:3px 0 0;font-size:11px;color:#7A5460">{{ i.color }}</p>
             </div>
             <span style="font-size:13px;white-space:nowrap">{{ i.subtotalFmt }}</span>
           </div>
         </sc-for>
         <div style="display:flex;justify-content:space-between;margin-top:18px;font-size:13px"><span style="color:#6B4753">Productos</span><span>{{ totalCarritoFmt }}</span></div>
-        <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:13px"><span style="color:#6B4753">Envío</span><span>{{ envioTexto }}</span></div>
+        <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:13px"><span style="color:#6B4753">EnvÃ­o</span><span>{{ envioTexto }}</span></div>
         <div style="display:flex;justify-content:space-between;margin-top:14px;padding-top:14px;border-top:1px solid rgba(51,24,33,.14);font-size:15px"><span style="font-weight:600">{{ etiquetaTotal }}</span><span style="font-weight:600">{{ totalPagarFmt }}</span></div>
         <sc-if value="{{ hayEnvioAlRecibir }}">
           <p style="margin:10px 0 0;font-size:11.5px;color:#8A6472;line-height:1.6">+ {{ envioAlRecibirFmt }} al repartidor cuando recibas el pedido.</p>
@@ -1304,13 +1309,13 @@ input,select,textarea{font-family:inherit;color:#331821}
   </div>
 </sc-if>
 
-<!-- ===================== LIGHTBOX GALERÍA ===================== -->
+<!-- ===================== LIGHTBOX GALERÃA ===================== -->
 <sc-if value="{{ lightboxAbierto }}">
   <div style="position:fixed;inset:0;z-index:115;display:flex;align-items:center;justify-content:center;padding:clamp(16px,4vw,64px);animation:aparecer .28s ease both">
     <div onClick="{{ cerrarLightbox }}" style="position:absolute;inset:0;background:rgba(28,10,16,.93)"></div>
-    <button onClick="{{ cerrarLightbox }}" aria-label="Cerrar" style="position:absolute;top:clamp(14px,2vw,26px);right:clamp(14px,2vw,26px);z-index:3;width:48px;height:48px;border:1px solid rgba(249,241,234,.4);background:rgba(249,241,234,.08);border-radius:50%;cursor:pointer;font-size:22px;font-weight:300;line-height:1;color:#F9F1EA;transition:background .3s ease" style-hover="background:rgba(249,241,234,.2)">×</button>
-    <button onClick="{{ lightboxAnterior }}" aria-label="Anterior" style="position:absolute;top:50%;left:clamp(10px,2.5vw,34px);transform:translateY(-50%);z-index:3;width:50px;height:50px;border:1px solid rgba(249,241,234,.35);background:rgba(249,241,234,.08);border-radius:50%;cursor:pointer;font-size:17px;line-height:1;color:#F9F1EA;transition:background .3s ease" style-hover="background:rgba(249,241,234,.2)">←</button>
-    <button onClick="{{ lightboxSiguiente }}" aria-label="Siguiente" style="position:absolute;top:50%;right:clamp(10px,2.5vw,34px);transform:translateY(-50%);z-index:3;width:50px;height:50px;border:1px solid rgba(249,241,234,.35);background:rgba(249,241,234,.08);border-radius:50%;cursor:pointer;font-size:17px;line-height:1;color:#F9F1EA;transition:background .3s ease" style-hover="background:rgba(249,241,234,.2)">→</button>
+    <button onClick="{{ cerrarLightbox }}" aria-label="Cerrar" style="position:absolute;top:clamp(14px,2vw,26px);right:clamp(14px,2vw,26px);z-index:3;width:48px;height:48px;border:1px solid rgba(249,241,234,.4);background:rgba(249,241,234,.08);border-radius:50%;cursor:pointer;font-size:22px;font-weight:300;line-height:1;color:#F9F1EA;transition:background .3s ease" style-hover="background:rgba(249,241,234,.2)">Ã—</button>
+    <button onClick="{{ lightboxAnterior }}" aria-label="Anterior" style="position:absolute;top:50%;left:clamp(10px,2.5vw,34px);transform:translateY(-50%);z-index:3;width:50px;height:50px;border:1px solid rgba(249,241,234,.35);background:rgba(249,241,234,.08);border-radius:50%;cursor:pointer;font-size:17px;line-height:1;color:#F9F1EA;transition:background .3s ease" style-hover="background:rgba(249,241,234,.2)">â†</button>
+    <button onClick="{{ lightboxSiguiente }}" aria-label="Siguiente" style="position:absolute;top:50%;right:clamp(10px,2.5vw,34px);transform:translateY(-50%);z-index:3;width:50px;height:50px;border:1px solid rgba(249,241,234,.35);background:rgba(249,241,234,.08);border-radius:50%;cursor:pointer;font-size:17px;line-height:1;color:#F9F1EA;transition:background .3s ease" style-hover="background:rgba(249,241,234,.2)">â†’</button>
     <figure style="position:relative;z-index:2;margin:0;max-width:min(92vw,940px);display:flex;flex-direction:column;align-items:center;gap:16px">
       <sc-if value="{{ lightboxEsFoto }}">
         <img src="{{ lightboxUrl }}" alt="{{ lightboxTitle }}" style="max-width:100%;max-height:80vh;object-fit:contain;display:block;box-shadow:0 30px 70px -30px rgba(0,0,0,.7)">
@@ -1338,25 +1343,25 @@ const WA = "595972897875";
 const SITIO = "https://manastina-tienda.vercel.app";
 
 /* Cobro online con PagoPar.
-   La clave privada NO está acá: vive en la Edge Function del servidor.
-   Esta anon key es pública por diseño, igual que la del resto de Supabase. */
+   La clave privada NO estÃ¡ acÃ¡: vive en la Edge Function del servidor.
+   Esta anon key es pÃºblica por diseÃ±o, igual que la del resto de Supabase. */
 const SUPABASE_URL = "https://api.neura.com.py";
 const SUPABASE_ANON = "";              // se completa al desplegar
-const PAGO_ACTIVO = !!SUPABASE_ANON;   // sin anon key, el botón no se muestra
+const PAGO_ACTIVO = !!SUPABASE_ANON;   // sin anon key, el botÃ³n no se muestra
 
-/* Ciudades de reparto. Los nombres acompañan al <select> de arriba. */
+/* Ciudades de reparto. Los nombres acompaÃ±an al <select> de arriba. */
 const CIUDADES = {
-  "capiata": "Capiatá", "san-lorenzo": "San Lorenzo", "j-augusto-saldivar": "J. Augusto Saldívar",
-  "nemby": "Ñemby", "ypane": "Ypané", "asuncion": "Asunción",
-  "fernando-de-la-mora": "Fernando de la Mora", "lambare": "Lambaré", "luque": "Luque",
-  "itaugua": "Itauguá", "aregua": "Areguá", "villa-elisa": "Villa Elisa",
-  "san-antonio": "San Antonio", "ita": "Itá",
+  "capiata": "CapiatÃ¡", "san-lorenzo": "San Lorenzo", "j-augusto-saldivar": "J. Augusto SaldÃ­var",
+  "nemby": "Ã‘emby", "ypane": "YpanÃ©", "asuncion": "AsunciÃ³n",
+  "fernando-de-la-mora": "Fernando de la Mora", "lambare": "LambarÃ©", "luque": "Luque",
+  "itaugua": "ItauguÃ¡", "aregua": "AreguÃ¡", "villa-elisa": "Villa Elisa",
+  "san-antonio": "San Antonio", "ita": "ItÃ¡",
   "mariano-roque-alonso": "Mariano Roque Alonso", "limpio": "Limpio",
   "otra": "Otra ciudad"
 };
 
-/* Costo del delivery por ciudad. build.js reescribe esta línea desde
-   pagopar/config.env, que es la fuente de verdad. Acá solo se muestra:
+/* Costo del delivery por ciudad. build.js reescribe esta lÃ­nea desde
+   pagopar/config.env, que es la fuente de verdad. AcÃ¡ solo se muestra:
    el monto que se cobra lo recalcula siempre el servidor. */
 const TARIFAS_ENVIO = {"capiata":10000,"san-lorenzo":10000,"j-augusto-saldivar":10000,"nemby":15000,"ypane":15000,"itaugua":20000,"fernando-de-la-mora":20000,"aregua":20000,"villa-elisa":20000,"luque":20000,"san-antonio":20000,"asuncion":20000,"lambare":20000,"ita":20000,"mariano-roque-alonso":30000,"limpio":30000};
 
@@ -1383,12 +1388,12 @@ const esVideoArchivo = u => {
   return limpio.endsWith(".mp4") || limpio.endsWith(".webm") || limpio.endsWith(".mov");
 };
 
-/* La colección de la portada mientras el ERP no diga otra cosa. Si todavía no
+/* La colecciÃ³n de la portada mientras el ERP no diga otra cosa. Si todavÃ­a no
    cargaron ninguna, la web sigue mostrando exactamente lo que mostraba antes. */
-const COL_NOMBRE = "Nueva colección";
+const COL_NOMBRE = "Nueva colecciÃ³n";
 const COL_FRASE = "Presencia\nen cada detalle";
 /* Logos que vienen con el sitio. Se usan mientras el ERP no tenga el suyo
-   cargado, así la grilla de marcas nunca queda con casilleros vacíos. */
+   cargado, asÃ­ la grilla de marcas nunca queda con casilleros vacÃ­os. */
 const LOGOS_LOCALES = {
   "nine-west": "assets/marca-nine-west.png",
   "guess": "assets/marca-guess.jpg",
@@ -1404,7 +1409,7 @@ const clave = t => String(t || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").rep
 const COL_FOTO = "https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=1600&auto=format&fit=crop";
 
 /* Parte la frase en los dos renglones que se cruzan al hacer scroll. El corte
-   lo decide quien la escribe con un salto de línea; si no puso ninguno, se
+   lo decide quien la escribe con un salto de lÃ­nea; si no puso ninguno, se
    parte sola por la mitad de las palabras. */
 const partirFrase = f => {
   const t = String(f || "").trim();
@@ -1493,9 +1498,9 @@ class Component extends DCLogic {
     clearInterval(this._menuTimer);
   }
   componentDidUpdate() {
-    /* La barra del navegador acompaña lo que se está viendo, así el link se
-       copia y se pasa. Solo se reescribe si cambió, para no llenar el
-       historial con la misma dirección. */
+    /* La barra del navegador acompaÃ±a lo que se estÃ¡ viendo, asÃ­ el link se
+       copia y se pasa. Solo se reescribe si cambiÃ³, para no llenar el
+       historial con la misma direcciÃ³n. */
     try {
       const quiere = this.direccionDeLoQueSeVe();
       if (quiere !== window.location.pathname + window.location.search) {
@@ -1519,16 +1524,16 @@ class Component extends DCLogic {
     document.querySelectorAll("video.lb-video").forEach(lv => { lv.controls = true; });
   }
 
-  /* Abre lo que pida la dirección. Sirve para entrar directo a la tienda, a
-     una marca, a una categoría o a una colección desde un link compartido.
+  /* Abre lo que pida la direcciÃ³n. Sirve para entrar directo a la tienda, a
+     una marca, a una categorÃ­a o a una colecciÃ³n desde un link compartido.
 
        ?p=c04            una pieza
-       ?tienda=1         el catálogo entero
-       ?marca=guess      el catálogo filtrado por marca
-       ?cat=carteras     por categoría
-       ?coleccion=x      por colección
+       ?tienda=1         el catÃ¡logo entero
+       ?marca=guess      el catÃ¡logo filtrado por marca
+       ?cat=carteras     por categorÃ­a
+       ?coleccion=x      por colecciÃ³n
        ?ver=nuevos       novedades  (o ?ver=destacados)
-       ?q=cartera negra  con una búsqueda puesta
+       ?q=cartera negra  con una bÃºsqueda puesta
 
      Se pueden combinar: ?marca=guess&cat=carteras */
   abrirDesdeURL() {
@@ -1550,8 +1555,8 @@ class Component extends DCLogic {
 
     const extra = { ruta: { n: "tienda" }, visibles: 8 };
     /* La marca viaja como clave y en el estado vive por nombre. Las marcas
-       pueden venir del ERP y llegar después, así que queda pendiente hasta
-       que haya con qué resolverla. */
+       pueden venir del ERP y llegar despuÃ©s, asÃ­ que queda pendiente hasta
+       que haya con quÃ© resolverla. */
     if (marca) extra.marcaPend = marca;
     if (cat) extra.cat = cat;
     if (col) extra.colFiltro = col;
@@ -1561,9 +1566,9 @@ class Component extends DCLogic {
     if (marca) this.resolverMarcaPendiente();
   }
 
-  /* Pasa la clave de la dirección al nombre real de la marca. Se vuelve a
+  /* Pasa la clave de la direcciÃ³n al nombre real de la marca. Se vuelve a
      intentar cuando llegan las del ERP: puede ser una que el archivo del
-     sitio no tenía. */
+     sitio no tenÃ­a. */
   resolverMarcaPendiente() {
     const pend = this.state.marcaPend;
     if (!pend) return;
@@ -1572,7 +1577,7 @@ class Component extends DCLogic {
     if (hallada) this.setState({ marca: hallada, marcaPend: null });
   }
 
-  /* La dirección que corresponde a lo que se está viendo. Es lo que se copia
+  /* La direcciÃ³n que corresponde a lo que se estÃ¡ viendo. Es lo que se copia
      de la barra del navegador para pasarle a alguien. */
   direccionDeLoQueSeVe() {
     const s = this.state, base = window.location.pathname;
@@ -1588,7 +1593,7 @@ class Component extends DCLogic {
     else if (s.marcaPend) partes.push("marca=" + encodeURIComponent(s.marcaPend));
     if (s.cat !== "todas") partes.push("cat=" + encodeURIComponent(s.cat));
     if (s.consulta.trim()) partes.push("q=" + encodeURIComponent(s.consulta.trim()));
-    /* Sin ningún filtro hace falta algo que diga que es la tienda, si no el
+    /* Sin ningÃºn filtro hace falta algo que diga que es la tienda, si no el
        link vuelve a la portada. */
     if (!partes.length) partes.push("tienda=1");
     return base + "?" + partes.join("&");
@@ -1604,8 +1609,8 @@ class Component extends DCLogic {
     this._t = setTimeout(() => this.setState({ aviso: "" }), 2600);
   }
   ir(ruta, extra) {
-    /* La dirección la escribe componentDidUpdate a partir del estado nuevo:
-       acá todavía no está aplicado y saldría la anterior. */
+    /* La direcciÃ³n la escribe componentDidUpdate a partir del estado nuevo:
+       acÃ¡ todavÃ­a no estÃ¡ aplicado y saldrÃ­a la anterior. */
     this.setState(Object.assign({ ruta, menuAbierto: false, buscarAbierto: false, coleccionesAbierto: false, filtrosAbiertos: false, pError: "", colFiltro: null, portada: null }, extra || {}));
     setTimeout(() => window.scrollTo({ top: 0, behavior: "auto" }), 0);
   }
@@ -1613,7 +1618,7 @@ class Component extends DCLogic {
      resolver un link directo (?p=...), no para listar la tienda. */
   todosLosProductos() { return (this.state.datos && this.state.datos.productos) || []; }
 
-  /* Lo que se muestra al público. Los marcados `oculto` quedan afuera de la
+  /* Lo que se muestra al pÃºblico. Los marcados `oculto` quedan afuera de la
      tienda, del buscador, de las novedades y de los relacionados. */
   productos() { return this.todosLosProductos().filter(p => !p.oculto); }
   topePrecio() {
@@ -1625,8 +1630,8 @@ class Component extends DCLogic {
   cats() { return (this.state.datos && this.state.datos.categorias) || []; }
   nombreCat(id) { const c = this.cats().find(x => x.id === id); return c ? c.nombre : ""; }
 
-  /* Devuelve la variante elegida del producto. Si el color no está entre las
-     variantes (por ejemplo, si el catálogo cambió mientras el color estaba
+  /* Devuelve la variante elegida del producto. Si el color no estÃ¡ entre las
+     variantes (por ejemplo, si el catÃ¡logo cambiÃ³ mientras el color estaba
      guardado en el carrito), cae en la primera para no romper. */
   variante(p, colorNombre) {
     const cols = (p && p.colores) || [];
@@ -1642,7 +1647,7 @@ class Component extends DCLogic {
   }
   /* Fotos que se muestran en la ficha para un color. Si la variante trae las
      suyas, esas mandan; si no, se usan las del producto (comportamiento
-     viejo, y también el fallback para colores nuevos sin fotos cargadas). */
+     viejo, y tambiÃ©n el fallback para colores nuevos sin fotos cargadas). */
   fotosDeColor(p, colorNombre) {
     const v = this.variante(p, colorNombre);
     if (v && v.imagenes && v.imagenes.length) return v.imagenes;
@@ -1660,8 +1665,8 @@ class Component extends DCLogic {
     this.avisar(p.nombre + " agregada al carrito");
   }
   prep(p) {
-    /* La tarjeta del catálogo prefiere la foto de la primera variante con
-       stock, así lo que se ve al abrir la ficha coincide con lo que se ve en
+    /* La tarjeta del catÃ¡logo prefiere la foto de la primera variante con
+       stock, asÃ­ lo que se ve al abrir la ficha coincide con lo que se ve en
        la grilla. Si ninguna tiene stock, cae en la primera a secas. */
     const cols = p.colores || [];
     const primeraConStock = cols.find(c => (c.stock == null ? p.stock > 0 : c.stock > 0)) || cols[0];
@@ -1675,34 +1680,34 @@ class Component extends DCLogic {
       sinFoto: !fotosVar[0],
       catNombre: this.nombreCat(p.categoria),
       agotado: p.stock <= 0,
-      estado: p.stock <= 0 ? "Agotado" : (p.stock <= 3 ? "Últimas unidades" : "Disponible"),
+      estado: p.stock <= 0 ? "Agotado" : (p.stock <= 3 ? "Ãšltimas unidades" : "Disponible"),
       abrir: () => this.ir({ n: "producto", id: p.id }, { pColor: cols.length === 1 ? cols[0].nombre : null, pCant: 1, pImg: 1 }),
       agregar: () => {
         if (p.stock <= 0) { this.avisar("Sin stock por ahora"); return; }
-        if (cols.length > 1) { this.ir({ n: "producto", id: p.id }, { pColor: null, pCant: 1, pImg: 1 }); this.avisar("Elegí un color para continuar"); return; }
+        if (cols.length > 1) { this.ir({ n: "producto", id: p.id }, { pColor: null, pCant: 1, pImg: 1 }); this.avisar("ElegÃ­ un color para continuar"); return; }
         this.agregar(p, cols[0].nombre, 1);
         this.setState({ carritoAbierto: true });
       }
     });
   }
-  /* Los códigos de la colección que se está mirando, o null si no hay ninguna.
-     Salen del ERP: son los productos que le eligieron a esa colección. */
+  /* Los cÃ³digos de la colecciÃ³n que se estÃ¡ mirando, o null si no hay ninguna.
+     Salen del ERP: son los productos que le eligieron a esa colecciÃ³n. */
   codigosColeccion() {
     const c = this.state.coleccion;
     if (!this.state.colFiltro || !c || c.id !== this.state.colFiltro) return null;
     const lista = c.productos || [];
     return lista.length ? lista : null;
   }
-  /* Qué destaca cada pieza en la portada. Los dos bloques —novedades y
-     selección— se marcan desde el ERP, así que acá solo se pregunta. */
+  /* QuÃ© destaca cada pieza en la portada. Los dos bloques â€”novedades y
+     selecciÃ³nâ€” se marcan desde el ERP, asÃ­ que acÃ¡ solo se pregunta. */
   esDePortada(p, cual) {
     if (cual === "nuevos") return p.nuevo === true;
     if (cual === "destacados") return p.seleccion === true;
     return true;
   }
-  /* El filtro de portada solo se aplica si hay algo que mostrar. Si todavía
-     no marcaron ninguna pieza, es preferible el catálogo entero antes que
-     una tienda vacía. */
+  /* El filtro de portada solo se aplica si hay algo que mostrar. Si todavÃ­a
+     no marcaron ninguna pieza, es preferible el catÃ¡logo entero antes que
+     una tienda vacÃ­a. */
   filtroPortada() {
     const cual = this.state.portada;
     if (!cual) return null;
@@ -1736,7 +1741,7 @@ class Component extends DCLogic {
     const f = this.state.form;
     let m = "Hola, Manastina. Quiero realizar el siguiente pedido:\n\n";
     this.state.carrito.forEach(i => {
-      m += "• " + i.cantidad + " × " + i.nombre + "\n";
+      m += "â€¢ " + i.cantidad + " Ã— " + i.nombre + "\n";
       m += "Color/variante: " + i.color + "\n";
       m += "Precio: " + fmt(i.precio) + "\n";
       m += "Subtotal: " + fmt(i.precio * i.cantidad) + "\n";
@@ -1746,26 +1751,26 @@ class Component extends DCLogic {
     m += "Total de productos: " + fmt(total) + "\n\n";
     m += "Datos de entrega:\n";
     m += "Nombre: " + f.nombre + "\n";
-    m += "Teléfono: " + f.telefono + "\n";
+    m += "TelÃ©fono: " + f.telefono + "\n";
     m += "Ciudad: " + (nombreCiudad(f.ciudad) || f.ciudad) + "\n";
-    m += "Dirección: " + (f.direccion || "-") + "\n";
-    m += "Modalidad: " + (f.modalidad === "envio" ? "Envío" : "Retiro") + "\n";
+    m += "DirecciÃ³n: " + (f.direccion || "-") + "\n";
+    m += "Modalidad: " + (f.modalidad === "envio" ? "EnvÃ­o" : "Retiro") + "\n";
     if (f.modalidad === "envio") {
       const t = tarifaEnvio(f.ciudad);
-      m += "Envío: " + (t == null ? "a coordinar" : fmt(t)) + "\n";
+      m += "EnvÃ­o: " + (t == null ? "a coordinar" : fmt(t)) + "\n";
     }
     m += "Observaciones: " + (f.obs || "-") + "\n\n";
-    m += "Quedo pendiente de la confirmación y del costo de envío. Gracias.";
+    m += "Quedo pendiente de la confirmaciÃ³n y del costo de envÃ­o. Gracias.";
     return m;
   }
-  /* Trae del ERP los productos publicados y arma con eso el catálogo.
+  /* Trae del ERP los productos publicados y arma con eso el catÃ¡logo.
 
-     Manda el ERP: lo que esté marcado como visible aparece, lo que no, no.
-     El archivo datos-manastina.js queda como capa de enriquecimiento — le
-     suma las fotos por ángulo, los colores y la marca a los productos que
-     ya tenía cargados.
+     Manda el ERP: lo que estÃ© marcado como visible aparece, lo que no, no.
+     El archivo datos-manastina.js queda como capa de enriquecimiento â€” le
+     suma las fotos por Ã¡ngulo, los colores y la marca a los productos que
+     ya tenÃ­a cargados.
 
-     Si la consulta falla o vuelve vacía, no se toca nada: la tienda sigue
+     Si la consulta falla o vuelve vacÃ­a, no se toca nada: la tienda sigue
      funcionando con el archivo, como antes. */
   sincronizarStock() {
     if (!PAGO_ACTIVO) return;
@@ -1789,9 +1794,9 @@ class Component extends DCLogic {
         const porId = {};
         delErp.forEach(p => { porId[p.id] = p; });
 
-        /* Las categorías también salen del ERP: si crean una nueva y la marcan
-           visible, aparece sola en el menú y en la portada. Las que ya estaban
-           conservan su foto del sitio si el ERP todavía no tiene una. */
+        /* Las categorÃ­as tambiÃ©n salen del ERP: si crean una nueva y la marcan
+           visible, aparece sola en el menÃº y en la portada. Las que ya estaban
+           conservan su foto del sitio si el ERP todavÃ­a no tiene una. */
         const cats = (d.categorias || []).filter(c => c.productos > 0);
         const categorias = cats.length
           ? cats.map(c => {
@@ -1805,13 +1810,13 @@ class Component extends DCLogic {
             })
           : datos.categorias;
 
-        /* La colección de la portada también la manda el ERP: el nombre, la
-           frase, la foto y qué productos la componen. */
+        /* La colecciÃ³n de la portada tambiÃ©n la manda el ERP: el nombre, la
+           frase, la foto y quÃ© productos la componen. */
         const col = d.coleccion && d.coleccion.id ? d.coleccion : null;
 
-        /* Las marcas también: los nombres, el orden y los logos. Las que ya
-           tenían logo en el sitio lo conservan hasta que suban el suyo. */
-        /* La galería de la portada: fotos y videos, en el orden del ERP. */
+        /* Las marcas tambiÃ©n: los nombres, el orden y los logos. Las que ya
+           tenÃ­an logo en el sitio lo conservan hasta que suban el suyo. */
+        /* La galerÃ­a de la portada: fotos y videos, en el orden del ERP. */
         const galeria = (d.galeria || [])
           .filter(g => g && g.url)
           .map(g => ({
@@ -1838,8 +1843,8 @@ class Component extends DCLogic {
       .catch(() => {});
   }
 
-  /* Las fotos que manda el ERP: la portada primero y después la galería.
-     Devuelve lista vacía si el producto todavía no tiene ninguna. */
+  /* Las fotos que manda el ERP: la portada primero y despuÃ©s la galerÃ­a.
+     Devuelve lista vacÃ­a si el producto todavÃ­a no tiene ninguna. */
   fotosDelErp(real) {
     const extra = (real && real.imagenes) || [];
     return [(real && real.imagen) || ""].concat(extra).filter(Boolean);
@@ -1864,8 +1869,8 @@ class Component extends DCLogic {
       : (typeof real.stock === "number" ? real.stock : (base ? base.stock : 0));
 
     if (base) {
-      /* Ya estaba en la web. Fotos y colores del archivo estático se
-         respetan como fallback, pero si el ERP mandó variantes esas
+      /* Ya estaba en la web. Fotos y colores del archivo estÃ¡tico se
+         respetan como fallback, pero si el ERP mandÃ³ variantes esas
          reemplazan a los colores/imagenes del archivo. */
       const colores = conVariantes
         ? varErp.map(c => ({
@@ -1876,7 +1881,7 @@ class Component extends DCLogic {
           }))
         : base.colores;
       /* Fotos compartidas del producto: si hay variantes, van las que el ERP
-         mandó "sin variante" (real.imagenes); si no, se sigue con la lógica
+         mandÃ³ "sin variante" (real.imagenes); si no, se sigue con la lÃ³gica
          vieja (archivo si tiene, ERP si no). */
       const imagenes = conVariantes
         ? ((real.imagenes && real.imagenes.length) ? this.fotosDelErp(real) : [])
@@ -1897,7 +1902,7 @@ class Component extends DCLogic {
     }
 
     /* Producto nuevo: sale con lo que tenga el ERP. Si trae variantes, se
-       usan; si no, cae en una única "Único" para que el carrito y el mensaje
+       usan; si no, cae en una Ãºnica "Ãšnico" para que el carrito y el mensaje
        de WhatsApp sigan funcionando igual. */
     return {
       id: real.id,
@@ -1916,12 +1921,12 @@ class Component extends DCLogic {
             stock: Math.max(0, Number(c.stock || 0)),
             imagenes: (c.imagenes && c.imagenes.length) ? c.imagenes : []
           }))
-        : [{ nombre: "Único", hex: "#4C0F2E", stock: stock, imagenes: [] }],
+        : [{ nombre: "Ãšnico", hex: "#4C0F2E", stock: stock, imagenes: [] }],
       imagenes: this.fotosDelErp(real)
     };
   }
 
-  /* Si algo del carrito se agotó mientras el cliente lo tenía guardado,
+  /* Si algo del carrito se agotÃ³ mientras el cliente lo tenÃ­a guardado,
      se ajusta antes de que llegue a pagar y se lleve una sorpresa. */
   limpiarCarritoSinStock(porId) {
     const carrito = this.state.carrito;
@@ -1932,7 +1937,7 @@ class Component extends DCLogic {
 
     carrito.forEach(i => {
       const real = porId[i.id];
-      /* Ya no está en el catálogo: se quedó sin stock o lo despublicaron.
+      /* Ya no estÃ¡ en el catÃ¡logo: se quedÃ³ sin stock o lo despublicaron.
          Antes se dejaba en el carrito y el cliente llegaba a pagar algo que
          el servidor iba a rechazar. */
       if (!real) { cambio = true; return; }
@@ -1947,49 +1952,49 @@ class Component extends DCLogic {
 
     if (cambio) {
       this.guardar(ajustado);
-      this.avisar("Ajustamos tu carrito: cambió la disponibilidad de algún producto");
+      this.avisar("Ajustamos tu carrito: cambiÃ³ la disponibilidad de algÃºn producto");
     }
   }
 
   setF(k, v) { this.setState({ form: Object.assign({}, this.state.form, { [k]: v }) }); }
 
-  /* Cómo queda el envío según ciudad y modalidad. Es solo para mostrar:
+  /* CÃ³mo queda el envÃ­o segÃºn ciudad y modalidad. Es solo para mostrar:
      el monto que realmente se cobra lo decide la Edge Function. */
   resumenEnvio() {
     const f = this.state.form;
     if (f.modalidad === "retiro") {
       return { texto: "Retiro en el local", cobraAhora: 0, alRecibir: 0 };
     }
-    if (!f.ciudad) return { texto: "Elegí tu ciudad", cobraAhora: 0, alRecibir: 0 };
+    if (!f.ciudad) return { texto: "ElegÃ­ tu ciudad", cobraAhora: 0, alRecibir: 0 };
 
     const tarifa = tarifaEnvio(f.ciudad);
     if (tarifa == null) {
       return { texto: "A coordinar", cobraAhora: 0, alRecibir: 0 };
     }
     return f.envioPago === "recibir"
-      ? { texto: fmt(tarifa) + " · al recibir", cobraAhora: 0, alRecibir: tarifa }
+      ? { texto: fmt(tarifa) + " Â· al recibir", cobraAhora: 0, alRecibir: tarifa }
       : { texto: fmt(tarifa), cobraAhora: tarifa, alRecibir: 0 };
   }
 
   avisoEnvio() {
     const f = this.state.form;
-    if (f.modalidad === "retiro") return "Retirás tu pedido en el local, sin costo adicional.";
-    if (f.ciudad === "otra") return "El costo del envío lo coordinamos por WhatsApp.";
+    if (f.modalidad === "retiro") return "RetirÃ¡s tu pedido en el local, sin costo adicional.";
+    if (f.ciudad === "otra") return "El costo del envÃ­o lo coordinamos por WhatsApp.";
     const tarifa = tarifaEnvio(f.ciudad);
     if (tarifa == null) return "";
     return f.envioPago === "recibir"
-      ? "El envío se lo abonás al repartidor cuando recibas el pedido."
-      : "El envío ya va incluido en este pago.";
+      ? "El envÃ­o se lo abonÃ¡s al repartidor cuando recibas el pedido."
+      : "El envÃ­o ya va incluido en este pago.";
   }
 
   /* Campos que faltan para poder cobrar online.
-     PagoPar exige correo y cédula; para WhatsApp alcanza con menos. */
+     PagoPar exige correo y cÃ©dula; para WhatsApp alcanza con menos. */
   camposFaltantes(paraPagar) {
     const f = this.state.form, ec = {};
     if (!f.nombre.trim()) ec.nombre = 1;
     if (f.telefono.replace(/\D/g, "").length < 7) ec.telefono = 1;
-    /* Ciudad y dirección solo cuentan si el pedido se envía. Con retiro esos
-       campos ni siquiera se muestran, así que exigirlos dejaba el formulario
+    /* Ciudad y direcciÃ³n solo cuentan si el pedido se envÃ­a. Con retiro esos
+       campos ni siquiera se muestran, asÃ­ que exigirlos dejaba el formulario
        trabado pidiendo algo que no estaba a la vista. */
     if (f.modalidad === "envio") {
       if (!f.ciudad.trim()) ec.ciudad = 1;
@@ -2003,17 +2008,17 @@ class Component extends DCLogic {
   }
 
   /* Pide el link de pago al servidor y manda al cliente a PagoPar.
-     Los montos los recalcula la Edge Function: acá no se manda ningún precio. */
+     Los montos los recalcula la Edge Function: acÃ¡ no se manda ningÃºn precio. */
   pagarConPagopar() {
     if (this.state.pagando) return;
 
     const ec = this.camposFaltantes(true);
     if (Object.keys(ec).length) {
-      this.setState({ errCampos: ec, errPedido: "Completá los campos marcados para poder pagar." });
+      this.setState({ errCampos: ec, errPedido: "CompletÃ¡ los campos marcados para poder pagar." });
       return;
     }
     if (!this.state.carrito.length) {
-      this.setState({ errPedido: "Tu carrito está vacío." });
+      this.setState({ errPedido: "Tu carrito estÃ¡ vacÃ­o." });
       return;
     }
 
@@ -2039,7 +2044,7 @@ class Component extends DCLogic {
       .then(r => r.json().then(d => ({ ok: r.ok, d })))
       .then(({ ok, d }) => {
         if (!ok || !d.link) throw new Error((d && d.error) || "No pudimos generar el pago.");
-        /* El carrito se limpia recién cuando el pago se confirma, no ahora:
+        /* El carrito se limpia reciÃ©n cuando el pago se confirma, no ahora:
            si el cliente abandona PagoPar, vuelve y encuentra su pedido intacto. */
         try { sessionStorage.setItem("manastina_pago", JSON.stringify({ numero: d.numero, total: d.total })); } catch (e) {}
         window.location.href = d.link;
@@ -2047,7 +2052,7 @@ class Component extends DCLogic {
       .catch(err => {
         this.setState({
           pagando: false,
-          errPedido: (err && err.message) || "No pudimos conectar con PagoPar. Probá de nuevo o escribinos por WhatsApp."
+          errPedido: (err && err.message) || "No pudimos conectar con PagoPar. ProbÃ¡ de nuevo o escribinos por WhatsApp."
         });
       });
   }
@@ -2064,16 +2069,16 @@ class Component extends DCLogic {
     const galBase = (s.datos && s.datos.galeria && s.datos.galeria.length)
       ? s.datos.galeria
       : [
-      { url: "assets/hero-1.png", thumb: "assets/hero-1.png", esVideo: false, esFoto: true, title: "Campaña", desc: "Estructura firme, terminación serena." },
+      { url: "assets/hero-1.png", thumb: "assets/hero-1.png", esVideo: false, esFoto: true, title: "CampaÃ±a", desc: "Estructura firme, terminaciÃ³n serena." },
       { url: "assets/gal-vid-1.mp4", thumb: "assets/gal-vid-1.jpg", esVideo: true, esFoto: false, title: "En movimiento", desc: "Detalle de la pieza." },
-      { url: "assets/sobre-tienda.jpg", thumb: "assets/sobre-tienda.jpg", esVideo: false, esFoto: true, title: "Nuestro local", desc: "Te esperamos en Capiatá." },
-      { url: "assets/gal-vid-2.mp4", thumb: "assets/gal-vid-2.jpg", esVideo: true, esFoto: false, title: "Selección", desc: "Piezas en video." },
+      { url: "assets/sobre-tienda.jpg", thumb: "assets/sobre-tienda.jpg", esVideo: false, esFoto: true, title: "Nuestro local", desc: "Te esperamos en CapiatÃ¡." },
+      { url: "assets/gal-vid-2.mp4", thumb: "assets/gal-vid-2.jpg", esVideo: true, esFoto: false, title: "SelecciÃ³n", desc: "Piezas en video." },
       { url: "assets/hero-3.png", thumb: "assets/hero-3.png", esVideo: false, esFoto: true, title: "Nuevos ingresos", desc: "En cantidades cortas." },
       { url: "assets/gal-bolsos.jpg", thumb: "assets/gal-bolsos.jpg", esVideo: false, esFoto: true, title: "Carteras", desc: "Cuero con presencia." },
-      { url: "assets/gal-vid-3.mp4", thumb: "assets/gal-vid-3.jpg", esVideo: true, esFoto: false, title: "En la tienda", desc: "Recorré la selección." },
-      { url: "https://images.unsplash.com/photo-1594223274512-ad4803739b7c?q=80&w=900&auto=format&fit=crop", thumb: "https://images.unsplash.com/photo-1594223274512-ad4803739b7c?q=80&w=700&auto=format&fit=crop", esVideo: false, esFoto: true, title: "Bandoleras", desc: "Para cada ocasión." },
+      { url: "assets/gal-vid-3.mp4", thumb: "assets/gal-vid-3.jpg", esVideo: true, esFoto: false, title: "En la tienda", desc: "RecorrÃ© la selecciÃ³n." },
+      { url: "https://images.unsplash.com/photo-1594223274512-ad4803739b7c?q=80&w=900&auto=format&fit=crop", thumb: "https://images.unsplash.com/photo-1594223274512-ad4803739b7c?q=80&w=700&auto=format&fit=crop", esVideo: false, esFoto: true, title: "Bandoleras", desc: "Para cada ocasiÃ³n." },
       { url: "assets/gal-vid-4.mp4", thumb: "assets/gal-vid-4.jpg", esVideo: true, esFoto: false, title: "Detalle", desc: "Terminaciones." },
-      { url: "https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?q=80&w=900&auto=format&fit=crop", thumb: "https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?q=80&w=700&auto=format&fit=crop", esVideo: false, esFoto: true, title: "Accesorios", desc: "Selección Manastina." }
+      { url: "https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?q=80&w=900&auto=format&fit=crop", thumb: "https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?q=80&w=700&auto=format&fit=crop", esVideo: false, esFoto: true, title: "Accesorios", desc: "SelecciÃ³n Manastina." }
       ];
     const galItems = galBase.map((g, i) => Object.assign({}, g, (i % 2 === 0)
       ? { w: 330, h: 470, dy: 0 }
@@ -2099,12 +2104,12 @@ class Component extends DCLogic {
     const lbItem = lbAbierto ? galItems[lbIdx] : null;
     const lista = this.filtrados();
 
-    /* Portada de la colección. Cada dato cae al valor de siempre si el ERP
-       todavía no lo tiene cargado, así nunca queda un hueco en la portada. */
+    /* Portada de la colecciÃ³n. Cada dato cae al valor de siempre si el ERP
+       todavÃ­a no lo tiene cargado, asÃ­ nunca queda un hueco en la portada. */
     const colNombre = (s.coleccion && s.coleccion.nombre) || COL_NOMBRE;
     const colFrase = partirFrase((s.coleccion && s.coleccion.frase) || COL_FRASE);
     const colTieneProductos = !!(s.coleccion && s.coleccion.productos && s.coleccion.productos.length);
-    const nombrePortada = this.filtroPortada() === "nuevos" ? "Nuevos ingresos" : "Selección Manastina";
+    const nombrePortada = this.filtroPortada() === "nuevos" ? "Nuevos ingresos" : "SelecciÃ³n Manastina";
     const q = s.consulta.trim().toLowerCase();
     const busq = q ? prods.filter(p => (p.nombre + " " + this.nombreCat(p.categoria) + " " + p.descripcion).toLowerCase().includes(q)).slice(0, 8).map(p => this.prep(p)) : [];
 
@@ -2136,9 +2141,9 @@ class Component extends DCLogic {
          muestran solo esas. La portada del producto no se mezcla: puede ser
          de otro color y confundir (ej: producto con portada crema y
          cliente eligiendo negro).
-       - Si el color elegido todavía no tiene fotos cargadas, cae en la
-         portada + galería compartida como fallback.
-       - Sin color elegido —producto con varias variantes recién entrado—
+       - Si el color elegido todavÃ­a no tiene fotos cargadas, cae en la
+         portada + galerÃ­a compartida como fallback.
+       - Sin color elegido â€”producto con varias variantes reciÃ©n entradoâ€”
          se muestra la portada compartida. */
     const varElegida = prod ? this.variante(prod, colorSel) : null;
     const fotosVarElegida = (varElegida && varElegida.imagenes && varElegida.imagenes.length)
@@ -2171,7 +2176,7 @@ class Component extends DCLogic {
     const itemsCarrito = carrito.map(i => {
       const pr = prods.find(x => x.id === i.id);
       /* La miniatura del carrito muestra la foto del color elegido: si el
-         cliente agregó "Cartera Rosa Amora Negro", que se vea en negro y no
+         cliente agregÃ³ "Cartera Rosa Amora Negro", que se vea en negro y no
          una foto del cognac. */
       const fotosPr = pr ? this.fotosDeColor(pr, i.color) : [];
       const foto = fotosPr[0] || (pr && pr.imagenes && pr.imagenes[0]) || "";
@@ -2180,7 +2185,7 @@ class Component extends DCLogic {
       foto, tieneFoto: !!foto, sinFoto: !foto,
       abrir: () => { if (pr) this.ir({ n: "producto", id: pr.id }, { pColor: i.color, pCant: 1, pImg: 1 }); },
       precioFmt: fmt(i.precio), subtotalFmt: fmt(i.precio * i.cantidad), tope: i.cantidad >= i.stock,
-      mas: () => { if (i.cantidad >= i.stock) { this.avisar("No hay más unidades disponibles"); return; } this.guardar(carrito.map(x => x.clave === i.clave ? Object.assign({}, x, { cantidad: x.cantidad + 1 }) : x)); },
+      mas: () => { if (i.cantidad >= i.stock) { this.avisar("No hay mÃ¡s unidades disponibles"); return; } this.guardar(carrito.map(x => x.clave === i.clave ? Object.assign({}, x, { cantidad: x.cantidad + 1 }) : x)); },
       menos: () => { if (i.cantidad <= 1) { this.guardar(carrito.filter(x => x.clave !== i.clave)); return; } this.guardar(carrito.map(x => x.clave === i.clave ? Object.assign({}, x, { cantidad: x.cantidad - 1 }) : x)); },
       quitar: () => this.guardar(carrito.filter(x => x.clave !== i.clave))
       };
@@ -2285,8 +2290,8 @@ class Component extends DCLogic {
       seleccion: prods.filter(p => p.seleccion).slice(0, 4).map(p => this.prep(p)),
       instagram: [1, 2, 3, 4, 5, 6],
       galeria: galItems.map((g, i) => Object.assign({}, g, {
-        /* Si el video no tiene portada cargada, la tira lo muestra a él.
-           Un <img> apuntando a un mp4 quedaría roto. */
+        /* Si el video no tiene portada cargada, la tira lo muestra a Ã©l.
+           Un <img> apuntando a un mp4 quedarÃ­a roto. */
         thumbEsVideo: esVideoArchivo(g.thumb),
         thumbEsFoto: !esVideoArchivo(g.thumb),
         abrir: () => this.setState({ lightbox: i })
@@ -2300,7 +2305,7 @@ class Component extends DCLogic {
       cerrarLightbox: () => this.setState({ lightbox: null }),
       lightboxAnterior: () => this.setState({ lightbox: (lbIdx - 1 + galItems.length) % galItems.length }),
       lightboxSiguiente: () => this.setState({ lightbox: (lbIdx + 1) % galItems.length }),
-      galAyuda: esMobile ? "Deslizá para recorrer" : "Mové el cursor para recorrer · o usá las flechas",
+      galAyuda: esMobile ? "DeslizÃ¡ para recorrer" : "MovÃ© el cursor para recorrer Â· o usÃ¡ las flechas",
       refGalCont: this._galCont,
       refGalTrack: this._galTrack,
       galMove: e => {
@@ -2340,14 +2345,14 @@ class Component extends DCLogic {
       }),
       salirColeccion: () => this.setState({ colFiltro: null, portada: null, visibles: 8 }),
       verColeccion: !!this.codigosColeccion() || !!this.filtroPortada(),
-      etiquetaFiltro: this.codigosColeccion() ? "Colección" : "Portada",
+      etiquetaFiltro: this.codigosColeccion() ? "ColecciÃ³n" : "Portada",
       nombreFiltro: this.codigosColeccion() ? colNombre : nombrePortada,
       coleccionNombre: colNombre,
       coleccionFrase1: colFrase[0],
       coleccionFrase2: colFrase[1],
       coleccionHayFrase2: !!colFrase[1],
       coleccionImagen: (s.coleccion && s.coleccion.imagen) || COL_FOTO,
-      coleccionAlt: "Campaña " + colNombre,
+      coleccionAlt: "CampaÃ±a " + colNombre,
       irNosotros: () => this.ir({ n: "nosotros" }),
       irContacto: () => this.ir({ n: "contacto" }),
       irCarteras: () => this.ir({ n: "tienda" }, { cat: "carteras", visibles: 8 }),
@@ -2374,7 +2379,7 @@ class Component extends DCLogic {
         opacidad: k === mSlide ? "1" : "0"
       })),
       menuSlideNombre: menuActivo ? menuActivo.nombre : "",
-      menuSlideMarca: menuActivo ? ((menuActivo.marca ? menuActivo.marca + " · " : "") + this.nombreCat(menuActivo.categoria)) : "",
+      menuSlideMarca: menuActivo ? ((menuActivo.marca ? menuActivo.marca + " Â· " : "") + this.nombreCat(menuActivo.categoria)) : "",
       irMenuSlide: k => this.setState({ menuSlide: k }),
       menuPuntos: nuevosLista.map((p, k) => ({
         ancho: k === mSlide ? "22px" : "7px",
@@ -2384,7 +2389,7 @@ class Component extends DCLogic {
       buscarDesdeMenu: e => { if (e && e.preventDefault) e.preventDefault(); this.ir({ n: "tienda" }, { visibles: 8 }); },
       consulta: s.consulta, onConsulta: e => this.setState({ consulta: e.target.value, visibles: 8 }),
       resultadosBusqueda: busq,
-      textoResultadosBusqueda: q ? (busq.length + " resultado" + (busq.length === 1 ? "" : "s")) : "Escribí para buscar entre nuestras piezas",
+      textoResultadosBusqueda: q ? (busq.length + " resultado" + (busq.length === 1 ? "" : "s")) : "EscribÃ­ para buscar entre nuestras piezas",
 
       tituloCatalogo: this.codigosColeccion() ? colNombre
         : (this.filtroPortada() ? nombrePortada
@@ -2418,12 +2423,12 @@ class Component extends DCLogic {
       prodMaterial: prod && prod.material ? prod.material : "", prodMedidas: prod && prod.medidas ? prod.medidas : "",
       prodTieneMaterial: !!(prod && prod.material), prodTieneMedidas: !!(prod && prod.medidas),
       prodIncluye: prod && prod.incluye ? prod.incluye : "", prodTieneIncluye: !!(prod && prod.incluye),
-      prodEstado: prod ? (stockColor <= 0 ? "Agotado" : (stockColor <= 3 ? "Últimas unidades" : "Disponible")) : "",
+      prodEstado: prod ? (stockColor <= 0 ? "Agotado" : (stockColor <= 3 ? "Ãšltimas unidades" : "Disponible")) : "",
       prodEstadoColor: prod && stockColor <= 0 ? "#9F507D" : "#4C0F2E",
       textoStock: prod ? (stockColor > 0 ? stockColor + " unidades disponibles" : "Sin stock por ahora") : "",
       prodColores: colores.map(c => {
-        /* Cuando la variante no trae stock (viene del archivo estático viejo),
-           usamos el del producto. Así el swatch no queda deshabilitado por
+        /* Cuando la variante no trae stock (viene del archivo estÃ¡tico viejo),
+           usamos el del producto. AsÃ­ el swatch no queda deshabilitado por
            mostrar 0 cuando en realidad hay unidades. */
         const st = typeof c.stock === "number" ? c.stock : (prod ? prod.stock : 0);
         const agot = st <= 0;
@@ -2439,11 +2444,11 @@ class Component extends DCLogic {
           tip: agot ? "Sin stock" : c.nombre,
           /* Al cambiar el color reseteamos pImg=1 para que el carrusel arranque
              en la primera foto de la variante nueva; si el usuario estaba en la
-             tercera, la variante nueva podría no tenerla y quedaría vacío. */
+             tercera, la variante nueva podrÃ­a no tenerla y quedarÃ­a vacÃ­o. */
           elegir: () => { if (agot) return; this.setState({ pColor: c.nombre, pImg: 1, pError: "" }); }
         };
       }),
-      colorElegidoNombre: colorSel || "elegí una opción",
+      colorElegidoNombre: colorSel || "elegÃ­ una opciÃ³n",
       cantidad: s.pCant, imagenActual: s.pImg,
       prodFotoActual: prodFotos.length ? (prodFotos[Math.min(s.pImg, prodFotos.length) - 1] || prodFotos[0]) : "",
       prodFotosLista: prodFotos.map(url => ({ url })),
@@ -2454,14 +2459,14 @@ class Component extends DCLogic {
       prodDesplazamiento: (-(Math.min(s.pImg, Math.max(1, prodFotos.length)) - 1) * 100) + "%",
       prodTieneFoto: prodFotos.length > 0, prodSinFoto: prodFotos.length === 0,
       miniaturas: prodFotos.map((url, i) => ({ n: i + 1, url, borde: s.pImg === i + 1 ? "#4C0F2E" : "rgba(51,24,33,.18)", elegir: () => this.setState({ pImg: i + 1 }) })),
-      masCantidad: () => { if (prod && s.pCant >= stockColor) { this.setState({ pError: "No hay más unidades disponibles de este color." }); return; } this.setState({ pCant: s.pCant + 1 }); },
+      masCantidad: () => { if (prod && s.pCant >= stockColor) { this.setState({ pError: "No hay mÃ¡s unidades disponibles de este color." }); return; } this.setState({ pCant: s.pCant + 1 }); },
       menosCantidad: () => this.setState({ pCant: Math.max(1, s.pCant - 1) }),
       errorProducto: s.pError,
       agregarDesdeFicha: () => {
         if (!prod) return;
-        if (prod.stock <= 0) { this.setState({ pError: "Esta pieza está agotada. Consultanos por WhatsApp para reponerla." }); return; }
-        if (!colorSel) { this.setState({ pError: "Elegí un color antes de agregar la pieza al carrito." }); return; }
-        if (stockColor <= 0) { this.setState({ pError: "El color " + colorSel + " está agotado. Elegí otro o consultanos por WhatsApp." }); return; }
+        if (prod.stock <= 0) { this.setState({ pError: "Esta pieza estÃ¡ agotada. Consultanos por WhatsApp para reponerla." }); return; }
+        if (!colorSel) { this.setState({ pError: "ElegÃ­ un color antes de agregar la pieza al carrito." }); return; }
+        if (stockColor <= 0) { this.setState({ pError: "El color " + colorSel + " estÃ¡ agotado. ElegÃ­ otro o consultanos por WhatsApp." }); return; }
         this.agregar(prod, colorSel, Math.min(s.pCant, stockColor));
         this.setState({ pError: "", carritoAbierto: true });
       },
@@ -2470,7 +2475,7 @@ class Component extends DCLogic {
         /* Se agrega el link a la ficha del producto en manastina.com. Esa
            pagina (generada por build.js en /p/<id>.html) trae og:image
            apuntando a la foto real, asi que WhatsApp muestra el preview con
-           imagen, titulo y "manastina.com" — sin exponer el hostname del
+           imagen, titulo y "manastina.com" â€” sin exponer el hostname del
            bucket. La ficha hace un location.replace() a ?p=<id>, con lo cual
            el visitante humano cae en la ficha real del producto. */
         var idSeguro = encodeURIComponent(String(prod.id).replace(/[^a-zA-Z0-9._-]/g, "_"));
@@ -2507,17 +2512,17 @@ class Component extends DCLogic {
 
       pagoActivo: PAGO_ACTIVO,
       pagando: s.pagando,
-      textoBotonPago: s.pagando ? "Generando el pago…" : "Pagar con PagoPar",
+      textoBotonPago: s.pagando ? "Generando el pagoâ€¦" : "Pagar con PagoPar",
       fondoBotonPago: s.pagando ? "#8A6472" : "#4C0F2E",
       cursorBotonPago: s.pagando ? "wait" : "pointer",
       avisoEnvio: this.avisoEnvio(),
       pagarOnline: () => this.pagarConPagopar(),
 
-      /* --- Envío --------------------------------------------------------- */
+      /* --- EnvÃ­o --------------------------------------------------------- */
       esEnvio: modEnvio,
       esRetiro: !modEnvio,
       ciudadACoordinar: modEnvio && s.form.ciudad === "otra",
-      /* El toggle solo tiene sentido si sabemos cuánto sale el envío. */
+      /* El toggle solo tiene sentido si sabemos cuÃ¡nto sale el envÃ­o. */
       mostrarCuandoPagaEnvio: modEnvio && tarifaEnvio(s.form.ciudad) != null,
 
       /* --- Selector de ciudad -------------------------------------------- */
@@ -2527,9 +2532,9 @@ class Component extends DCLogic {
       giroFlechaCiudad: s.ciudadesAbiertas ? "180deg" : "0deg",
       ciudadElegidaTexto: s.form.ciudad
         ? nombreCiudad(s.form.ciudad) + (tarifaEnvio(s.form.ciudad) != null
-            ? " · " + fmt(tarifaEnvio(s.form.ciudad))
-            : " · a coordinar")
-        : "Elegí tu ciudad",
+            ? " Â· " + fmt(tarifaEnvio(s.form.ciudad))
+            : " Â· a coordinar")
+        : "ElegÃ­ tu ciudad",
       colorCiudadElegida: s.form.ciudad ? "#331821" : "#9A7A87",
       listaCiudades: ORDEN_CIUDADES.map((clave, i) => {
         const elegida = s.form.ciudad === clave;
@@ -2541,7 +2546,7 @@ class Component extends DCLogic {
           colorPrecio: tarifa != null ? "#7A5460" : "#9F507D",
           fondo: elegida ? "rgba(76,15,46,.09)" : "transparent",
           peso: elegida ? "600" : "400",
-          /* Una línea separa las ciudades con tarifa de la opción abierta. */
+          /* Una lÃ­nea separa las ciudades con tarifa de la opciÃ³n abierta. */
           separador: clave === "otra" ? "1px solid rgba(51,24,33,.12)" : "0",
           elegir: () => this.setState({
             form: Object.assign({}, s.form, { ciudad: clave }),
@@ -2568,7 +2573,7 @@ class Component extends DCLogic {
         e.preventDefault();
         const ec = this.camposFaltantes(false);
         if (Object.keys(ec).length) {
-          this.setState({ errCampos: ec, errPedido: "Completá los campos marcados para poder enviar el pedido." });
+          this.setState({ errCampos: ec, errPedido: "CompletÃ¡ los campos marcados para poder enviar el pedido." });
           return;
         }
         window.open("https://wa.me/" + WA + "?text=" + encodeURIComponent(this.mensajePedido()), "_blank", "noopener");
@@ -2583,7 +2588,7 @@ class Component extends DCLogic {
       enviarContacto: e => {
         e.preventDefault();
         if (!s.cNombre.trim() || !s.cContacto.trim() || !s.cMensaje.trim()) {
-          this.setState({ errContacto: "Completá nombre, contacto y mensaje para poder responderte.", okContacto: "" });
+          this.setState({ errContacto: "CompletÃ¡ nombre, contacto y mensaje para poder responderte.", okContacto: "" });
           return;
         }
         this.setState({ errContacto: "", okContacto: "Recibimos tu consulta. Te respondemos por WhatsApp a la brevedad." });
