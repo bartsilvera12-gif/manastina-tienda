@@ -1664,14 +1664,21 @@ class Component extends DCLogic {
     this.guardar(carrito);
     this.avisar(p.nombre + " agregada al carrito");
   }
-  prep(p) {
+  prep(p, colorForzado) {
     /* La tarjeta del catálogo prefiere la foto de la primera variante con
        stock, así lo que se ve al abrir la ficha coincide con lo que se ve en
-       la grilla. Si ninguna tiene stock, cae en la primera a secas. */
+       la grilla. Si ninguna tiene stock, cae en la primera a secas.
+       Cuando el usuario esta filtrando por color, se pisa esa preferencia
+       con la variante elegida: la card muestra la foto de ese color, aunque
+       el producto tenga otros. */
     const cols = p.colores || [];
+    const varForzada = colorForzado
+      ? cols.find(c => c.nombre === colorForzado)
+      : null;
     const primeraConStock = cols.find(c => (c.stock == null ? p.stock > 0 : c.stock > 0)) || cols[0];
-    const fotosVar = (primeraConStock && primeraConStock.imagenes && primeraConStock.imagenes.length)
-      ? primeraConStock.imagenes
+    const varElegida = varForzada || primeraConStock;
+    const fotosVar = (varElegida && varElegida.imagenes && varElegida.imagenes.length)
+      ? varElegida.imagenes
       : (p.imagenes || []);
     /* Para animar la tarjeta rotando las variantes: una foto por color
        (la primera de cada uno). Si el color no tiene fotos propias, se
@@ -1686,18 +1693,33 @@ class Component extends DCLogic {
     for (const u of fotosSlideshow) {
       if (fotosDedup[fotosDedup.length - 1] !== u) fotosDedup.push(u);
     }
+    /* Con un color forzado, la card se queda quieta en la foto de ese color:
+       no tendria sentido rotar las variantes cuando el usuario ya eligio una. */
+    const slideshowJson = (colorForzado || fotosDedup.length < 2) ? "" : JSON.stringify(fotosDedup);
+    /* Si se forzo un color, al abrir la ficha ya queda seleccionado ese color
+       (y no el default de "una sola variante"). */
+    const pColorInicial = colorForzado || (cols.length === 1 ? cols[0].nombre : null);
     return Object.assign({}, p, {
       precioFmt: fmt(p.precio),
       foto: fotosVar[0] || "",
-      fotosSlideshowJson: fotosDedup.length >= 2 ? JSON.stringify(fotosDedup) : "",
+      fotosSlideshowJson: slideshowJson,
       tieneFoto: !!fotosVar[0],
       sinFoto: !fotosVar[0],
       catNombre: this.nombreCat(p.categoria),
       agotado: p.stock <= 0,
       estado: p.stock <= 0 ? "Agotado" : (p.stock <= 3 ? "Últimas unidades" : "Disponible"),
-      abrir: () => this.ir({ n: "producto", id: p.id }, { pColor: cols.length === 1 ? cols[0].nombre : null, pCant: 1, pImg: 1 }),
+      abrir: () => this.ir({ n: "producto", id: p.id }, { pColor: pColorInicial, pCant: 1, pImg: 1 }),
       agregar: () => {
         if (p.stock <= 0) { this.avisar("Sin stock por ahora"); return; }
+        /* Con color forzado y stock disponible en esa variante, se agrega
+           directo sin pasar por la ficha. */
+        if (colorForzado) {
+          const stock = this.stockDeColor(p, colorForzado);
+          if (stock <= 0) { this.avisar("Ese color esta agotado"); return; }
+          this.agregar(p, colorForzado, 1);
+          this.setState({ carritoAbierto: true });
+          return;
+        }
         if (cols.length > 1) { this.ir({ n: "producto", id: p.id }, { pColor: null, pCant: 1, pImg: 1 }); this.avisar("Elegí un color para continuar"); return; }
         this.agregar(p, cols[0].nombre, 1);
         this.setState({ carritoAbierto: true });
@@ -2410,7 +2432,10 @@ class Component extends DCLogic {
         : (s.marca !== "todas" ? s.marca : (s.cat === "todas" ? "Tienda" : this.nombreCat(s.cat)))),
       textoResultados: lista.length + (lista.length === 1 ? " pieza" : " piezas"),
       totalResultados: lista.length,
-      productosVisibles: lista.slice(0, s.visibles).map(p => this.prep(p)),
+      /* Si hay filtro de color activo, cada card usa la foto de ese color
+         (y no la del primer color con stock). Asi el catalogo muestra
+         exactamente lo que el usuario esta buscando. */
+      productosVisibles: lista.slice(0, s.visibles).map(p => this.prep(p, s.color !== "todos" ? s.color : null)),
       sinResultados: lista.length === 0 && !!s.datos,
       hayMas: lista.length > s.visibles,
       verMas: () => this.setState({ visibles: s.visibles + 8 }),
