@@ -308,7 +308,7 @@ input,select,textarea{font-family:inherit;color:#331821}
       <sc-for list="{{ resultadosBusqueda }}" as="p" hint-placeholder-count="4">
         <button onClick="{{ p.abrir }}" style="background:none;border:0;padding:0;text-align:left;cursor:pointer;display:block">
           <div style="position:relative;aspect-ratio:4/5;overflow:hidden;background:repeating-linear-gradient(135deg,#EFE3DA 0 12px,#EADCD1 12px 24px);display:flex;align-items:center;justify-content:center">
-            <sc-if value="{{ p.tieneFoto }}"><img src="{{ p.foto }}" alt="{{ p.nombre }}" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></sc-if><sc-if value="{{ p.sinFoto }}"><span style="font-family:ui-monospace,Menlo,monospace;font-size:9px;letter-spacing:.1em;color:#9F507D;text-transform:uppercase">Fotografía pendiente</span></sc-if>
+            <sc-if value="{{ p.tieneFoto }}"><img class="card-slideshow" data-fotos="{{ p.fotosSlideshowJson }}" src="{{ p.foto }}" alt="{{ p.nombre }}" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .45s ease"></sc-if><sc-if value="{{ p.sinFoto }}"><span style="font-family:ui-monospace,Menlo,monospace;font-size:9px;letter-spacing:.1em;color:#9F507D;text-transform:uppercase">Fotografía pendiente</span></sc-if>
           </div>
           <p style="margin:12px 0 4px;font-family:'Cormorant Garamond',Georgia,serif;font-size:20px;font-weight:600">{{ p.nombre }}</p>
           <p style="margin:0;font-size:12px;letter-spacing:.06em">{{ p.precioFmt }}</p>
@@ -415,7 +415,7 @@ input,select,textarea{font-family:inherit;color:#331821}
             <button onClick="{{ p.abrir }}" style="background:none;border:0;padding:0;cursor:pointer;display:block;width:100%;text-align:left;overflow:hidden;color:#331821">
               <div style="position:relative;aspect-ratio:4/5;overflow:hidden;background:repeating-linear-gradient(135deg,#EFE3DA 0 14px,#EADCD1 14px 28px);box-shadow:0 18px 40px -22px rgba(51,24,33,.42);transition:box-shadow .5s ease" style-hover="box-shadow:0 26px 54px -20px rgba(51,24,33,.5)">
                 <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;transition:transform .8s cubic-bezier(.2,.7,.2,1)" style-hover="transform:scale(1.05)">
-                  <sc-if value="{{ p.tieneFoto }}"><img src="{{ p.foto }}" alt="{{ p.nombre }}" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></sc-if><sc-if value="{{ p.sinFoto }}"><span style="font-family:ui-monospace,Menlo,monospace;font-size:9px;letter-spacing:.1em;color:#9F507D;text-transform:uppercase">Fotografía pendiente</span></sc-if>
+                  <sc-if value="{{ p.tieneFoto }}"><img class="card-slideshow" data-fotos="{{ p.fotosSlideshowJson }}" src="{{ p.foto }}" alt="{{ p.nombre }}" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .45s ease"></sc-if><sc-if value="{{ p.sinFoto }}"><span style="font-family:ui-monospace,Menlo,monospace;font-size:9px;letter-spacing:.1em;color:#9F507D;text-transform:uppercase">Fotografía pendiente</span></sc-if>
                 </div>
                 <span style="position:absolute;top:14px;right:14px;background:rgba(76,15,46,.92);color:#F9F1EA;font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;padding:5px 9px;font-weight:600;border-radius:2px">Nuevo</span>
                 <sc-if value="{{ p.agotado }}">
@@ -693,7 +693,7 @@ input,select,textarea{font-family:inherit;color:#331821}
             <button onClick="{{ p.abrir }}" style="background:none;border:0;padding:0;cursor:pointer;display:block;width:100%;text-align:left;overflow:hidden">
               <div style="position:relative;aspect-ratio:4/5;overflow:hidden;background:repeating-linear-gradient(135deg,#EFE3DA 0 14px,#EADCD1 14px 28px)">
                 <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;transition:transform .7s cubic-bezier(.2,.7,.2,1)" style-hover="transform:scale(1.04)">
-                  <sc-if value="{{ p.tieneFoto }}"><img src="{{ p.foto }}" alt="{{ p.nombre }}" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></sc-if><sc-if value="{{ p.sinFoto }}"><span style="font-family:ui-monospace,Menlo,monospace;font-size:9px;letter-spacing:.1em;color:#9F507D;text-transform:uppercase">Fotografía pendiente</span></sc-if>
+                  <sc-if value="{{ p.tieneFoto }}"><img class="card-slideshow" data-fotos="{{ p.fotosSlideshowJson }}" src="{{ p.foto }}" alt="{{ p.nombre }}" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .45s ease"></sc-if><sc-if value="{{ p.sinFoto }}"><span style="font-family:ui-monospace,Menlo,monospace;font-size:9px;letter-spacing:.1em;color:#9F507D;text-transform:uppercase">Fotografía pendiente</span></sc-if>
                 </div>
                 <sc-if value="{{ p.agotado }}">
                   <span style="position:absolute;top:12px;left:12px;background:#F9F1EA;font-size:9px;letter-spacing:.16em;text-transform:uppercase;padding:6px 10px;font-weight:600">Agotado</span>
@@ -866,7 +866,7 @@ input,select,textarea{font-family:inherit;color:#331821}
         <article>
           <button onClick="{{ p.abrir }}" style="background:none;border:0;padding:0;cursor:pointer;display:block;width:100%;text-align:left;overflow:hidden">
             <div style="position:relative;aspect-ratio:4/5;overflow:hidden;background:repeating-linear-gradient(135deg,#EFE3DA 0 14px,#EADCD1 14px 28px);display:flex;align-items:center;justify-content:center;transition:transform .7s cubic-bezier(.2,.7,.2,1)" style-hover="transform:scale(1.04)">
-              <sc-if value="{{ p.tieneFoto }}"><img src="{{ p.foto }}" alt="{{ p.nombre }}" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></sc-if><sc-if value="{{ p.sinFoto }}"><span style="font-family:ui-monospace,Menlo,monospace;font-size:9px;letter-spacing:.1em;color:#9F507D;text-transform:uppercase">Fotografía pendiente</span></sc-if>
+              <sc-if value="{{ p.tieneFoto }}"><img class="card-slideshow" data-fotos="{{ p.fotosSlideshowJson }}" src="{{ p.foto }}" alt="{{ p.nombre }}" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .45s ease"></sc-if><sc-if value="{{ p.sinFoto }}"><span style="font-family:ui-monospace,Menlo,monospace;font-size:9px;letter-spacing:.1em;color:#9F507D;text-transform:uppercase">Fotografía pendiente</span></sc-if>
             </div>
             <p style="margin:14px 0 0;font-family:'Cormorant Garamond',Georgia,serif;font-size:21px;font-weight:600">{{ p.nombre }}</p>
             <p style="margin:5px 0 0;font-size:12.5px">{{ p.precioFmt }}</p>
@@ -1673,9 +1673,23 @@ class Component extends DCLogic {
     const fotosVar = (primeraConStock && primeraConStock.imagenes && primeraConStock.imagenes.length)
       ? primeraConStock.imagenes
       : (p.imagenes || []);
+    /* Para animar la tarjeta rotando las variantes: una foto por color
+       (la primera de cada uno). Si el color no tiene fotos propias, se
+       hereda la del producto para que quede una imagen igual (no un hueco).
+       El script del final del body usa `data-fotos` para hacer el cross-fade. */
+    const fotosSlideshow = cols
+      .map(c => (c.imagenes && c.imagenes[0]) || (p.imagenes && p.imagenes[0]) || "")
+      .filter(u => !!u);
+    /* Deduplico URLs consecutivas iguales (si dos colores comparten foto no
+       tiene sentido rotarlos como si fueran distintos). */
+    const fotosDedup = [];
+    for (const u of fotosSlideshow) {
+      if (fotosDedup[fotosDedup.length - 1] !== u) fotosDedup.push(u);
+    }
     return Object.assign({}, p, {
       precioFmt: fmt(p.precio),
       foto: fotosVar[0] || "",
+      fotosSlideshowJson: fotosDedup.length >= 2 ? JSON.stringify(fotosDedup) : "",
       tieneFoto: !!fotosVar[0],
       sinFoto: !fotosVar[0],
       catNombre: this.nombreCat(p.categoria),
@@ -2601,6 +2615,59 @@ class Component extends DCLogic {
     };
   }
 }
+
+/* ── Slideshow de variantes en las cards del listado ────────────────────
+   Cada card con `data-fotos` trae una lista JSON de URLs (una por color
+   disponible). Cada 2.6 s se avanza al siguiente, con un fade rapido
+   controlado por la transition CSS del <img>. Cuando el usuario mueve el
+   mouse encima de la card, la rotacion se pausa para que pueda mirar la
+   pieza sin que se le cambie de foto. Las URLs se precargan al montar
+   la card la primera vez para evitar flash blanco al cambiar. */
+(function () {
+  const INTERVALO_MS = 2600;
+  const FADE_MS = 220;
+  const cache = new Set();
+  function precargar(url) {
+    if (!url || cache.has(url)) return;
+    cache.add(url);
+    const im = new Image();
+    im.src = url;
+  }
+  function paso() {
+    document.querySelectorAll("img.card-slideshow[data-fotos]").forEach((img) => {
+      const raw = img.getAttribute("data-fotos") || "";
+      if (!raw) return;
+      let fotos;
+      try { fotos = JSON.parse(raw); } catch { return; }
+      if (!Array.isArray(fotos) || fotos.length < 2) return;
+      /* Pausa el ciclo si el mouse esta sobre la card contenedora. */
+      const card = img.closest("article, .card-prod, button") || img.parentElement;
+      if (card && card.matches(":hover")) return;
+      fotos.forEach(precargar);
+      const idx = Number(img.dataset.slideIdx || "0");
+      const proximo = (idx + 1) % fotos.length;
+      const nuevaUrl = fotos[proximo];
+      if (!nuevaUrl || nuevaUrl === img.currentSrc) {
+        img.dataset.slideIdx = String(proximo);
+        return;
+      }
+      img.style.opacity = "0";
+      setTimeout(() => {
+        img.src = nuevaUrl;
+        img.dataset.slideIdx = String(proximo);
+        img.style.opacity = "1";
+      }, FADE_MS);
+    });
+  }
+  /* Corre siempre; si no hay cards con slideshow no hace nada. Se inicia
+     cuando el DOM esta listo y no se detiene: los renders de la SPA
+     agregan/quitan cards y el query las recoge en cada tick. */
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => setInterval(paso, INTERVALO_MS));
+  } else {
+    setInterval(paso, INTERVALO_MS);
+  }
+})();
 </script>
 </body>
 </html>
