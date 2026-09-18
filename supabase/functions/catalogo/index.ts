@@ -481,6 +481,43 @@ Deno.serve(async (req) => {
         .filter((g) => g.url);
     }
 
+    // --- Imágenes fijas del sitio (portada, secciones) ----------------------
+    // Las administra el cliente desde el ERP (módulo "Imágenes del sitio"). Cada
+    // slot tiene una `clave` que el HTML del sitio conoce (portada_izquierda,
+    // portada_video, portada_derecha, sobre_tienda, campana_fondo). Si no hay
+    // imagen cargada para una clave, el sitio usa su asset por defecto.
+    const imagenesSitio: Record<string, string> = {};
+    {
+      const { data: cfg, error: errCfg } = await sb
+        .from("web_config_imagenes")
+        .select("id, clave, imagen_path, imagen_web_url");
+      if (errCfg) {
+        console.warn("[catalogo] sin imágenes de sitio del ERP:", errCfg.message);
+      } else if (cfg?.length) {
+        const filasCfg = cfg as unknown as {
+          id: string;
+          clave: string;
+          imagen_path: string | null;
+          imagen_web_url: string | null;
+        }[];
+        const nuevasCfg = await publicarFotosPendientes(
+          sb,
+          filasCfg.map((c) => ({
+            producto_id: c.id,
+            imagen_path: c.imagen_path,
+            imagen_web_url: c.imagen_web_url,
+          })),
+          "web_config_imagenes",
+          "web-config",
+        );
+        for (const c of filasCfg) {
+          const url = nuevasCfg.get(String(c.id)) ??
+            normalizarUrlPublica(c.imagen_web_url);
+          if (url && c.clave) imagenesSitio[c.clave] = url;
+        }
+      }
+    }
+
     return new Response(
       JSON.stringify({
         productos,
@@ -488,6 +525,7 @@ Deno.serve(async (req) => {
         marcas,
         coleccion,
         galeria: galeriaPortada,
+        imagenes_sitio: imagenesSitio,
         actualizado: new Date().toISOString(),
       }),
       { headers: { ...cabeceras(origen), "Content-Type": "application/json" } },
