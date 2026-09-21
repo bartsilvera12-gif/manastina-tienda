@@ -2700,5 +2700,27 @@ class Component extends DCLogic {
   }
 })();
 </script>
+<script>
+/* Fix video de portada: un <video> NO recarga solo al cambiar su <source>.
+   Cuando el ERP manda un video distinto, forzamos load()+play(). Solo aplica
+   al video de portada (tiene <source type=video/mp4>); los de galeria usan src directo. */
+(function(){
+  function base(u){ return (u||"").split(/[?#]/)[0].split("/").pop(); }
+  function sync(){
+    var vs=document.getElementsByTagName("video");
+    for(var i=0;i<vs.length;i++){
+      var v=vs[i], s=v.querySelector("source[type='video/mp4']");
+      if(!s) continue;
+      var want=s.getAttribute("src")||""; if(!want) continue;
+      if(base(v.currentSrc)!==base(want)){
+        try{ v.load(); var p=v.play(); if(p&&p.catch) p.catch(function(){}); }catch(e){}
+      }
+    }
+  }
+  try{ new MutationObserver(function(m){ for(var i=0;i<m.length;i++){ if(m[i].attributeName==="src"){ sync(); break; } } })
+       .observe(document.documentElement,{subtree:true,attributes:true,attributeFilter:["src"]}); }catch(e){}
+  setInterval(sync,1500); setTimeout(sync,2000);
+})();
+</script>
 </body>
 </html>
