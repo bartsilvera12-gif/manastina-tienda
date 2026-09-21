@@ -15,6 +15,7 @@ Thumbs.db
 .DS_Store
 
 # Build de Hostinger (se genera con: node build.js)
+/dist/
 /build/
 /manastina-hostinger.zip
 

@@ -7,7 +7,7 @@ const fs = require('fs');
 const path = require('path');
 
 const SITIO = 'https://manastina.com';   // dominio de producción
-const OUT = 'build';
+const OUT = 'dist';
 
 /* Se vacía el contenido en vez de borrar la carpeta: en Windows es muy común
    que algo la tenga tomada (el explorador, un servidor local, el antivirus) y

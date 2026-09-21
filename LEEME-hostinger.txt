@@ -17,7 +17,7 @@ MANASTINA — cómo subir a Hostinger
        public_html/assets/...
        public_html/p/...
 
-   NO así:  public_html/build/index.html
+   NO así:  public_html/dist/index.html
 
 4) Verificá que el archivo  .htaccess  esté presente.
    Si no lo ves, activá "Mostrar archivos ocultos" en el
