@@ -585,7 +585,7 @@ input,select,textarea{font-family:inherit;color:#331821}
 
   <!-- CIERRE EDITORIAL — banner de marca sobre bolso -->
   <section class="cierre-banner" style="position:relative;min-height:min(66vh,560px);display:flex;align-items:center;justify-content:center;overflow:hidden;color:#F9F1EA">
-    <img src="https://images.unsplash.com/photo-1594223274512-ad4803739b7c?q=80&w=1920&auto=format&fit=crop" alt="Bolso de la selección MANASTINA" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center">
+    <img src="{{ imgCierreBanner }}" alt="Bolso de la selección MANASTINA" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center">
     <div aria-hidden="true" style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(51,24,33,.58),rgba(51,24,33,.48) 40%,rgba(51,24,33,.72)),radial-gradient(120% 90% at 50% 40%, rgba(76,15,46,.34), rgba(51,24,33,.58))"></div>
     <div class="cierre-cortina" aria-hidden="true" style="position:absolute;inset:0;z-index:1;background:linear-gradient(160deg,#5A1236,#4C0F2E 52%,#3B0E25);display:flex;align-items:flex-end;justify-content:center;padding-bottom:26px">
       <span style="font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:#E9C9D2;font-weight:600">Pasá el cursor</span>
@@ -2240,6 +2240,7 @@ class Component extends DCLogic {
       imgPortadaDer: _imgSitio.portada_derecha || "assets/hero-3.png",
       imgSobreTienda: _imgSitio.sobre_tienda || "assets/sobre-tienda.jpg",
       imgCampanaFondo: _imgSitio.campana_fondo || "https://images.unsplash.com/photo-1509319117193-57bab727e09d?q=80&w=1920&auto=format&fit=crop",
+      imgCierreBanner: _imgSitio.cierre_fondo || "https://images.unsplash.com/photo-1594223274512-ad4803739b7c?q=80&w=1920&auto=format&fit=crop",
       esMobile, esDesktop, esHome: enHome, esTienda: s.ruta.n === "tienda", esProducto: !!prod,
       esNosotros: s.ruta.n === "nosotros", esContacto: s.ruta.n === "contacto",
       altoHeader: esMobile ? "66px" : "79px", heroOffset: "0px",
