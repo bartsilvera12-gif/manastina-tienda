@@ -518,6 +518,26 @@ Deno.serve(async (req) => {
       }
     }
 
+    // --- Textos editables del sitio (horarios, redes, "Nuestros valores") ----
+    // Los administra el cliente desde el ERP (módulo "Textos del sitio"). Cada
+    // campo tiene una `clave` que el HTML del sitio conoce (horarios,
+    // red_instagram, valor_1_titulo, …). Si no hay valor, el sitio usa su texto
+    // por defecto.
+    const textosSitio: Record<string, string> = {};
+    {
+      const { data: txt, error: errTxt } = await sb
+        .from("web_config_textos")
+        .select("clave, valor");
+      if (errTxt) {
+        console.warn("[catalogo] sin textos de sitio del ERP:", errTxt.message);
+      } else if (txt?.length) {
+        for (const t of txt as unknown as { clave: string; valor: string | null }[]) {
+          const v = (t.valor ?? "").trim();
+          if (t.clave && v) textosSitio[t.clave] = v;
+        }
+      }
+    }
+
     return new Response(
       JSON.stringify({
         productos,
@@ -526,6 +546,7 @@ Deno.serve(async (req) => {
         coleccion,
         galeria: galeriaPortada,
         imagenes_sitio: imagenesSitio,
+        textos_sitio: textosSitio,
         actualizado: new Date().toISOString(),
       }),
       { headers: { ...cabeceras(origen), "Content-Type": "application/json" } },
