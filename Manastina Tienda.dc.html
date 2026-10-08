@@ -2393,7 +2393,7 @@ class Component extends DCLogic {
       coleccionFrase1: colFrase[0],
       coleccionFrase2: colFrase[1],
       coleccionHayFrase2: !!colFrase[1],
-      coleccionImagen: (s.coleccion && s.coleccion.imagen) || COL_FOTO,
+      coleccionImagen: (s.coleccion && s.coleccion.imagen) || _imgSitio.coleccion_centro || COL_FOTO,
       coleccionAlt: "Campaña " + colNombre,
       irNosotros: () => this.ir({ n: "nosotros" }),
       irContacto: () => this.ir({ n: "contacto" }),
