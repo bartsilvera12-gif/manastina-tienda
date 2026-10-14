@@ -1,6 +1,30 @@
 MANASTINA — cómo subir a Hostinger
 ==================================
 
+OPCIÓN A (recomendada): deploy por GitHub
+-----------------------------------------
+El sitio que publica Hostinger vive en la rama  hostinger  de
+github.com/bartsilvera12-gif/manastina-tienda , con el index.html
+suelto en la raíz. La rama  main  NO sirve para publicar: ahí el sitio
+se genera en build/ (que no se sube) y además están build.js, pagopar/
+y supabase/, que son del servidor y no deben quedar expuestos.
+
+Si Hostinger devuelve 403, casi seguro está apuntando a main.
+
+Para publicar cambios:
+
+   node publicar-hostinger.js
+
+Eso arma el sitio y actualiza la rama  hostinger . Después, en el hPanel:
+Avanzado → Git → Implementar (o esperar al despliegue automático).
+
+Configuración en el hPanel (una sola vez):
+   Repositorio : https://github.com/bartsilvera12-gif/manastina-tienda
+   Rama        : hostinger
+   Directorio  : public_html
+
+OPCIÓN B: subir el .zip a mano
+------------------------------
 1) Entrá al hPanel de Hostinger → Administrador de archivos.
 
 2) Abrí la carpeta  public_html  y borrá lo que haya adentro
