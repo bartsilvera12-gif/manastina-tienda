@@ -12,7 +12,7 @@ const fs = require('fs');
 const path = require('path');
 
 const RAMA = 'hostinger';
-const OUT = 'build';
+const OUT = 'dist';
 /* Fuera del repo: una carpeta de trabajo adentro confundiria a git y al build. */
 const WORKTREE = path.resolve('..', '.deploy-hostinger');
 
@@ -23,7 +23,7 @@ function git(...args) {
 execFileSync('node', ['build.js'], { stdio: 'inherit' });
 
 if (!fs.existsSync(path.join(OUT, 'index.html'))) {
-  console.error('No encuentro build/index.html. El build no termino bien.');
+  console.error('No encuentro dist/index.html. El build no termino bien.');
   process.exit(1);
 }
 
