@@ -593,8 +593,8 @@ input,select,textarea{font-family:inherit;color:#331821}
     <div style="position:relative;z-index:2;text-align:center;padding:clamp(32px,5vw,64px) clamp(24px,6vw,72px);display:flex;flex-direction:column;align-items:center;gap:clamp(14px,1.9vw,24px);max-width:680px">
       <img src="assets/logo-isotipo-claro.png" alt="MANASTINA" loading="lazy" style="width:clamp(64px,7vw,96px);height:auto;display:block;opacity:.96">
       <p style="margin:0;font-size:9.5px;letter-spacing:.34em;text-transform:uppercase;color:#E9C9D2;font-weight:600">Manastina · Llena de Gracia</p>
-      <h2 style="margin:0;font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;font-style:italic;font-size:clamp(28px,4.4vw,54px);line-height:1.08;color:#F9F1EA;text-wrap:balance;text-shadow:0 2px 30px rgba(51,24,33,.4)">No seguimos tendencias.<br>Dictamos el estilo.</h2>
-      <p style="margin:0;max-width:44ch;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:clamp(16px,1.5vw,20px);line-height:1.5;color:#F0DFE2">Curaduría propia de carteras y accesorios con presencia. Piezas elegidas, no tendencias pasajeras.</p>
+      <h2 style="margin:0;font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;font-style:italic;font-size:clamp(28px,4.4vw,54px);line-height:1.08;color:#F9F1EA;text-wrap:balance;text-shadow:0 2px 30px rgba(51,24,33,.4)">{{ cierreTitulo1 }}<sc-if value="{{ cierreHayTitulo2 }}"><br>{{ cierreTitulo2 }}</sc-if></h2>
+      <p style="margin:0;max-width:44ch;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:clamp(16px,1.5vw,20px);line-height:1.5;color:#F0DFE2">{{ cierreFrase }}</p>
       <button onClick="{{ irNosotros }}" style="margin-top:6px;min-height:50px;padding:14px 34px;background:transparent;border:1px solid rgba(249,241,234,.7);border-radius:2px;color:#F9F1EA;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;font-weight:600;cursor:pointer;transition:background .45s ease,color .45s ease,border-color .45s ease" style-hover="background:#F9F1EA;color:#4C0F2E;border-color:#F9F1EA">Conocer Manastina</button>
     </div>
   </section>
@@ -1826,7 +1826,13 @@ class Component extends DCLogic {
         const ficha = {};
         datos.productos.forEach(p => { ficha[p.id] = p; });
 
-        const productos = delErp.map(real => this.fusionarProducto(ficha[real.id], real));
+        /* Solo productos con stock: un modelo que se quedó sin ningún color con
+           stock (o sin stock) desaparece del catálogo, en vez de mostrarse
+           "Agotado". `porId` se arma aparte con TODO lo del ERP para que la
+           limpieza del carrito siga detectando lo que se agotó. */
+        const productos = delErp
+          .map(real => this.fusionarProducto(ficha[real.id], real))
+          .filter(p => p.stock > 0);
 
         const porId = {};
         delErp.forEach(p => { porId[p.id] = p; });
@@ -1910,12 +1916,14 @@ class Component extends DCLogic {
          respetan como fallback, pero si el ERP mandó variantes esas
          reemplazan a los colores/imagenes del archivo. */
       const colores = conVariantes
-        ? varErp.map(c => ({
-            nombre: String(c.nombre),
-            hex: c.hex || "#1A1114",
-            stock: Math.max(0, Number(c.stock || 0)),
-            imagenes: (c.imagenes && c.imagenes.length) ? c.imagenes : []
-          }))
+        ? varErp
+            .filter(c => Number(c.stock || 0) > 0)   // color sin stock no se ofrece
+            .map(c => ({
+              nombre: String(c.nombre),
+              hex: c.hex || "#1A1114",
+              stock: Math.max(0, Number(c.stock || 0)),
+              imagenes: (c.imagenes && c.imagenes.length) ? c.imagenes : []
+            }))
         : base.colores;
       /* Fotos compartidas del producto: si hay variantes, van las que el ERP
          mandó "sin variante" (real.imagenes); si no, se sigue con la lógica
@@ -1952,12 +1960,14 @@ class Component extends DCLogic {
       seleccion: real.destacado === true,
       descripcion: real.descripcion || "",
       colores: conVariantes
-        ? varErp.map(c => ({
-            nombre: String(c.nombre),
-            hex: c.hex || "#1A1114",
-            stock: Math.max(0, Number(c.stock || 0)),
-            imagenes: (c.imagenes && c.imagenes.length) ? c.imagenes : []
-          }))
+        ? varErp
+            .filter(c => Number(c.stock || 0) > 0)   // color sin stock no se ofrece
+            .map(c => ({
+              nombre: String(c.nombre),
+              hex: c.hex || "#1A1114",
+              stock: Math.max(0, Number(c.stock || 0)),
+              imagenes: (c.imagenes && c.imagenes.length) ? c.imagenes : []
+            }))
         : [{ nombre: "Único", hex: "#4C0F2E", stock: stock, imagenes: [] }],
       imagenes: this.fotosDelErp(real)
     };
@@ -2247,6 +2257,11 @@ class Component extends DCLogic {
       imgSobreTienda: _imgSitio.sobre_tienda || "assets/sobre-tienda.jpg",
       imgCampanaFondo: _imgSitio.campana_fondo || "https://images.unsplash.com/photo-1509319117193-57bab727e09d?q=80&w=1920&auto=format&fit=crop",
       imgCierreBanner: _imgSitio.cierre_fondo || "https://images.unsplash.com/photo-1594223274512-ad4803739b7c?q=80&w=1920&auto=format&fit=crop",
+      // Banner "No seguimos tendencias" (título en 2 líneas + frase, editables desde el ERP).
+      cierreTitulo1: _txtSitio.cierre_titulo_1 || "No seguimos tendencias.",
+      cierreTitulo2: _txtSitio.cierre_titulo_2 || "Dictamos el estilo.",
+      cierreHayTitulo2: !!((_txtSitio.cierre_titulo_2 || "Dictamos el estilo.").trim()),
+      cierreFrase: _txtSitio.cierre_frase || "Curaduría propia de carteras y accesorios con presencia. Piezas elegidas, no tendencias pasajeras.",
       esMobile, esDesktop, esHome: enHome, esTienda: s.ruta.n === "tienda", esProducto: !!prod,
       esNosotros: s.ruta.n === "nosotros", esContacto: s.ruta.n === "contacto",
       altoHeader: esMobile ? "66px" : "79px", heroOffset: "0px",
