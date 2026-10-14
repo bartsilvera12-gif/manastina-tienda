@@ -1,0 +1,40 @@
+MANASTINA — cómo subir a Hostinger
+==================================
+
+1) Entrá al hPanel de Hostinger → Administrador de archivos.
+
+2) Abrí la carpeta  public_html  y borrá lo que haya adentro
+   (suele venir un index.html o default.php de ejemplo).
+
+3) Subí el archivo  manastina-hostinger.zip  dentro de public_html
+   y usá la opción "Extraer".
+
+   IMPORTANTE: el contenido tiene que quedar suelto dentro de
+   public_html, así:
+
+       public_html/index.html
+       public_html/.htaccess
+       public_html/assets/...
+       public_html/p/...
+
+   NO así:  public_html/build/index.html
+
+4) Verificá que el archivo  .htaccess  esté presente.
+   Si no lo ves, activá "Mostrar archivos ocultos" en el
+   Administrador de archivos.
+
+5) Listo. Entrá a https://manastina.com
+
+Actualizar el catálogo más adelante
+-----------------------------------
+Los productos, precios, stock y fotos están en  datos-manastina.js
+Se edita ese archivo y se vuelve a subir, solo ese archivo.
+Las fotos nuevas van dentro de  assets/catalogo/
+
+Qué hace el .htaccess
+---------------------
+- Fuerza HTTPS y redirige de www a la versión sin www
+- Comprime el HTML, CSS y JS (carga más rápido)
+- Cachea imágenes y videos por un año
+- El HTML y el catálogo NO se cachean, así los cambios se ven al toque
+- Bloquea el listado de carpetas
