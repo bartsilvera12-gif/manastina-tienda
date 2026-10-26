@@ -1681,6 +1681,7 @@ class Component extends DCLogic {
     if (i >= 0) carrito[i] = Object.assign({}, carrito[i], { stock, cantidad: Math.min(stock, carrito[i].cantidad + cant) });
     else carrito.push({ clave, id: p.id, nombre: p.nombre, color: colorNombre, precio: p.precio, stock, cantidad: Math.min(stock, cant) });
     this.guardar(carrito);
+    try { if (window.fbq) fbq('track','AddToCart',{ content_ids:[p.id], content_name:p.nombre, content_type:'product', value:(p.precio||0)*cant, currency:'PYG', contents:[{id:p.id,quantity:cant}] }); } catch(e){}
     this.avisar(p.nombre + " agregada al carrito");
   }
   prep(p, colorForzado) {
@@ -2579,7 +2580,7 @@ class Component extends DCLogic {
       seguirComprando: () => { this.setState({ carritoAbierto: false }); this.ir({ n: "tienda" }); },
 
       checkoutAbierto: s.checkout,
-      abrirCheckout: () => this.setState({ checkout: true, carritoAbierto: false, errPedido: "", errCampos: {} }),
+      abrirCheckout: () => { try { if (window.fbq) { var _c=this.state.carrito||[]; fbq('track','InitiateCheckout',{ content_ids:_c.map(function(i){return i.id;}), content_type:'product', num_items:_c.reduce(function(a,i){return a+i.cantidad;},0), value:_c.reduce(function(a,i){return a+(i.precio||0)*i.cantidad;},0), currency:'PYG', contents:_c.map(function(i){return {id:i.id,quantity:i.cantidad};}) }); } } catch(e){} this.setState({ checkout: true, carritoAbierto: false, errPedido: "", errCampos: {} }); },
       cerrarCheckout: () => this.setState({ checkout: false }),
       fNombre: s.form.nombre, fTelefono: s.form.telefono, fCiudad: s.form.ciudad, fDireccion: s.form.direccion, fObs: s.form.obs,
       fEmail: s.form.email, fDocumento: s.form.documento,
