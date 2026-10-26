@@ -170,6 +170,13 @@ src="https://www.facebook.com/tr?id=1898538131108346&ev=PageView&noscript=1"
 
     // El pedido se pagó: recién ahora se vacía el carrito.
     if (estado === "pagado") {
+      try {
+        var _oid = String(d.numero || hash);
+        if (window.fbq && localStorage.getItem("manastina_fb_purchase") !== _oid) {
+          fbq('track','Purchase',{ value: Number(d.total||0), currency:'PYG', content_type:'product' });
+          try { localStorage.setItem("manastina_fb_purchase", _oid); } catch (e) {}
+        }
+      } catch (e) {}
       try { localStorage.removeItem("manastina_carrito"); } catch (e) {}
     }
   }
